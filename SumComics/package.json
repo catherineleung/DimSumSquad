@@ -1,5 +1,5 @@
 {
-  "name": "SumComics",
+  "name": "exp2016",
   "version": "0.0.0",
   "private": true,
   "scripts": {
@@ -15,5 +15,5 @@
     "serve-favicon": "~2.2.1",
     "mongodb": "~2.0.33",
     "monk": "~1.0.1"
-  }
+}
 }
