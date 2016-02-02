@@ -38,14 +38,11 @@ var Router = (function () {
 
         /* GET Registration page. */
         router.get('/registration', function (req, res) {
-            var db = req.db;
-            var collection = db.get('usercollection');
-            collection.find({}, {}, function (e, docs) {
-                res.render('registration', {
-                    "registration": docs
-                });
+            res.render('registration', {
+                title1: 'Add New User'
             });
         });
+
 
 
         /* GET New User page. */
@@ -61,15 +58,20 @@ var Router = (function () {
             // Set our internal DB variable
             var db = req.db;
             // Get our form values. These rely on the "name" attributes
-            var user = new User(req.body.username, req.body.useremail);
+            var user = new User(req.body.username, req.body.useremail, req.body.userpass, req.body.userpasscheck);
             var userName = user.getName();
             var userEmail = user.getEmail();
+            var userPass = user.getPass();
+            var userPassCheck = user.getConfirmPass();
             // Set our collection
             var collection = db.get('usercollection');
             // Submit to the DB
             collection.insert({
                 "username": userName,
-                "email": userEmail
+                "email": userEmail,
+                "password": userPass,
+                "confirmpassword": userPassCheck
+
             }, function (err, doc) {
                 if (err) {
                     // If it failed, return error
