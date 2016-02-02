@@ -35,6 +35,19 @@ var Router = (function () {
                 });
             });
         });
+
+        /* GET Registration page. */
+        router.get('/registration', function (req, res) {
+            var db = req.db;
+            var collection = db.get('usercollection');
+            collection.find({}, {}, function (e, docs) {
+                res.render('registration', {
+                    "registration": docs
+                });
+            });
+        });
+
+
         /* GET New User page. */
         router.get('/newuser', function (req, res) {
             res.render('newuser', {
