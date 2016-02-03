@@ -1,11 +1,15 @@
 ///<reference path='types/DefinitelyTyped/node/node.d.ts'/>
 ///<reference path='types/DefinitelyTyped/express/express.d.ts'/> 
 
-class User {
+interface User {
 
 }
 
-class Viewer extends User {
+class Visitor implements User {
+
+}
+
+class Viewer implements User {
 	private favouriteComics: Comic[];
 }
 
