@@ -34,11 +34,6 @@ class Router {
           res.render('index', { title: 'Express' });
         });
 
-        /* GET Hello World page */
-        router.get('/helloworld', function(req, res) {
-        	res.render('helloworld', { title: 'Hello, World!' });
-        });
-
         /* GET Userlist page. */
         router.get('/userlist', function(req, res) {
             var db = req.db;
@@ -54,8 +49,6 @@ class Router {
         router.get('/newuser', function(req, res) {
             res.render('newuser', { 
             	title1: 'Add New User',
-            	title2: 'Remove User',
-            	title3: 'Remove All Users' 
             });
         });
 
