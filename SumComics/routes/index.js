@@ -1,10 +1,11 @@
 ///<reference path='../types/DefinitelyTyped/node/node.d.ts'/>
 ///<reference path='../types/DefinitelyTyped/express/express.d.ts'/>
 var User = (function () {
-    function User(username, email, password) {
+    function User(username, email, password, confirmpassword) {
         this.username = username;
         this.email = email;
         this.password = password;
+        this.confirmpassword = confirmpassword;
     }
     User.prototype.getName = function () {
         return this.username;
@@ -15,6 +16,9 @@ var User = (function () {
     User.prototype.getPassword = function () {
         return this.password;
     };
+    User.prototype.getConfirmPassword = function () {
+        return this.confirmpassword;
+    }
     return User;
 })();
 var Router = (function () {
@@ -46,17 +50,19 @@ var Router = (function () {
             // Set our internal DB variable
             var db = req.db;
             // Get our form values. These rely on the "name" attributes
-            var user = new User(req.body.username, req.body.useremail, req.body.userpassword);
+            var user = new User(req.body.username, req.body.useremail, req.body.userpassword, req.body.userconfirmpassword);
             var userName = user.getName();
             var userEmail = user.getEmail();
             var userPassword = user.getPassword();
+            var userConfirmPassword = user.getConfirmPassword();
             // Set our collection
             var collection = db.get('usercollection');
             // Submit to the DB
             collection.insert({
                 "username": userName,
                 "email": userEmail,
-                "password": userPassword
+                "password": userPassword,
+                "userconfirmpassword": userConfirmPassword
             }, function (err, doc) {
                 if (err) {
                     // If it failed, return error

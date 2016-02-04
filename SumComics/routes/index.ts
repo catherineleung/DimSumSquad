@@ -11,11 +11,13 @@ class User implements UserInterface {
     private username: string;
     private email: string;
     private password: string;
+    private confirmpassword: string;
 
-    constructor(username: string, email: string, password: string) {
+    constructor(username: string, email: string, password: string, confirmpassword: string) {
         this.username = username;
         this.email = email;
         this.password = password;
+        this.confirmpassword = confirmpassword;
     }
 
     getName() {
@@ -28,6 +30,10 @@ class User implements UserInterface {
 
     getPassword() {
         return this.password;
+    }
+
+    getConfirmPassword() {
+        return this.confirmpassword;
     }
 }
 
@@ -67,11 +73,12 @@ class Router {
 
             // Get our form values. These rely on the "name" attributes
             
-            var user = new User(req.body.username, req.body.useremail, req.body.userpassword);
+            var user = new User(req.body.username, req.body.useremail, req.body.userpassword, req.body.userconfirmpassword);
 
             var userName = user.getName();
             var userEmail = user.getEmail();
             var userPassword = user.getPassword();
+            var userConfirmPassword = user.getConfirmPassword()
 
             // Set our collection
             var collection = db.get('usercollection');
@@ -80,8 +87,9 @@ class Router {
             collection.insert({
             	"username" : userName,
             	"email" : userEmail,
-                "password" : userPassword
-            }, function (err, doc) {
+                "password" : userPassword,
+                "confirmpassword": userConfirmPassword
+            }, function(err, doc) {
                 if (err) {
                     // If it failed, return error
                     res.send("There was a problem adding the information to the database.");
