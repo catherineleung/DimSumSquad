@@ -70,11 +70,17 @@
             <li>
               <a href="mailto:<%= userlist[i].email %>">
                 <%= userlist[i].username %>
-              </a>
+              </a> <br>
+              Email: <%= userlist[i].email %><br>
+              Password: <%= userlist[i].password %>
             </li>
           <% } %>
         </ul>
-        <a class="btn btn-sm btn-primary" href="/newuser" role="button">New User &raquo;</a>
+        <a class="btn btn-sm btn-primary" href="/newuser" role="button">New User &raquo;</a> <br> <br>
+
+        <form id="formRemoveAllUsers" name="removeallusers" method="post" action="/removeallusers">
+          <button id="btnRemoveAllUsers" class="btn btn-sm btn-primary" type="submit">Remove All Users &raquo;</button>
+        </form>
       </div>
 
     </div> <!-- /container -->

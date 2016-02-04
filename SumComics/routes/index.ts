@@ -4,15 +4,18 @@
 interface UserInterface {
     getName(): string;
     getEmail(): string;
+    getPassword(): string;
 }
 
 class User implements UserInterface {
-    username: string;
-    email: string;
+    private username: string;
+    private email: string;
+    private password: string;
 
-    constructor(username: string, email: string) {
+    constructor(username: string, email: string, password: string) {
         this.username = username;
         this.email = email;
+        this.password = password;
     }
 
     getName() {
@@ -21,6 +24,10 @@ class User implements UserInterface {
 
     getEmail() {
         return this.email;
+    }
+
+    getPassword() {
+        return this.password;
     }
 }
 
@@ -48,7 +55,7 @@ class Router {
         /* GET New User page. */
         router.get('/newuser', function(req, res) {
             res.render('newuser', { 
-            	title1: 'Add New User',
+            	title1: 'Registration',
             });
         });
 
@@ -60,20 +67,20 @@ class Router {
 
             // Get our form values. These rely on the "name" attributes
             
-            var user = new User(req.body.username, req.body.useremail);
+            var user = new User(req.body.username, req.body.useremail, req.body.userpassword);
 
             var userName = user.getName();
             var userEmail = user.getEmail();
+            var userPassword = user.getPassword();
 
             // Set our collection
             var collection = db.get('usercollection');
 
-            console.log("New username: " + userName);
-            console.log("New useremail: " + userEmail);
             // Submit to the DB
             collection.insert({
             	"username" : userName,
-            	"email" : userEmail
+            	"email" : userEmail,
+                "password" : userPassword
             }, function (err, doc) {
                 if (err) {
                     // If it failed, return error

@@ -1,15 +1,19 @@
 ///<reference path='../types/DefinitelyTyped/node/node.d.ts'/>
 ///<reference path='../types/DefinitelyTyped/express/express.d.ts'/>
 var User = (function () {
-    function User(username, email) {
+    function User(username, email, password) {
         this.username = username;
         this.email = email;
+        this.password = password;
     }
     User.prototype.getName = function () {
         return this.username;
     };
     User.prototype.getEmail = function () {
         return this.email;
+    };
+    User.prototype.getPassword = function () {
+        return this.password;
     };
     return User;
 })();
@@ -34,7 +38,7 @@ var Router = (function () {
         /* GET New User page. */
         router.get('/newuser', function (req, res) {
             res.render('newuser', {
-                title1: 'Add New User'
+                title1: 'Registration'
             });
         });
         /* POST to Add User Service */
@@ -42,17 +46,17 @@ var Router = (function () {
             // Set our internal DB variable
             var db = req.db;
             // Get our form values. These rely on the "name" attributes
-            var user = new User(req.body.username, req.body.useremail);
+            var user = new User(req.body.username, req.body.useremail, req.body.userpassword);
             var userName = user.getName();
             var userEmail = user.getEmail();
+            var userPassword = user.getPassword();
             // Set our collection
             var collection = db.get('usercollection');
-            console.log("New username: " + userName);
-            console.log("New useremail: " + userEmail);
             // Submit to the DB
             collection.insert({
                 "username": userName,
-                "email": userEmail
+                "email": userEmail,
+                "password": userPassword
             }, function (err, doc) {
                 if (err) {
                     // If it failed, return error
