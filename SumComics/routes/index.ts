@@ -75,6 +75,8 @@ class Router {
             // Set our collection
             var collection = db.get('usercollection');
 
+            console.log("New username: " + userName);
+            console.log("New useremail: " + userEmail);
             // Submit to the DB
             collection.insert({
             	"username" : userName,
