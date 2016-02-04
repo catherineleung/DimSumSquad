@@ -25,10 +25,31 @@ var Router = (function () {
     function Router() {
         var express = require('express');
         var router = express.Router();
+
+        // for file uploading
+        var multer = require('multer'),
+            bodyParser = require('body-parser'),
+            path = require('path');
+
         /* GET home page. */
         router.get('/', function (req, res, next) {
             res.render('index', { title: 'Express' });
         });
+
+        /* GET uploads page */
+        router.get('/upload', function(req, res){
+            res.render('upload');
+        });
+
+        // taken from file uploading tutorial
+        /* more uploads stuff */
+        router.post('/', multer({ dest: './uploads/'}).single('upl'), function(req,res){
+            console.log(req.body);   
+            console.log(req.file);
+            res.status(204).end();
+            }); 
+
+
         /* GET Userlist page. */
         router.get('/userlist', function (req, res) {
             var db = req.db;
