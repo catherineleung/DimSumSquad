@@ -1,5 +1,5 @@
-///<reference path='../types/DefinitelyTyped/DefinitelyTyped/node/node.d.ts'/>
-///<reference path='../types/DefinitelyTyped/DefinitelyTyped/express/express.d.ts'/>
+///<reference path='../types/DefinitelyTyped/node/node.d.ts'/>
+///<reference path='../types/DefinitelyTyped/express/express.d.ts'/>
 var User = (function () {
     function User(username, email, password) {
         this.username = username;

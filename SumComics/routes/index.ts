@@ -1,5 +1,5 @@
-///<reference path='../types/DefinitelyTyped/DefinitelyTyped/node/node.d.ts'/>
-///<reference path='../types/DefinitelyTyped/DefinitelyTyped/express/express.d.ts'/>
+///<reference path='../types/DefinitelyTyped/node/node.d.ts'/>
+///<reference path='../types/DefinitelyTyped/express/express.d.ts'/>
 
 interface UserInterface {
     getName(): string;
