@@ -15,7 +15,7 @@ npm install -g typescript
 
 Navigate to:
 ```
-/types/DefinitelyTyped/
+/types/
 ```
 
 Initialize Git repo:
