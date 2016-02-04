@@ -1,6 +1,6 @@
 # DimSumSquad
 
-Install dependencies
+Installing dependencies:
 ```
 npm install
 ```
