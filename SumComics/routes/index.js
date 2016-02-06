@@ -1,55 +1,14 @@
 ///<reference path='../types/DefinitelyTyped/node/node.d.ts'/>
 ///<reference path='../types/DefinitelyTyped/express/express.d.ts'/>
-var User = (function () {
-    function User(username, email, password, confirmpassword) {
-        this.username = username;
-        this.email = email;
-        this.password = password;
-        this.confirmpassword = confirmpassword;
-    }
-    User.prototype.getName = function () {
-        return this.username;
-    };
-    User.prototype.getEmail = function () {
-        return this.email;
-    };
-    User.prototype.getPassword = function () {
-        return this.password;
-    };
-    User.prototype.getConfirmPassword = function () {
-        return this.confirmpassword;
-    }
-    return User;
-})();
 var Router = (function () {
     function Router() {
         var express = require('express');
         var router = express.Router();
-
-        // for file uploading
-        var multer = require('multer'),
-            bodyParser = require('body-parser'),
-            path = require('path');
-
+        var User = require('../model/user.js');
         /* GET home page. */
         router.get('/', function (req, res, next) {
             res.render('index', { title: 'Express' });
         });
-
-        /* GET uploads page */
-        router.get('/upload', function(req, res){
-            res.render('upload');
-        });
-
-        // taken from file uploading tutorial
-        /* more uploads stuff */
-        router.post('/', multer({ dest: './uploads/'}).single('upl'), function(req,res){
-            console.log(req.body);   
-            console.log(req.file);
-            res.status(204).end();
-            }); 
-
-
         /* GET Userlist page. */
         router.get('/userlist', function (req, res) {
             var db = req.db;
@@ -83,7 +42,7 @@ var Router = (function () {
                 "username": userName,
                 "email": userEmail,
                 "password": userPassword,
-                "userconfirmpassword": userConfirmPassword
+                "confirmpassword": userConfirmPassword
             }, function (err, doc) {
                 if (err) {
                     // If it failed, return error
