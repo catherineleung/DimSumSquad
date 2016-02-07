@@ -21,13 +21,103 @@ var User = (function () {
     };
     return User;
 })();
+var ImageFile = (function () {
+    function ImageFile(imageFileName) {
+        this.fileName = imageFileName;
+    }
+    ImageFile.prototype.getfileName = function () {
+        return this.fileName;
+    };
+    return ImageFile;
+})();
 var Router = (function () {
     function Router() {
         var express = require('express');
         var router = express.Router();
+        // tracks # of posts
+        var i = 0;
+        var image_file_list = new Array();
+        var image_file_list_string = new Array;
+        // added this in for file uploading
+        var multer = require('multer');
+        var storage = multer.diskStorage({
+            destination: function (req, file, callback) {
+                callback(null, './uploads');
+            },
+            filename: function (req, file, callback) {
+                // callback(null, file.fieldname + '_' + Date.now());
+                callback(null, file.fieldname + '_' + Date.now() + '_' + file.originalname);
+                // name of the image file
+                var imageFileName = file.fieldname + '_' + Date.now() + '_' + file.originalname;
+                image_file_list.push(new ImageFile(imageFileName));
+                // image_file_list[i] = new ImageFile(imageFileName);
+                // debugging
+                console.log("This is the imageFileName: " + imageFileName);
+                // adds image name to the array
+                image_file_list_string.push(imageFileName);
+                // increment
+                i++;
+            }
+        });
+        var upload = multer({ storage: storage }).single('userPhoto');
+        // end of file uploading stuff
         /* GET home page. */
         router.get('/', function (req, res, next) {
             res.render('index', { title: 'Express' });
+        });
+        /* GET upload page. */
+        router.get('/upload', function (req, res) {
+            res.sendFile(__dirname + "/upload.html");
+        });
+        /* POST/UPLOAD picture */
+        router.post('/api/photo', function (req, res) {
+            upload(req, res, function (err) {
+                if (err) {
+                    return res.end("Error uploading file.");
+                }
+                /*
+                for (var IF in image_file_list_string){
+                    // console.log(IF);
+                    res.render('uploads', { image_name: + "/" + IF} )
+                } */
+                // set the collection
+                var db = req.db;
+                var comic_images = db.get('comic_images _collection');
+                console.log("just set the collection!");
+                // Need to change this later to go through the entire collection 
+                var name = image_file_list_string[i - 1];
+                comic_images.insert({
+                    "image_Name": name
+                }, function (err, doc) {
+                    if (err) {
+                        // If it failed, return error
+                        res.send("There was a problem adding the information to the database.");
+                    }
+                    else {
+                        // And forward to success page
+                        console.log("in here!");
+                        res.redirect('/uploads');
+                    }
+                });
+                // res.redirect('/uploads');
+                /*
+                router.get('/uploads', function(req, res){
+                    res.render('uploads', { image_name: "/" + image_file_list_string[0]})
+                });
+                */
+                // res.sendStatus(200);
+            });
+        });
+        /* GET uploads page */
+        router.get('/uploads', function (req, res) {
+            console.log("in get uploads call");
+            console.log("first picture name: " + image_file_list_string[0]);
+            res.render('uploads', { image_name: image_file_list_string[0] });
+            /* for (var IF in image_file_list_string){
+                console.log(IF);
+                res.render('uploads', { image_name: IF})
+            }
+            // res.render('uploads'); */
         });
         /* GET Userlist page. */
         router.get('/userlist', function (req, res) {
