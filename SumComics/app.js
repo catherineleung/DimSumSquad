@@ -11,7 +11,8 @@ var Application = (function () {
         // Mongo code
         var mongo = require('mongodb');
         var monk = require('monk');
-        var db = monk('localhost:27017/exp2016');
+        var uri = 'mongodb://kathyskrafts:dimsumsquad@ds059185.mongolab.com:59185/heroku_f0bt5b2s';
+        var db = monk(uri);
         var routes = require('./routes/index');
         var users = require('./routes/users');
         var app = express();
