@@ -42,11 +42,50 @@ class Router {
     constructor() {
         var express = require('express');
         var router = express.Router();
+        
+        // added this in for file uploading
+        
+        var multer  =   require('multer');
+        var storage =   multer.diskStorage({
+            destination: function (req, file, callback) {
+            callback(null, './uploads');
+                },
+            filename: function (req, file, callback) {
+            // callback(null, file.fieldname + '_' + Date.now());
+            callback(null, file.fieldname + '_' + Date.now() + '_' + file.originalname);
+            
+            // name of the image file
+            var imageFileName =  file.fieldname + '_' + Date.now() + '_' + file.originalname;
+            
+            }
+
+            });
+        var upload = multer({ storage : storage}).single('userPhoto');
+        
+        // end of file uploading stuff
        
         /* GET home page. */
         router.get('/', function(req, res, next) {
           res.render('index', { title: 'Express' });
         });
+        
+        /* GET upload page. */
+        router.get('/upload',function(req,res){
+            res.sendFile(__dirname + "/upload.html");
+        });
+
+        /* POST/UPLOAD picture */
+        router.post('/api/photo',function(req,res){
+            upload(req,res,function(err) {
+            if(err) {
+                return res.end("Error uploading file.");
+            }
+            res.sendStatus(200);
+            // res.redirect('/upload');
+            // res.end("File is uploaded");
+
+            });
+            });
 
         /* GET Userlist page. */
         router.get('/userlist', function(req, res) {
