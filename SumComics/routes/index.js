@@ -104,21 +104,66 @@ var Router = (function () {
                 router.get('/uploads', function(req, res){
                     res.render('uploads', { image_name: "/" + image_file_list_string[0]})
                 });
-                */
+*/
                 // res.sendStatus(200);
             });
-        });
-        /* GET uploads page */
-        router.get('/uploads', function (req, res) {
-            console.log("in get uploads call");
-            console.log("first picture name: " + image_file_list_string[0]);
-            res.render('uploads', { image_name: image_file_list_string[0] });
+});
+/* GET uploads page */
+router.get('/uploads', function (req, res) {
+    console.log("in get uploads call");
+    console.log("first picture name: " + image_file_list_string[0]);
+    res.render('uploads', { image_name: image_file_list_string[0] });
             /* for (var IF in image_file_list_string){
                 console.log(IF);
                 res.render('uploads', { image_name: IF})
             }
             // res.render('uploads'); */
         });
+
+
+
+
+
+
+        // passport stuff
+        var passport = require('passport'), LocalStrategy = require('passport-local').Strategy;
+        var isAuthenticated = function(req, res, next) {
+            // if user authenticated in the session, call next() to call next request handler
+            // passport adds this method to request object. middleware allowed to add properties 
+            // to request and response objects
+            if (req.isAuthenticated())
+                return next();
+            // if user not authenticated, redirect them to login page/home page
+            res.redirect('/');
+        }
+
+        module.exports = function(passport) {
+            /* GET login page. */
+            router.get('/', function(req, res) {
+                // display login page with any flash message, if any
+                res.render('/', { message: req.flash('message')});
+            });
+
+            /* HANDLE login POST */
+            router.post('/login', passport.authenticate('local', {
+                successRedirect: '/',
+                failureRedirect: '/newuser',
+                failureFlash: true
+            }));
+
+            /* GET home page. */
+            router.get('/', function (req, res, next) {
+                res.render('index', { title: 'Express' });
+            });
+
+            return router;
+
+        }
+        // end of passport stuff
+
+
+
+
         /* GET Userlist page. */
         router.get('/userlist', function (req, res) {
             var db = req.db;

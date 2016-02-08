@@ -8,6 +8,16 @@ var Application = (function () {
         var logger = require('morgan');
         var cookieParser = require('cookie-parser');
         var bodyParser = require('body-parser');
+        var mongoose = require('mongoose');
+        //mongoose
+        mongoose.connect('mongodb://kathyskrafts:dimsumsquad@ds059185.mongolab.com:59185/heroku_f0bt5b2s');
+        mongoose.connection.on("open", function() {
+            console.log("connection to database done!");
+        });
+
+        mongoose.connection.on("error", function() {
+            console.log("error");
+        });
         // Mongo code
         var mongo = require('mongodb');
         var monk = require('monk');
@@ -36,6 +46,20 @@ var Application = (function () {
         app.use(express.static(path.join(__dirname, 'uploads')));
         app.use('/', routes);
         app.use('/users', users);
+
+        // configuring passport
+        var passport = require('passport');
+        var LocalStrategy = require('passport-local').Strategy;
+        var User = require('./models/user');
+        var bCrypt = require('bcrypt-nodejs');
+        var expressSession = require('express-session');
+        app.use(expressSession({secret:'mySecret', resave: false, saveUninitialized: false}));
+        app.use(passport.initialize());
+        app.use(passport.session());
+
+
+
+
         // catch 404 and forward to error handler
         app.use(function (req, res, next) {
             var err = new Error('Not Found');
