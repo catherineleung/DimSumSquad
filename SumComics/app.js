@@ -57,6 +57,13 @@ var Application = (function () {
         app.use(passport.initialize());
         app.use(passport.session());
 
+        var flash = require('connect-flash');
+        app.use(flash());
+
+        // initialize passport
+        var initPassport = require('./passport/init');
+        initPassport(passport);
+        console.log("passport initialized!");
 
 
 

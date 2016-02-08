@@ -126,7 +126,10 @@ router.get('/uploads', function (req, res) {
 
 
         // passport stuff
-        var passport = require('passport'), LocalStrategy = require('passport-local').Strategy;
+        var passport = require('passport');
+        var User = require('../models/user');
+        var logUserSchema = require('../models/logUser');
+
         var isAuthenticated = function(req, res, next) {
             // if user authenticated in the session, call next() to call next request handler
             // passport adds this method to request object. middleware allowed to add properties 
@@ -137,28 +140,47 @@ router.get('/uploads', function (req, res) {
             res.redirect('/');
         }
 
-        module.exports = function(passport) {
-            /* GET login page. */
-            router.get('/', function(req, res) {
-                // display login page with any flash message, if any
-                res.render('/', { message: req.flash('message')});
+        function logUser(username, type) {
+            var record = new logUserSchema();
+            record.timestamp = Date.now();
+            record.user = username;
+            record.type = type;
+
+            record.save(function(err) {
+                if (err) {
+                    console.log(err);
+                    res.status(500).json({
+                        status: 'failure'
+                    });
+                }
             });
+        }
 
-            /* HANDLE login POST */
-            router.post('/login', passport.authenticate('local', {
-                successRedirect: '/',
-                failureRedirect: '/newuser',
-                failureFlash: true
-            }));
-
-            /* GET home page. */
-            router.get('/', function (req, res, next) {
-                res.render('index', { title: 'Express' });
+        module.exports = function(passport){
+        /* GET login page */
+        router.get('/', function(req, res) {
+            console.log("inside get login page stuff");
+            // display login page with any flash msg, if any
+            res.render('index', {
+                message: req.flash('message')
             });
+        });
 
-            return router;
+        /* Handle Login POST */
+        router.post('/login', passport.authenticate('login',{
+            successRedirect: '/profile',
+            failureRedirect: '/login',
+            failureFlash: true
+        }));
+
 
         }
+
+        
+
+
+
+
         // end of passport stuff
 
 
