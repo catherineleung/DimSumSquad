@@ -11,30 +11,28 @@ var ImageFile = (function () {
 })();
 var Router = (function () {
     function Router() {
-        var express = require('express');
-        var router = express.Router();
-        module.exports = function (router, passport) {
+        module.exports = function (app, passport) {
             // normal routes ===============================================================
             // show the home page (will also have our login links)
-            router.get('/', function (req, res) {
+            app.get('/', function (req, res) {
                 res.render('index.ejs', {
                     user: req.user
                 });
             });
             // PROFILE SECTION =========================
-            router.get('/profile', isLoggedIn, function (req, res) {
+            app.get('/profile', isLoggedIn, function (req, res) {
                 res.render('profile.ejs', {
                     user: req.user
                 });
             });
             // UPLOAD SECTION =========================
-            router.get('/upload', isLoggedIn, function (req, res) {
+            app.get('/upload', isLoggedIn, function (req, res) {
                 res.render('upload.ejs', {
                     user: req.user
                 });
             });
             // LOGOUT ==============================
-            router.get('/logout', function (req, res) {
+            app.get('/logout', function (req, res) {
                 req.logout();
                 res.redirect('/');
             });
@@ -49,7 +47,7 @@ var Router = (function () {
             var multer = require('multer');
             var storage = multer.diskStorage({
                 destination: function (req, file, callback) {
-                    callback(null, './uploads');
+                    callback(null, './public/uploads');
                 },
                 filename: function (req, file, callback) {
                     // callback(null, file.fieldname + '_' + Date.now());
@@ -68,7 +66,7 @@ var Router = (function () {
             });
             var upload = multer({ storage: storage }).single('userPhoto');
             // POST/UPLOAD PICTURE ========================================
-            router.post('/api/photo', function (req, res) {
+            app.post('/api/photo', function (req, res) {
                 upload(req, res, function (err) {
                     if (err) {
                         return res.end("Error uploading file.");
@@ -112,47 +110,47 @@ var Router = (function () {
             // locally --------------------------------
             // LOGIN ===============================
             // show the login form
-            router.get('/login', function (req, res) {
+            app.get('/login', function (req, res) {
                 res.render('login.ejs', { message: req.flash('loginMessage'), user: req.user });
             });
             // process the login form
-            router.post('/login', passport.authenticate('local-login', {
+            app.post('/login', passport.authenticate('local-login', {
                 successRedirect: '/profile',
                 failureRedirect: '/login',
                 failureFlash: true // allow flash messages
             }));
             // SIGNUP =================================
             // show the signup form
-            router.get('/signup', function (req, res) {
+            app.get('/signup', function (req, res) {
                 res.render('signup.ejs', { message: req.flash('signupMessage'), user: req.user });
             });
             // process the signup form
-            router.post('/signup', passport.authenticate('local-signup', {
+            app.post('/signup', passport.authenticate('local-signup', {
                 successRedirect: '/',
                 failureRedirect: '/signup',
                 failureFlash: true // allow flash messages
             }));
             // facebook -------------------------------
             // send to facebook to do the authentication
-            router.get('/auth/facebook', passport.authenticate('facebook', { scope: 'email' }));
+            app.get('/auth/facebook', passport.authenticate('facebook', { scope: 'email' }));
             // handle the callback after facebook has authenticated the user
-            router.get('/auth/facebook/callback', passport.authenticate('facebook', {
+            app.get('/auth/facebook/callback', passport.authenticate('facebook', {
                 successRedirect: '/profile',
                 failureRedirect: '/'
             }));
             // twitter --------------------------------
             // send to twitter to do the authentication
-            router.get('/auth/twitter', passport.authenticate('twitter', { scope: 'email' }));
+            app.get('/auth/twitter', passport.authenticate('twitter', { scope: 'email' }));
             // handle the callback after twitter has authenticated the user
-            router.get('/auth/twitter/callback', passport.authenticate('twitter', {
+            app.get('/auth/twitter/callback', passport.authenticate('twitter', {
                 successRedirect: '/profile',
                 failureRedirect: '/'
             }));
             // google ---------------------------------
             // send to google to do the authentication
-            router.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
+            app.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
             // the callback after google has authenticated the user
-            router.get('/auth/google/callback', passport.authenticate('google', {
+            app.get('/auth/google/callback', passport.authenticate('google', {
                 successRedirect: '/profile',
                 failureRedirect: '/'
             }));
@@ -160,35 +158,35 @@ var Router = (function () {
             // AUTHORIZE (ALREADY LOGGED IN / CONNECTING OTHER SOCIAL ACCOUNT) =============
             // =============================================================================
             // locally --------------------------------
-            router.get('/connect/local', function (req, res) {
+            app.get('/connect/local', function (req, res) {
                 res.render('connect-local.ejs', { message: req.flash('loginMessage') });
             });
-            router.post('/connect/local', passport.authenticate('local-signup', {
+            app.post('/connect/local', passport.authenticate('local-signup', {
                 successRedirect: '/profile',
                 failureRedirect: '/connect/local',
                 failureFlash: true // allow flash messages
             }));
             // facebook -------------------------------
             // send to facebook to do the authentication
-            router.get('/connect/facebook', passport.authorize('facebook', { scope: 'email' }));
+            app.get('/connect/facebook', passport.authorize('facebook', { scope: 'email' }));
             // handle the callback after facebook has authorized the user
-            router.get('/connect/facebook/callback', passport.authorize('facebook', {
+            app.get('/connect/facebook/callback', passport.authorize('facebook', {
                 successRedirect: '/profile',
                 failureRedirect: '/'
             }));
             // twitter --------------------------------
             // send to twitter to do the authentication
-            router.get('/connect/twitter', passport.authorize('twitter', { scope: 'email' }));
+            app.get('/connect/twitter', passport.authorize('twitter', { scope: 'email' }));
             // handle the callback after twitter has authorized the user
-            router.get('/connect/twitter/callback', passport.authorize('twitter', {
+            app.get('/connect/twitter/callback', passport.authorize('twitter', {
                 successRedirect: '/profile',
                 failureRedirect: '/'
             }));
             // google ---------------------------------
             // send to google to do the authentication
-            router.get('/connect/google', passport.authorize('google', { scope: ['profile', 'email'] }));
+            app.get('/connect/google', passport.authorize('google', { scope: ['profile', 'email'] }));
             // the callback after google has authorized the user
-            router.get('/connect/google/callback', passport.authorize('google', {
+            app.get('/connect/google/callback', passport.authorize('google', {
                 successRedirect: '/profile',
                 failureRedirect: '/'
             }));
@@ -199,7 +197,7 @@ var Router = (function () {
             // for local account, remove email and password
             // user account will stay active in case they want to reconnect in the future
             // local -----------------------------------
-            router.get('/unlink/local', isLoggedIn, function (req, res) {
+            app.get('/unlink/local', isLoggedIn, function (req, res) {
                 var user = req.user;
                 user.local.email = undefined;
                 user.local.password = undefined;
@@ -208,7 +206,7 @@ var Router = (function () {
                 });
             });
             // facebook -------------------------------
-            router.get('/unlink/facebook', isLoggedIn, function (req, res) {
+            app.get('/unlink/facebook', isLoggedIn, function (req, res) {
                 var user = req.user;
                 user.facebook.token = undefined;
                 user.save(function (err) {
@@ -216,7 +214,7 @@ var Router = (function () {
                 });
             });
             // twitter --------------------------------
-            router.get('/unlink/twitter', isLoggedIn, function (req, res) {
+            app.get('/unlink/twitter', isLoggedIn, function (req, res) {
                 var user = req.user;
                 user.twitter.token = undefined;
                 user.save(function (err) {
@@ -224,7 +222,7 @@ var Router = (function () {
                 });
             });
             // google ---------------------------------
-            router.get('/unlink/google', isLoggedIn, function (req, res) {
+            app.get('/unlink/google', isLoggedIn, function (req, res) {
                 var user = req.user;
                 user.google.token = undefined;
                 user.save(function (err) {

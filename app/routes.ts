@@ -19,7 +19,7 @@ class Router {
 
     constructor() {
 
-        module.exports = function(router, passport) {
+        module.exports = function(app, passport) {
 
             // normal routes ===============================================================
 
@@ -63,7 +63,7 @@ class Router {
             var multer = require('multer');
             var storage = multer.diskStorage({
                 destination: function(req, file, callback) {
-                    callback(null, './uploads');
+                    callback(null, './public/uploads');
                 },
                 filename: function(req, file, callback) {
                     // callback(null, file.fieldname + '_' + Date.now());
