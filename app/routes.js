@@ -72,12 +72,6 @@ var Router = (function () {
                     if (err) {
                         return res.end("Error uploading file.");
                     }
-                    /*
-                    for (var IF in image_file_list_string){
-                        // console.log(IF);
-                    res.render('uploads', { image_name: + "/" + IF} )
-                    } */
-                    // set the collection
                     var Image = require('../app/models/image');
                     var imageFilePath = new Image({ path: imageFileName });
                     console.log("imageFilePath: " + imageFilePath);
@@ -86,30 +80,6 @@ var Router = (function () {
                             return console.error(err);
                         res.redirect('/');
                     });
-                    // var comic_images = db.get('comiccollection');
-                    // console.log("just set the collection!");
-                    // // Need to change this later to go through the entire collection 
-                    // var name = image_file_list_string[i - 1];
-                    // comic_images.insert({
-                    //     "image_name": name
-                    // }, function(err, doc) {
-                    //     if (err) {
-                    //         // If it failed, return error
-                    //         res.send("There was a problem adding the information to the database.");
-                    //     }
-                    //     else {
-                    //         // And forward to success page
-                    //         console.log("in here!");
-                    //         res.redirect('/uploads');
-                    //     }
-                    // });
-                    // res.rediect('/uploads');
-                    /*
-                   router.get('/uploads', function(req, res){
-                        res.render('uploads', { image_name: "/" + image_file_list_string[0]})
-                    });
-                    */
-                    // res.sendStatus(200);
                 });
             });
             // =============================================================================
