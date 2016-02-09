@@ -29,12 +29,8 @@ class Application {
         var url = configDB.url;
         var path = require('path');
 
-        var monk = require('monk');
-        var db = monk(url);
-
         // configuration ===============================================================
         mongoose.connect(url); // connect to our database
-
         require('./config/passport')(passport); // pass passport for configuration
 
         // set up our express application

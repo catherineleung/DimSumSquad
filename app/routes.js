@@ -43,6 +43,7 @@ var Router = (function () {
             var i = 0;
             var image_file_list = new Array;
             var image_file_list_string = new Array;
+            var imageFileName;
             // added this in for file uploading
             var multer = require('multer');
             var storage = multer.diskStorage({
@@ -53,7 +54,7 @@ var Router = (function () {
                     // callback(null, file.fieldname + '_' + Date.now());
                     callback(null, file.fieldname + '_' + Date.now() + '_' + file.originalname);
                     // name of the image file
-                    var imageFileName = file.fieldname + '_' + Date.now() + '_' + file.originalname;
+                    imageFileName = file.fieldname + '_' + Date.now() + '_' + file.originalname;
                     image_file_list.push(new ImageFile(imageFileName));
                     // image_file_list[i] = new ImageFile(imageFileName);
                     // debugging
@@ -77,24 +78,31 @@ var Router = (function () {
                     res.render('uploads', { image_name: + "/" + IF} )
                     } */
                     // set the collection
-                    var db = req.db;
-                    var comic_images = db.get('comiccollection');
-                    console.log("just set the collection!");
-                    // Need to change this later to go through the entire collection 
-                    var name = image_file_list_string[i - 1];
-                    comic_images.insert({
-                        "image_name": name
-                    }, function (err, doc) {
-                        if (err) {
-                            // If it failed, return error
-                            res.send("There was a problem adding the information to the database.");
-                        }
-                        else {
-                            // And forward to success page
-                            console.log("in here!");
-                            res.redirect('/uploads');
-                        }
+                    var Image = require('../app/models/image');
+                    var imageFilePath = new Image({ path: imageFileName });
+                    console.log("imageFilePath: " + imageFilePath);
+                    imageFilePath.save(function (err, imageFilePath) {
+                        if (err)
+                            return console.error(err);
+                        res.redirect('/');
                     });
+                    // var comic_images = db.get('comiccollection');
+                    // console.log("just set the collection!");
+                    // // Need to change this later to go through the entire collection 
+                    // var name = image_file_list_string[i - 1];
+                    // comic_images.insert({
+                    //     "image_name": name
+                    // }, function(err, doc) {
+                    //     if (err) {
+                    //         // If it failed, return error
+                    //         res.send("There was a problem adding the information to the database.");
+                    //     }
+                    //     else {
+                    //         // And forward to success page
+                    //         console.log("in here!");
+                    //         res.redirect('/uploads');
+                    //     }
+                    // });
                     // res.rediect('/uploads');
                     /*
                    router.get('/uploads', function(req, res){
