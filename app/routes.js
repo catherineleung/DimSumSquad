@@ -12,10 +12,18 @@ var ImageFile = (function () {
 var Router = (function () {
     function Router() {
         module.exports = function (app, passport) {
+            var Image = require('../app/models/image');
+            var User = require('../app/models/user');
             // normal routes ===============================================================
             // show the home page (will also have our login links)
             app.get('/', function (req, res) {
                 res.render('index.ejs', {
+                    user: req.user
+                });
+            });
+            // show the userlist page
+            app.get('/userlist', function (req, res) {
+                res.render('userlist.ejs', {
                     user: req.user
                 });
             });
@@ -72,9 +80,10 @@ var Router = (function () {
                     if (err) {
                         return res.end("Error uploading file.");
                     }
-                    var Image = require('../app/models/image');
-                    var imageFilePath = new Image({ path: imageFileName });
-                    console.log("imageFilePath: " + imageFilePath);
+                    var imageFilePath = new Image({ path: imageFileName, creatorID: req.user._id });
+                    User.findByIdAndUpdate(req.user._id, { $push: { 'local.images': imageFilePath._id } }, { safe: true, upsert: true, new: true }, function (err, model) {
+                        console.log(err);
+                    });
                     imageFilePath.save(function (err, imageFilePath) {
                         if (err)
                             return console.error(err);
