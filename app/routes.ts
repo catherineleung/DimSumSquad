@@ -1,6 +1,7 @@
 ///<reference path='../types/DefinitelyTyped/node/node.d.ts'/>
 ///<reference path='../types/DefinitelyTyped/express/express.d.ts'/>
 
+
 class ImageFile {
     
     private fileName: string;
@@ -18,7 +19,7 @@ class Router {
 
     constructor() {
 
-        module.exports = function(app, passport) {
+        module.exports = function(router, passport) {
 
             // normal routes ===============================================================
 
@@ -100,7 +101,7 @@ class Router {
                     } */
                     // set the collection
                     var db = req.db;
-                    var comic_images = db.get('comic_images_collection');
+                    var comic_images = db.get('comiccollection');
                     console.log("just set the collection!");
                     // Need to change this later to go through the entire collection 
                     var name = image_file_list_string[i - 1];
@@ -119,7 +120,7 @@ class Router {
                     });
                     // res.rediect('/uploads');
                     /*
-                   router.gt('/uploads', function(req, res){
+                   router.get('/uploads', function(req, res){
                         res.render('uploads', { image_name: "/" + image_file_list_string[0]})
                     });
                     */

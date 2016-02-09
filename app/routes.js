@@ -11,28 +11,30 @@ var ImageFile = (function () {
 })();
 var Router = (function () {
     function Router() {
-        module.exports = function (app, passport) {
+        var express = require('express');
+        var router = express.Router();
+        module.exports = function (router, passport) {
             // normal routes ===============================================================
             // show the home page (will also have our login links)
-            app.get('/', function (req, res) {
+            router.get('/', function (req, res) {
                 res.render('index.ejs', {
                     user: req.user
                 });
             });
             // PROFILE SECTION =========================
-            app.get('/profile', isLoggedIn, function (req, res) {
+            router.get('/profile', isLoggedIn, function (req, res) {
                 res.render('profile.ejs', {
                     user: req.user
                 });
             });
             // UPLOAD SECTION =========================
-            app.get('/upload', isLoggedIn, function (req, res) {
+            router.get('/upload', isLoggedIn, function (req, res) {
                 res.render('upload.ejs', {
                     user: req.user
                 });
             });
             // LOGOUT ==============================
-            app.get('/logout', function (req, res) {
+            router.get('/logout', function (req, res) {
                 req.logout();
                 res.redirect('/');
             });
@@ -66,7 +68,7 @@ var Router = (function () {
             });
             var upload = multer({ storage: storage }).single('userPhoto');
             // POST/UPLOAD PICTURE ========================================
-            app.post('/api/photo', function (req, res) {
+            router.post('/api/photo', function (req, res) {
                 upload(req, res, function (err) {
                     if (err) {
                         return res.end("Error uploading file.");
@@ -78,7 +80,7 @@ var Router = (function () {
                     } */
                     // set the collection
                     var db = req.db;
-                    var comic_images = db.get('comic_images_collection');
+                    var comic_images = db.get('comiccollection');
                     console.log("just set the collection!");
                     // Need to change this later to go through the entire collection 
                     var name = image_file_list_string[i - 1];
@@ -97,7 +99,7 @@ var Router = (function () {
                     });
                     // res.rediect('/uploads');
                     /*
-                   router.gt('/uploads', function(req, res){
+                   router.get('/uploads', function(req, res){
                         res.render('uploads', { image_name: "/" + image_file_list_string[0]})
                     });
                     */
@@ -110,47 +112,47 @@ var Router = (function () {
             // locally --------------------------------
             // LOGIN ===============================
             // show the login form
-            app.get('/login', function (req, res) {
+            router.get('/login', function (req, res) {
                 res.render('login.ejs', { message: req.flash('loginMessage'), user: req.user });
             });
             // process the login form
-            app.post('/login', passport.authenticate('local-login', {
+            router.post('/login', passport.authenticate('local-login', {
                 successRedirect: '/profile',
                 failureRedirect: '/login',
                 failureFlash: true // allow flash messages
             }));
             // SIGNUP =================================
             // show the signup form
-            app.get('/signup', function (req, res) {
+            router.get('/signup', function (req, res) {
                 res.render('signup.ejs', { message: req.flash('signupMessage'), user: req.user });
             });
             // process the signup form
-            app.post('/signup', passport.authenticate('local-signup', {
+            router.post('/signup', passport.authenticate('local-signup', {
                 successRedirect: '/',
                 failureRedirect: '/signup',
                 failureFlash: true // allow flash messages
             }));
             // facebook -------------------------------
             // send to facebook to do the authentication
-            app.get('/auth/facebook', passport.authenticate('facebook', { scope: 'email' }));
+            router.get('/auth/facebook', passport.authenticate('facebook', { scope: 'email' }));
             // handle the callback after facebook has authenticated the user
-            app.get('/auth/facebook/callback', passport.authenticate('facebook', {
+            router.get('/auth/facebook/callback', passport.authenticate('facebook', {
                 successRedirect: '/profile',
                 failureRedirect: '/'
             }));
             // twitter --------------------------------
             // send to twitter to do the authentication
-            app.get('/auth/twitter', passport.authenticate('twitter', { scope: 'email' }));
+            router.get('/auth/twitter', passport.authenticate('twitter', { scope: 'email' }));
             // handle the callback after twitter has authenticated the user
-            app.get('/auth/twitter/callback', passport.authenticate('twitter', {
+            router.get('/auth/twitter/callback', passport.authenticate('twitter', {
                 successRedirect: '/profile',
                 failureRedirect: '/'
             }));
             // google ---------------------------------
             // send to google to do the authentication
-            app.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
+            router.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
             // the callback after google has authenticated the user
-            app.get('/auth/google/callback', passport.authenticate('google', {
+            router.get('/auth/google/callback', passport.authenticate('google', {
                 successRedirect: '/profile',
                 failureRedirect: '/'
             }));
@@ -158,35 +160,35 @@ var Router = (function () {
             // AUTHORIZE (ALREADY LOGGED IN / CONNECTING OTHER SOCIAL ACCOUNT) =============
             // =============================================================================
             // locally --------------------------------
-            app.get('/connect/local', function (req, res) {
+            router.get('/connect/local', function (req, res) {
                 res.render('connect-local.ejs', { message: req.flash('loginMessage') });
             });
-            app.post('/connect/local', passport.authenticate('local-signup', {
+            router.post('/connect/local', passport.authenticate('local-signup', {
                 successRedirect: '/profile',
                 failureRedirect: '/connect/local',
                 failureFlash: true // allow flash messages
             }));
             // facebook -------------------------------
             // send to facebook to do the authentication
-            app.get('/connect/facebook', passport.authorize('facebook', { scope: 'email' }));
+            router.get('/connect/facebook', passport.authorize('facebook', { scope: 'email' }));
             // handle the callback after facebook has authorized the user
-            app.get('/connect/facebook/callback', passport.authorize('facebook', {
+            router.get('/connect/facebook/callback', passport.authorize('facebook', {
                 successRedirect: '/profile',
                 failureRedirect: '/'
             }));
             // twitter --------------------------------
             // send to twitter to do the authentication
-            app.get('/connect/twitter', passport.authorize('twitter', { scope: 'email' }));
+            router.get('/connect/twitter', passport.authorize('twitter', { scope: 'email' }));
             // handle the callback after twitter has authorized the user
-            app.get('/connect/twitter/callback', passport.authorize('twitter', {
+            router.get('/connect/twitter/callback', passport.authorize('twitter', {
                 successRedirect: '/profile',
                 failureRedirect: '/'
             }));
             // google ---------------------------------
             // send to google to do the authentication
-            app.get('/connect/google', passport.authorize('google', { scope: ['profile', 'email'] }));
+            router.get('/connect/google', passport.authorize('google', { scope: ['profile', 'email'] }));
             // the callback after google has authorized the user
-            app.get('/connect/google/callback', passport.authorize('google', {
+            router.get('/connect/google/callback', passport.authorize('google', {
                 successRedirect: '/profile',
                 failureRedirect: '/'
             }));
@@ -197,7 +199,7 @@ var Router = (function () {
             // for local account, remove email and password
             // user account will stay active in case they want to reconnect in the future
             // local -----------------------------------
-            app.get('/unlink/local', isLoggedIn, function (req, res) {
+            router.get('/unlink/local', isLoggedIn, function (req, res) {
                 var user = req.user;
                 user.local.email = undefined;
                 user.local.password = undefined;
@@ -206,7 +208,7 @@ var Router = (function () {
                 });
             });
             // facebook -------------------------------
-            app.get('/unlink/facebook', isLoggedIn, function (req, res) {
+            router.get('/unlink/facebook', isLoggedIn, function (req, res) {
                 var user = req.user;
                 user.facebook.token = undefined;
                 user.save(function (err) {
@@ -214,7 +216,7 @@ var Router = (function () {
                 });
             });
             // twitter --------------------------------
-            app.get('/unlink/twitter', isLoggedIn, function (req, res) {
+            router.get('/unlink/twitter', isLoggedIn, function (req, res) {
                 var user = req.user;
                 user.twitter.token = undefined;
                 user.save(function (err) {
@@ -222,7 +224,7 @@ var Router = (function () {
                 });
             });
             // google ---------------------------------
-            app.get('/unlink/google', isLoggedIn, function (req, res) {
+            router.get('/unlink/google', isLoggedIn, function (req, res) {
                 var user = req.user;
                 user.google.token = undefined;
                 user.save(function (err) {
