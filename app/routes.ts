@@ -30,6 +30,13 @@ class Router {
                 });
             });
 
+            // show the userlist page
+            app.get('/userlist', function (req, res) {
+                res.render('userlist.ejs', {
+                    user: req.user
+                });
+            });
+
             // PROFILE SECTION =========================
             app.get('/profile', isLoggedIn, function(req, res) {
                 res.render('profile.ejs', {
