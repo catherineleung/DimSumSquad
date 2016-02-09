@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <!-- <link rel="icon" href="../../favicon.ico"> -->
+
+  <title>SumComics</title>
+
+  <!-- Bootstrap core, IE10 viewport hack, and custom styles-->
+  <link href="/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="/bootstrap/docs/assets/css/ie10-viewport-bug-workaround.css" rel="stylesheet">
+  <link href="/bootstrap/docs/examples/navbar-static-top/navbar-static-top.css" rel="stylesheet">
+  <script src="/bootstrap/docs/assets/js/ie-emulation-modes-warning.js"></script>
+</head>
+
+<body>
+
+  <!-- Static navbar -->
+  <nav class="navbar navbar-default navbar-static-top">
+    <div class="container">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="./">KATHY'S KRAFTS</a>
+      </div>
+      <div id="navbar" class="navbar-collapse collapse">
+        <ul class="nav navbar-nav">
+
+        <!-- Menu navigation: add these later
+          <li class="active"><a href="#">Home</a></li>
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
+            <ul class="dropdown-menu">
+              <li><a href="#">Action</a></li>
+              <li><a href="#">Another action</a></li>
+              <li><a href="#">Something else here</a></li>
+              <li role="separator" class="divider"></li>
+              <li class="dropdown-header">Nav header</li>
+              <li><a href="#">Separated link</a></li>
+              <li><a href="#">One more separated link</a></li>
+            </ul>
+          </li>
+        -->
+        </ul>
+
+        <ul class="nav navbar-nav navbar-right">
+        <% if (!user) { %>
+            <li><a href="/signup">Sign Up</a></li>
+            <li class="divider-vertical"></li>
+            <li class="dropdown">
+            <a class="dropdown-toggle" href="#" data-toggle="dropdown">Sign In<strong class="caret"></strong></a>
+            <div class="dropdown-menu" style="padding: 20px; padding-bottom: 15px;">
+              <!-- Login form here-->
+              <form action="/login" method="post" accept-charset="UTF-8">
+                <input id="username" style="margin-bottom: 15px;" type="text" name="email" size="30" placeholder="Username">
+                <input id="password" style="margin-bottom: 15px;" type="password" name="password" size="30" placeholder="Password">
+                <input id="user_remember_me" style="float: left; margin-right: 10px;" type="checkbox" name="remember_me" value="1" />
+                <label class="string optional" for="user_remember_me"> Remember me</label>
+
+                <input class="btn btn-primary" style="clear: left; width: 100%; height: 32px; font-size: 13px;" type="submit" name="commit" value="Sign In" />
+              </form>
+            </div>
+        <% } else { %>
+            <li><a href="/profile">Welcome, <%= user.local.email %>!</a></li>
+            <li class="divider-vertical"></li>
+            <li><a href="/logout">Log Out</a></li>
+        <% } %>
+        </ul>
+        
+          <!--<ul class="nav navbar-nav navbar-right">
+            <li><a href="#">Default</a></li>
+            <li class="active"><a href="#">Static top <span class="sr-only">(current)</span></a></li>
+            <li><a href="#">Fixed top</a></li>
+          </ul>-->
+        </div><!--/.nav-collapse -->
+      </div>
+    </nav>
+
+<div class="container">
+
+    <!-- The profile picture -->
+    <div class="jumbotron">
+        <h1>Welcome back!</h1> <!--TODO: Needs to be replaced with a personal message-->
+        <div class="row">
+        <div class="col-md-3">
+          <img src="" alt="profile_pic" width="160" height="160">
+        </div>
+
+        <!-- User Information -->
+        <!--TODO: Add in user cookie data into user info fields-->
+        <div class="col-md-4">
+          <h2> User Info </h2>      
+          <strong>Username: </strong><span id=''></span>
+          <br>
+          <strong>Age: </strong><span id=''></span>
+          <br>
+          <strong>Gender: </strong><span id=''></span>
+          <br>
+          <strong>Email: </strong><span id=''></span>
+        </div>
+        </div>
+
+        <!-- Favourite Comics View -->
+        <div class="panel">
+        <h2> Favourites </h2>
+
+        </div>
+        <!-- Contributions View -->
+        <!--TODO: Display one of two views depending if the user is viewer or contributor-->
+        <!--TODO: Write function to display all comics thumbnails-->
+        <div class="panel">
+        <h2> Contributions </h2>
+        </div>
+
+    <div class="row">
+
+        <!-- LOCAL INFORMATION -->
+        <div class="col-sm-6">
+            <div class="well">
+                <h3><span class="fa fa-user"></span> Local</h3>
+
+                <% if (user.local.email) { %>
+                    <p>
+                        <strong>id</strong>: <%= user._id %><br>
+                        <strong>email</strong>: <%= user.local.email %><br>
+                        <strong>password</strong>: <%= user.local.password %>
+                    </p>
+                    
+                    <a href="/unlink/local" class="btn btn-default">Unlink</a>
+                <% } else { %>
+                    <a href="/connect/local" class="btn btn-default">Connect Local</a>
+                <% } %>
+
+            </div>
+        </div>
+
+        <!-- FACEBOOK INFORMATION -->
+        <div class="col-sm-6">
+            <div class="well">
+                <h3 class="text-primary"><span class="fa fa-facebook"></span> Facebook</h3>
+
+                <!-- check if the user has this token (is the user authenticated with this social account) -->
+                <% if (user.facebook.token) { %>
+                    <p>
+                        <strong>id</strong>: <%= user.facebook.id %><br>
+                        <strong>token</strong>: <%= user.facebook.token %><br>
+                        <strong>email</strong>: <%= user.facebook.email %><br>
+                        <strong>name</strong>: <%= user.facebook.name %><br>
+                    </p>
+
+                    <a href="/unlink/facebook" class="btn btn-primary">Unlink</a>
+                <% } else { %>
+                    <a href="/connect/facebook" class="btn btn-primary">Connect Facebook</a>
+                <% } %>
+
+            </div>
+        </div>
+
+    </div>
+
+    <div class="row">
+
+        <!-- TWITTER INFORMATION -->
+        <div class="col-sm-6">
+            <div class="well">
+                <h3 class="text-info"><span class="fa fa-twitter"></span> Twitter</h3>
+
+                <% if (user.twitter.token) { %>
+                    <p>
+                        <strong>id</strong>: <%= user.twitter.id %><br>
+                        <strong>token</strong>: <%= user.twitter.token %><br>
+                        <strong>display name</strong>: <%= user.twitter.displayName %><br>
+                        <strong>username</strong>: <%= user.twitter.username %>
+                    </p>
+
+                    <a href="/unlink/twitter" class="btn btn-info">Unlink</a>
+                <% } else { %>
+                    <a href="/connect/twitter" class="btn btn-info">Connect Twitter</a>
+                <% } %>
+
+            </div>
+        </div>
+
+        <!-- GOOGLE INFORMATION -->
+        <div class="col-sm-6">
+            <div class="well">
+                <h3 class="text-danger"><span class="fa fa-google-plus"></span> Google+</h3>
+
+                <% if (user.google.token) { %>
+                    <p>
+                        <strong>id</strong>: <%= user.google.id %><br>
+                        <strong>token</strong>: <%= user.google.token %><br>
+                        <strong>email</strong>: <%= user.google.email %><br>
+                        <strong>name</strong>: <%= user.google.name %>
+                    </p>
+
+                    <a href="/unlink/google" class="btn btn-danger">Unlink</a>
+                <% } else { %>
+                    <a href="/connect/google" class="btn btn-danger">Connect Google</a>
+                <% } %>
+
+            </div>
+        </div>
+
+    </div>
+    </div> <!-- END JUMBOTRON -->
+</div> <!-- END CONTAINER -->
+
+    <!-- Bootstrap core JavaScript and IE10 viewport hack-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
+    <script src="../bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="../bootstrap/docs/assets/js/ie10-viewport-bug-workaround.js"></script>
+  </body>
+  </html>

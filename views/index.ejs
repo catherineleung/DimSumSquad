@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <!-- <link rel="icon" href="../../favicon.ico"> -->
+
+  <title>SumComics</title>
+
+  <!-- Bootstrap core, IE10 viewport hack, and custom styles-->
+  <link href="/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="/bootstrap/docs/assets/css/ie10-viewport-bug-workaround.css" rel="stylesheet">
+  <link href="/bootstrap/docs/examples/navbar-static-top/navbar-static-top.css" rel="stylesheet">
+  <script src="/bootstrap/docs/assets/js/ie-emulation-modes-warning.js"></script>
+</head>
+
+<body>
+
+  <!-- Static navbar -->
+  <nav class="navbar navbar-default navbar-static-top">
+    <div class="container">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="./">KATHY'S KRAFTS</a>
+      </div>
+      <div id="navbar" class="navbar-collapse collapse">
+        <ul class="nav navbar-nav">
+
+        <!-- Menu navigation: add these later
+          <li class="active"><a href="#">Home</a></li>
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
+            <ul class="dropdown-menu">
+              <li><a href="#">Action</a></li>
+              <li><a href="#">Another action</a></li>
+              <li><a href="#">Something else here</a></li>
+              <li role="separator" class="divider"></li>
+              <li class="dropdown-header">Nav header</li>
+              <li><a href="#">Separated link</a></li>
+              <li><a href="#">One more separated link</a></li>
+            </ul>
+          </li>
+        -->
+        </ul>
+
+
+
+
+        
+        <ul class="nav navbar-nav navbar-right">
+        <% if (!user) { %>
+            <li><a href="/signup">Sign Up</a></li>
+            <li class="divider-vertical"></li>
+            <li class="dropdown">
+            <a class="dropdown-toggle" href="#" data-toggle="dropdown">Sign In<strong class="caret"></strong></a>
+            <div class="dropdown-menu" style="padding: 20px; padding-bottom: 15px;">
+              <!-- Login form here-->
+              <form action="/login" method="post" accept-charset="UTF-8">
+                <input id="username" style="margin-bottom: 15px;" type="text" name="email" size="30" placeholder="Username">
+                <input id="password" style="margin-bottom: 15px;" type="password" name="password" size="30" placeholder="Password">
+                <input id="user_remember_me" style="float: left; margin-right: 10px;" type="checkbox" name="remember_me" value="1" />
+                <label class="string optional" for="user_remember_me"> Remember me</label>
+
+                <input class="btn btn-primary" style="clear: left; width: 100%; height: 32px; font-size: 13px;" type="submit" name="commit" value="Sign In" />
+              </form>
+            </div>
+        <% } else { %>
+            <li><a href="/profile">Welcome, <%= user.local.email %>!</a></li>
+            <li class="divider-vertical"></li>
+            <li><a href="/logout">Log Out</a></li>
+        <% } %>
+        </ul>
+        
+
+
+          <!--<ul class="nav navbar-nav navbar-right">
+            <li><a href="#">Default</a></li>
+            <li class="active"><a href="#">Static top <span class="sr-only">(current)</span></a></li>
+            <li><a href="#">Fixed top</a></li>
+          </ul>-->
+        </div><!--/.nav-collapse -->
+      </div>
+    </nav>
+
+<div class="container">
+
+    <div class="jumbotron text-center">
+        <h2>Welcome!</h2>
+        <% if (!user) { %>
+            <a href="/login" class="btn btn-primary"><span class="fa fa-user"></span> Log In</a>
+            <a href="/signup" class="btn btn-success"><span class="fa fa-user"></span> Sign Up</a>
+            <a href="/userlist" class="btn btn-warning"><span class="fa fa-user"></span> View Users</a>
+            <!--
+            <a href="/auth/facebook" class="btn btn-primary"><span class="fa fa-facebook"></span> Facebook</a>
+            <a href="/auth/twitter" class="btn btn-info"><span class="fa fa-twitter"></span> Twitter</a>
+            <a href="/auth/google" class="btn btn-danger"><span class="fa fa-google-plus"></span> Google+</a>
+            -->
+        <% } else { %>
+            <p>You are logged in as: <b><%= user.local.email %></b></p>
+            <a href="/upload" class="btn btn-danger"><span class="fa fa-user"></span> Upload</a>
+        <% } %>
+    </div>
+
+    <!-- Bootstrap core JavaScript and IE10 viewport hack-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
+    <script src="../bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="../bootstrap/docs/assets/js/ie10-viewport-bug-workaround.js"></script>
+  </body>
+  </html>
