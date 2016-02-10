@@ -24,8 +24,13 @@ var Router = (function () {
             });
             // show the userlist page
             app.get('/userlist', function (req, res) {
-                res.render('userlist.ejs', {
-                    user: req.user
+                User.find(function (err, users) {
+                    if (err)
+                        res.send(err);
+                    //res.json(users)
+                    res.render('userlist', {
+                        "userlist": users
+                    });
                 });
             });
             // PROFILE SECTION =========================

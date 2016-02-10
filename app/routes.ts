@@ -35,9 +35,14 @@ class Router {
             });
 
             // show the userlist page
-            app.get('/userlist', function (req, res) {
-                res.render('userlist.ejs', {
-                    user: req.user
+            app.get('/userlist', function(req, res) {
+                User.find(function(err, users) {
+                    if (err)
+                        res.send(err)
+                    //res.json(users)
+                    res.render('userlist', {
+                        "userlist": users
+                    });
                 });
             });
 
