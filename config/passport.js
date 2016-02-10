@@ -90,13 +90,23 @@ module.exports = function(passport) {
                     // check to see if theres already a user with that email
                     if (user) {
                         return done(null, false, req.flash('signupMessage', 'That email is already taken.'));
+                    } else if (password != req.body.passwordConfirm) {
+                        return done(null, false, req.flash('signupMessage', 'Oops! Your passwords do not match.'));
+                    } else if (!req.body.terms) {
+                        return done(null, false, req.flash('signupMessage', 'Please accept the terms and conditions.'));
                     } else {
-
                         // create the user
                         var newUser            = new User();
 
                         newUser.local.email    = email;
                         newUser.local.password = newUser.generateHash(password);
+                        newUser.local.username = req.body.username;
+                        // check to see if they checked off the contributor box
+                        if (req.body.contributor) {
+                            newUser.local.contributor = true;
+                        } else {
+                            newUser.local.contributor = false;
+                        }
 
                         newUser.save(function(err) {
                             if (err)
@@ -118,10 +128,21 @@ module.exports = function(passport) {
                     if (user) {
                         return done(null, false, req.flash('loginMessage', 'That email is already taken.'));
                         // Using 'loginMessage instead of signupMessage because it's used by /connect/local'
+                    } else if (password != req.body.passwordConfirm) {
+                        return done(null, false, req.flash('signupMessage', 'Oops! Your passwords do not match.'));
+                    } else if (!req.body.terms) {
+                        return done(null, false, req.flash('signupMessage', 'Please accept the terms and conditions.'));
                     } else {
                         var user = req.user;
                         user.local.email = email;
                         user.local.password = user.generateHash(password);
+                        user.local.username = req.body.username;
+                        if (req.body.contributor) {
+                            user.local.contributor = true;
+                        } else {
+                            user.local.contributor = false;
+                        }
+
                         user.save(function (err) {
                             if (err)
                                 return done(err);

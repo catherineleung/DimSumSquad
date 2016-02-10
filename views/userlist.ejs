@@ -64,18 +64,23 @@
     </nav>
 
 <div class="container">
-
-    
-        <h2> User List</h2>
+<div class="col-sm-6 col-sm-offset-3">
+<div class="well">
+          <h2> User List</h2>
+          <hr>
+          <small>
           <% for (i = 0; i < userlist.length; i++) { %>
-            <li>
-              <b>Email:</b> <%= userlist[i].local.email %><br>
-              <b>Password:</b> <%= userlist[i].local.password %>
-            </li>
+            <div class="col-lg-4"><b>Email:</b><br> <%= userlist[i].local.email %></div>
+            <div class="col-lg-4"><b>Username:</b><br> <%= userlist[i].local.username %></div>
+            <div class="col-lg-4"><b>Contributor?</b><br> <%= userlist[i].local.contributor %></div>
+            <br><br>
+            <hr>
           <% } %>
-     
-
+          </small>
 </div>
+</div>
+</div>
+
 
     <!-- Bootstrap core JavaScript and IE10 viewport hack-->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>

@@ -23,7 +23,6 @@ class Router {
 
             var Image = require('../app/models/image');
             var User = require('../app/models/user');
-            var mongoose = require('mongoose');
 
             // normal routes ===============================================================
 

@@ -14,7 +14,6 @@ var Router = (function () {
         module.exports = function (app, passport) {
             var Image = require('../app/models/image');
             var User = require('../app/models/user');
-            var mongoose = require('mongoose');
             // normal routes ===============================================================
             // show the home page (will also have our login links)
             app.get('/', function (req, res) {
