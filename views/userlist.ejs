@@ -65,19 +65,17 @@
 
 <div class="container">
 
-    <div class="jumbotron text-center">
+    
         <h2> User List</h2>
-        <ul>
           <% for (i = 0; i < userlist.length; i++) { %>
             <li>
-              Email: <%= userlist[i].local.email %><br>
-              Password: <%= userlist[i].local.password %>
+              <b>Email:</b> <%= userlist[i].local.email %><br>
+              <b>Password:</b> <%= userlist[i].local.password %>
             </li>
           <% } %>
-        </ul>
+     
 
-
-    </div>
+</div>
 
     <!-- Bootstrap core JavaScript and IE10 viewport hack-->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
