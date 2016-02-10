@@ -196,6 +196,12 @@
           <!--TODO: Write function to display all comics thumbnails-->
           <div class="panel">
             <h2> Contributions </h2>
+            <%  for (i = 0; i < images.length; i++) { 
+                  var id = images[i].creatorID;
+                  if (String(id) == String(user._id)) { %>
+                    <img src="/uploads/<%=images[i].path%>">
+            <%    }
+                } %>
           </div>
 
         </div> <!-- END JUMBOTRON -->

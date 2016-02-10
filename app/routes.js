@@ -14,6 +14,7 @@ var Router = (function () {
         module.exports = function (app, passport) {
             var Image = require('../app/models/image');
             var User = require('../app/models/user');
+            var mongoose = require('mongoose');
             // normal routes ===============================================================
             // show the home page (will also have our login links)
             app.get('/', function (req, res) {
@@ -29,8 +30,11 @@ var Router = (function () {
             });
             // PROFILE SECTION =========================
             app.get('/profile', isLoggedIn, function (req, res) {
-                res.render('profile.ejs', {
-                    user: req.user
+                Image.find({}, function (err, docs) {
+                    res.render('profile.ejs', {
+                        user: req.user,
+                        images: docs
+                    });
                 });
             });
             // UPLOAD SECTION =========================

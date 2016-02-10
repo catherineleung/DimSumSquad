@@ -23,6 +23,7 @@ class Router {
 
             var Image = require('../app/models/image');
             var User = require('../app/models/user');
+            var mongoose = require('mongoose');
 
             // normal routes ===============================================================
 
@@ -42,10 +43,14 @@ class Router {
 
             // PROFILE SECTION =========================
             app.get('/profile', isLoggedIn, function(req, res) {
-                res.render('profile.ejs', {
-                    user: req.user
+                Image.find({}, function(err, docs){
+                    res.render('profile.ejs', {
+                        user: req.user,
+                        images: docs
+                    });
                 });
             });
+
 
             // UPLOAD SECTION =========================
             app.get('/upload', isLoggedIn, function(req, res) {
