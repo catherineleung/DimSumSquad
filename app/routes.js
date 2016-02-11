@@ -70,6 +70,16 @@ var Router = (function () {
                     });
                 });
             });
+            // BECOMING A CONTRIBUTOR ==============
+            app.get('/contribute', function (req, res) {
+                var query = { 'local.username': req.user.local.username };
+                var newData = { $set: { 'local.contributor': true } };
+                User.findOneAndUpdate(query, newData, { upsert: false }, function (err, doc) {
+                    if (err)
+                        return res.send(500, { error: err });
+                    res.redirect('/profile');
+                });
+            });
             // =============================================================================
             // IMAGE UPLOADING =============================================================
             // =============================================================================
@@ -85,10 +95,11 @@ var Router = (function () {
                     callback(null, './public/uploads');
                 },
                 filename: function (req, file, callback) {
+                    var uploadDate = Date.now();
                     // callback(null, file.fieldname + '_' + Date.now());
-                    callback(null, file.fieldname + '_' + Date.now() + '_' + file.originalname);
+                    callback(null, file.fieldname + '_' + uploadDate + '_' + file.originalname);
                     // name of the image file
-                    imageFileName = file.fieldname + '_' + Date.now() + '_' + file.originalname;
+                    imageFileName = file.fieldname + '_' + uploadDate + '_' + file.originalname;
                     image_file_list.push(new ImageFile(imageFileName));
                     // image_file_list[i] = new ImageFile(imageFileName);
                     // debugging
