@@ -113,20 +113,22 @@ var Router = (function () {
             var upload = multer({ storage: storage }).single('userPhoto');
             // POST/UPLOAD PICTURE ========================================
             app.post('/api/photo', function (req, res) {
-                upload(req, res, function (err) {
-                    if (err) {
-                        return res.end("Error uploading file.");
-                    }
-                    var imageFilePath = new Image({ path: imageFileName, creatorID: req.user._id });
-                    // add image ID to the creator's list of uploaded images
-                    User.findByIdAndUpdate(req.user._id, { $push: { 'local.images': imageFileName } }, { safe: true, upsert: true, new: true }, function (err, model) {
-                        console.log(err);
-                    });
-                    // save image path data to db
-                    imageFilePath.save(function (err, imageFilePath) {
-                        if (err)
-                            return console.error(err);
-                        res.redirect('/');
+                process.nextTick(function () {
+                    upload(req, res, function (err) {
+                        if (err) {
+                            return res.end("Error uploading file.");
+                        }
+                        var imageFilePath = new Image({ path: imageFileName, creatorID: req.user._id });
+                        // add image ID to the creator's list of uploaded images
+                        User.findByIdAndUpdate(req.user._id, { $push: { 'local.images': imageFileName } }, { safe: true, upsert: true, new: true }, function (err, model) {
+                            console.log(err);
+                        });
+                        // save image path data to db
+                        imageFilePath.save(function (err, imageFilePath) {
+                            if (err)
+                                return console.error(err);
+                            res.redirect('/');
+                        });
                     });
                 });
             });
