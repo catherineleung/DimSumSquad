@@ -14,6 +14,9 @@
   <link href="/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="/bootstrap/docs/assets/css/ie10-viewport-bug-workaround.css" rel="stylesheet">
   <link href="/bootstrap/docs/examples/navbar-static-top/navbar-static-top.css" rel="stylesheet">
+
+  <link href="/bootstrap/custom/custom.css" rel="stylesheet"> <!-- CUSTOM CSS FOR THIS PAGE ONLY - MICHAEL -->
+
   <script src="/bootstrap/docs/assets/js/ie-emulation-modes-warning.js"></script>
 </head>
 
@@ -29,27 +32,20 @@
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
         </button>
-        <a class="navbar-brand" href="./">SumComics</a>
+        <a class="navbar-brand" href="./"><span class="glyphicon glyphicon-heart"></span> DimSumSquad</a>
       </div>
       <div id="navbar" class="navbar-collapse collapse">
         <ul class="nav navbar-nav">
-
-        <!-- Menu navigation: add these later
-          <li class="active"><a href="#">Home</a></li>
-          <li class="dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
-            <ul class="dropdown-menu">
-              <li><a href="#">Action</a></li>
-              <li><a href="#">Another action</a></li>
-              <li><a href="#">Something else here</a></li>
-              <li role="separator" class="divider"></li>
-              <li class="dropdown-header">Nav header</li>
-              <li><a href="#">Separated link</a></li>
-              <li><a href="#">One more separated link</a></li>
-            </ul>
-          </li>
-        -->
+          <li><a href="/comics">Browse</a></li>
+          <li><a href="#">About</a></li>
       </ul>
+
+        <form class="navbar-form navbar-left" role="search">
+          <div class="form-group">
+            <input type="text" class="form-control" placeholder="Search">
+          </div>
+          <button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-search"></span></button>
+        </form>
 
       <ul class="nav navbar-nav navbar-right">
         <% if (!user) { %>
@@ -69,142 +65,75 @@
             </form>
           </div>
           <% } else { %>
-          <li><a href="/profile">Welcome, <%= user.local.email %>!</a></li>
+          <li><a href="/profile">Welcome, <%= user.local.username %>!</a></li>
           <li class="divider-vertical"></li>
           <li><a href="/logout">Log Out</a></li>
           <% } %>
         </ul>
-        
-          <!--<ul class="nav navbar-nav navbar-right">
-            <li><a href="#">Default</a></li>
-            <li class="active"><a href="#">Static top <span class="sr-only">(current)</span></a></li>
-            <li><a href="#">Fixed top</a></li>
-          </ul>-->
-        </div><!--/.nav-collapse -->
+        </div>
       </div>
     </nav>
 
-    <div class="container">
+      <!-- fixed tab spacing -->
+      <div class="container">
+        <div class="well">
+          <h1>My Profile</h1>
+          <hr>
+          <ul class="nav nav-tabs">
+            <li class="active"><a href="#account" data-toggle="tab" aria-expanded="true">Account</a></li>
+            <li class=""><a href="#favourites" data-toggle="tab" aria-expanded="false">Favourites</a></li>
+            <li class=""><a href="#contributions" data-toggle="tab" aria-expanded="false">Contributions</a></li>
+          </ul>
+          <br>
 
-      <!-- The profile picture -->
-      <div class="jumbotron">
-        <h1>Welcome back!</h1> <!--TODO: Needs to be replaced with a personal message-->
-        <div class="row">
-          <div class="col-md-3">
-            <img src="" alt="profile_pic" width="160" height="160">
+          <div id="myTabContent" class="tab-content">
+            <div class="tab-pane fade active in" id="account">
+              <div class="panel panel-primary">
+                <div class="panel-heading">
+                  <h1 class="panel-title"><span class="glyphicon glyphicon-user"></span> Local Account</h1>
+                </div>
+                <div class="panel-body">
+                  <div class="row">
+                    <div class="col-md-3 col-md-offset-3">
+                      <img src="" alt="profile-pic" width="150" height="150">
+                    </div>
+                    <div class="col-md-6">
+                      <strong>Username</strong>: <%= user.local.username %><br>
+                      <strong>Email</strong>: <%= user.local.email %><br>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="tab-pane fade" id="favourites">
+              <div class="panel panel-danger">
+                <div class="panel-heading">
+                  <h1 class="panel-title"><span class="glyphicon glyphicon-star"></span> My Favourites</h1>
+                </div>
+                <div class="panel-body">
+
+                </div>
+              </div>
+            </div>
+
+            <div class="tab-pane fade" id="contributions">
+              <div class="panel panel-success">
+                <div class="panel-heading">
+                  <h1 class="panel-title"><span class="glyphicon glyphicon-cloud-upload"></span> My Contributions</h1>
+                </div>
+                <div class="panel-body">
+                  <%  for (i = 0; i < images.length; i++) { 
+                        if (String(images[i].creatorID) == String(user._id)) { %>
+                          <img src="/uploads/<%=images[i].path%>">
+                  <%    }
+                      } %> 
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-
-          <!-- User Information -->
-          <!--TODO: Add in user cookie data into user info fields-->
-          <div class="row">
-
-            <!-- LOCAL INFORMATION -->
-            <div class="col-sm-6">
-              <div class="well">
-                <h3><span class="fa fa-user"></span> Local</h3>
-
-                <% if (user.local.email) { %>
-                <p>
-                  <strong>Display Name</strong>: <%= user._id %><br>
-                  <strong>Email</strong>: <%= user.local.email %><br>
-                </p>
-
-                <a href="/unlink/local" class="btn btn-default">Unlink</a>
-                <% } else { %>
-                <a href="/connect/local" class="btn btn-default">Connect Local</a>
-                <% } %>
-
-              </div>
-            </div>
-
-            <!-- FACEBOOK INFORMATION -->
-            <div class="col-sm-6">
-              <div class="well">
-                <h3 class="text-primary"><span class="fa fa-facebook"></span> Facebook</h3>
-
-                <!-- check if the user has this token (is the user authenticated with this social account) -->
-                <% if (user.facebook.token) { %>
-                <p>
-                  <strong>id</strong>: <%= user.facebook.id %><br>
-                  <strong>token</strong>: <%= user.facebook.token %><br>
-                  <strong>email</strong>: <%= user.facebook.email %><br>
-                  <strong>name</strong>: <%= user.facebook.name %><br>
-                </p>
-
-                <a href="/unlink/facebook" class="btn btn-primary">Unlink</a>
-                <% } else { %>
-                <a href="/connect/facebook" class="btn btn-primary">Connect Facebook</a>
-                <% } %>
-
-              </div>
-            </div>
-          </div>
-
-          <div class="row">
-
-            <!-- TWITTER INFORMATION -->
-            <div class="col-sm-6">
-              <div class="well">
-                <h3 class="text-info"><span class="fa fa-twitter"></span> Twitter</h3>
-
-                <% if (user.twitter.token) { %>
-                <p>
-                  <strong>id</strong>: <%= user.twitter.id %><br>
-                  <strong>token</strong>: <%= user.twitter.token %><br>
-                  <strong>display name</strong>: <%= user.twitter.displayName %><br>
-                  <strong>username</strong>: <%= user.twitter.username %>
-                </p>
-
-                <a href="/unlink/twitter" class="btn btn-info">Unlink</a>
-                <% } else { %>
-                <a href="/connect/twitter" class="btn btn-info">Connect Twitter</a>
-                <% } %>
-
-              </div>
-            </div>
-
-            <!-- GOOGLE INFORMATION -->
-            <div class="col-sm-6">
-              <div class="well">
-                <h3 class="text-danger"><span class="fa fa-google-plus"></span> Google+</h3>
-
-                <% if (user.google.token) { %>
-                <p>
-                  <strong>id</strong>: <%= user.google.id %><br>
-                  <strong>token</strong>: <%= user.google.token %><br>
-                  <strong>email</strong>: <%= user.google.email %><br>
-                  <strong>name</strong>: <%= user.google.name %>
-                </p>
-
-                <a href="/unlink/google" class="btn btn-danger">Unlink</a>
-                <% } else { %>
-                <a href="/connect/google" class="btn btn-danger">Connect Google</a>
-                <% } %>
-
-              </div>
-            </div>
-          </div>
-
-          <!-- Favourite Comics View -->
-          <div class="panel">
-            <h2> Favourites </h2>
-
-          </div>
-          <!-- Contributions View -->
-          <!--TODO: Display one of two views depending if the user is viewer or contributor-->
-          <!--TODO: Write function to display all comics thumbnails-->
-          <div class="panel">
-            <h2> Contributions </h2>
-            <%  for (i = 0; i < images.length; i++) { 
-                  if (String(images[i].creatorID) == String(user._id)) { %>
-                    <img src="/uploads/<%=images[i].path%>">
-            <%    }
-                } %>
-          </div>
-
-        </div> <!-- END JUMBOTRON -->
-      </div> <!-- END CONTAINER -->
+      </div>
 
       <!-- Bootstrap core JavaScript and IE10 viewport hack-->
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>

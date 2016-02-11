@@ -88,7 +88,7 @@ module.exports = function(passport) {
         }
 
         var usernameExists = false;
-        // check for pre-existing username
+        // check for pre-existing username - TODO case sensitivity?
         User.findOne({ 'local.username' :  req.body.username }, function(err, user) {
             // if there are any errors, return the error
             if (err)

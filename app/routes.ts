@@ -40,7 +40,8 @@ class Router {
                         res.send(err)
                     //res.json(users)
                     res.render('userlist', {
-                        "userlist": users
+                        userlist: users,
+                        user: req.user
                     });
                 });
             });
@@ -75,6 +76,17 @@ class Router {
                 req.logout();
                 res.redirect('/');
             });
+
+            // COMICS ==============================
+            app.get('/comics', function(req, res) {
+                Image.find({}, function(err, docs){
+                    res.render('comics.ejs', {
+                        user: req.user,
+                        images: docs
+                    });
+                });
+            });
+
 
             // =============================================================================
             // IMAGE UPLOADING =============================================================

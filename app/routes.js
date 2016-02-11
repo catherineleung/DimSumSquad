@@ -28,7 +28,8 @@ var Router = (function () {
                         res.send(err);
                     //res.json(users)
                     res.render('userlist', {
-                        "userlist": users
+                        userlist: users,
+                        user: req.user
                     });
                 });
             });
@@ -43,6 +44,9 @@ var Router = (function () {
             });
             // UPLOAD SECTION =========================
             app.get('/upload', isLoggedIn, function (req, res) {
+                // can only access page if user has contributor status
+                // the button is removed for non-contributors, but this is so that 
+                //     typing /upload in the browser will do nothing
                 if (req.user.local.contributor) {
                     res.render('upload.ejs', {
                         user: req.user
@@ -56,6 +60,15 @@ var Router = (function () {
             app.get('/logout', function (req, res) {
                 req.logout();
                 res.redirect('/');
+            });
+            // COMICS ==============================
+            app.get('/comics', function (req, res) {
+                Image.find({}, function (err, docs) {
+                    res.render('comics.ejs', {
+                        user: req.user,
+                        images: docs
+                    });
+                });
             });
             // =============================================================================
             // IMAGE UPLOADING =============================================================
