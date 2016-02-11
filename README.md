@@ -1,9 +1,8 @@
 # DimSumSquad
 
-NOTES:<br>
 <b>Michael</b><br>
-Currently working on comics pages and routes<br>
-@Feb 10, 4:40PM<br>
+- Currently working on profile page and comics pages/routes<br>
+- Feb 10, 8:00PM<br>
 <br><br>
 
 Install dependencies:
