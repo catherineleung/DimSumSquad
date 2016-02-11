@@ -136,6 +136,7 @@ class Router {
                     }
                     var imageFilePath = new Image({ path: imageFileName, creatorID: req.user._id });
                     
+                    // add image ID to the creator's list of uploaded images
                     User.findByIdAndUpdate(
                         req.user._id, 
                         {$push: {'local.images' : imageFilePath._id}},
@@ -144,6 +145,7 @@ class Router {
                             console.log(err);    
                     });
 
+                    // save image path data to db
                     imageFilePath.save(function (err, imageFilePath) {
                         if (err) return console.error(err);
                         res.redirect('/');
@@ -164,7 +166,7 @@ class Router {
 
             // process the login form
             app.post('/login', passport.authenticate('local-login', {
-                successRedirect: '/profile', // redirect to the secure profile section
+                successRedirect: '/', // redirect to the secure profile section
                 failureRedirect: '/login', // redirect back to the signup page if there is an error
                 failureFlash: true // allow flash messages
             }));

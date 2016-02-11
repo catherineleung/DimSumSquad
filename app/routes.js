@@ -107,9 +107,11 @@ var Router = (function () {
                         return res.end("Error uploading file.");
                     }
                     var imageFilePath = new Image({ path: imageFileName, creatorID: req.user._id });
+                    // add image ID to the creator's list of uploaded images
                     User.findByIdAndUpdate(req.user._id, { $push: { 'local.images': imageFilePath._id } }, { safe: true, upsert: true, new: true }, function (err, model) {
                         console.log(err);
                     });
+                    // save image path data to db
                     imageFilePath.save(function (err, imageFilePath) {
                         if (err)
                             return console.error(err);
@@ -128,7 +130,7 @@ var Router = (function () {
             });
             // process the login form
             app.post('/login', passport.authenticate('local-login', {
-                successRedirect: '/profile',
+                successRedirect: '/',
                 failureRedirect: '/login',
                 failureFlash: true // allow flash messages
             }));
