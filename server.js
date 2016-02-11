@@ -18,8 +18,7 @@ var Application = (function () {
         var configDB = require('./config/database.js');
         var url = configDB.url;
         var path = require('path');
-        var monk = require('monk');
-        var db = monk(url);
+        var contributions = [];
         // configuration ===============================================================
         mongoose.connect(url); // connect to our database
         require('./config/passport')(passport); // pass passport for configuration

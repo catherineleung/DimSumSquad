@@ -132,7 +132,7 @@
                   <h1 class="panel-title"><span class="glyphicon glyphicon-cloud-upload"></span> My Contributions</h1>
                 </div>
                 <div class="panel-body">
-                  <%  var contributions = [];
+                  <%  contributions = [];
                       for (i = 0; i < images.length; i++) { 
                         if (String(images[i].creatorID) == String(user._id)) {
                           contributions.push(i);

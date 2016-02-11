@@ -29,6 +29,8 @@ class Application {
         var url = configDB.url;
         var path = require('path');
 
+        var contributions = [];
+
         // configuration ===============================================================
         mongoose.connect(url); // connect to our database
         require('./config/passport')(passport); // pass passport for configuration
