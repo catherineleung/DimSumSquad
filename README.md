@@ -1,8 +1,9 @@
 # DimSumSquad
 
-NOTE:<br>
-Feb 8, 2016 @ 5:00PM<br> 
-Please re-clone the repo.
+NOTES:<br>
+<b>Michael</b><br>
+Currently working on comics pages and routes
+<br>
 
 Install dependencies:
 ```
