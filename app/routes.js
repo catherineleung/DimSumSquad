@@ -119,7 +119,7 @@ var Router = (function () {
                     }
                     var imageFilePath = new Image({ path: imageFileName, creatorID: req.user._id });
                     // add image ID to the creator's list of uploaded images
-                    User.findByIdAndUpdate(req.user._id, { $push: { 'local.images': imageFilePath._id } }, { safe: true, upsert: true, new: true }, function (err, model) {
+                    User.findByIdAndUpdate(req.user._id, { $push: { 'local.images': imageFileName } }, { safe: true, upsert: true, new: true }, function (err, model) {
                         console.log(err);
                     });
                     // save image path data to db

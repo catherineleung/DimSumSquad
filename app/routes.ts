@@ -152,7 +152,7 @@ class Router {
                     // add image ID to the creator's list of uploaded images
                     User.findByIdAndUpdate(
                         req.user._id, 
-                        {$push: {'local.images' : imageFilePath._id}},
+                        { $push: { 'local.images': imageFileName} },
                         {safe: true, upsert: true, new : true},
                         function(err, model){                                    
                             console.log(err);    

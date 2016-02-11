@@ -132,18 +132,12 @@
                   <h1 class="panel-title"><span class="glyphicon glyphicon-cloud-upload"></span> My Contributions</h1>
                 </div>
                 <div class="panel-body">
-                  <%  contributions = [];
-                      for (i = 0; i < images.length; i++) { 
-                        if (String(images[i].creatorID) == String(user._id)) {
-                          contributions.push(i);
-                        }
-                      }
-                      for (i = 0; i < contributions.length; i += 6) { %>
+                  <%  for (i = 0; i < user.local.images.length; i += 6) { %>
                             <div class="row">
-                              <%  for (j = i; j < (contributions.length - (i * 6)); j++) { %>
+                              <%  for (j = i; j < (user.local.images.length - (i * 6)); j++) { %>
                                     <div class="col-md-2">
-                                      <a href="/uploads/<%=images[(i * 6) + j].path%>" class="thumbnail">
-                                        <img src="/uploads/<%=images[(i * 6) + j].path%>" alt="" style="width:150px;height:150px">
+                                      <a href="/uploads/<%=user.local.images[(i * 6) + j]%>" class="thumbnail">
+                                        <img src="/uploads/<%=user.local.images[(i * 6) + j]%>" alt="" style="width:150px;height:150px">
                                       </a>
                                     </div>
                               <%  } %>

@@ -10,7 +10,7 @@ var userSchema = mongoose.Schema({
         password     : String,
         username     : String,
         contributor  : Boolean,
-        images       : Array    //Array of image ObjectId's
+        images       : Array    //Array of image paths
     },
     facebook         : {
         id           : String,
