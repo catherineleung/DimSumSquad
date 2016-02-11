@@ -63,23 +63,23 @@
       </div>
     </nav>
 
-<div class="container">
-<div class="col-sm-6 col-sm-offset-3">
-<div class="well">
-          <h2> User List</h2>
+    <div class="container">
+      <div class="col-sm-6 col-sm-offset-3">
+        <div class="well">
+          <h2> User List (Admin Panel Only)</h2>
           <hr>
           <small>
-          <% for (i = 0; i < userlist.length; i++) { %>
-            <div class="col-lg-4"><b>Email:</b><br> <%= userlist[i].local.email %></div>
-            <div class="col-lg-4"><b>Username:</b><br> <%= userlist[i].local.username %></div>
-            <div class="col-lg-4"><b>Contributor?</b><br> <%= userlist[i].local.contributor %></div>
-            <br><br>
-            <hr>
-          <% } %>
+            <% for (i = 0; i < userlist.length; i++) { %>
+              <div class="col-lg-4"><b>Email:</b><br> <%= userlist[i].local.email %></div>
+              <div class="col-lg-4"><b>Username:</b><br> <%= userlist[i].local.username %></div>
+              <div class="col-lg-4"><b>Contributor?</b><br> <%= userlist[i].local.contributor %></div>
+              <br><br>
+              <hr>
+            <% } %>
           </small>
-</div>
-</div>
-</div>
+        </div>
+      </div>
+    </div>
 
 
     <!-- Bootstrap core JavaScript and IE10 viewport hack-->

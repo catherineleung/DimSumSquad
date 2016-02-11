@@ -78,7 +78,28 @@ module.exports = function(passport) {
         if (email)
             email = email.toLowerCase(); // Use lower-case e-mails to avoid case-sensitive e-mail matching
 
-        // asynchronous
+        // check for missing fields or unmatching passwords and flash appropriate error message
+        if (!req.body.username) {
+            return done(null, false, req.flash('signupMessage', 'Please enter a username.'));
+        } else if (!req.body.terms) {
+            return done(null, false, req.flash('signupMessage', 'Please accept the terms and conditions.'));
+        } else if (password != req.body.passwordConfirm) {
+            return done(null, false, req.flash('signupMessage', 'Oops! Your passwords do not match.'));
+        }
+
+        var usernameExists = false;
+        // check for pre-existing username
+        User.findOne({ 'local.username' :  req.body.username }, function(err, user) {
+            // if there are any errors, return the error
+            if (err)
+                return done(err);
+            if (user)
+                usernameExists = true; 
+                // returning done here doesn't seem to stop user creation (even though error message flashes)
+                // setting a boolean instead and flash/call done further down
+        });
+
+        // asynchronous <-- is this even necessary? i think we could remove process.nextTick()? 221 TAs advice pls
         process.nextTick(function() {
             // if the user is not already logged in:
             if (!req.user) {
@@ -90,10 +111,8 @@ module.exports = function(passport) {
                     // check to see if theres already a user with that email
                     if (user) {
                         return done(null, false, req.flash('signupMessage', 'That email is already taken.'));
-                    } else if (password != req.body.passwordConfirm) {
-                        return done(null, false, req.flash('signupMessage', 'Oops! Your passwords do not match.'));
-                    } else if (!req.body.terms) {
-                        return done(null, false, req.flash('signupMessage', 'Please accept the terms and conditions.'));
+                    } else if (usernameExists) {
+                        return done(null, false, req.flash('signuppMessage', 'That username is already taken.'));
                     } else {
                         // create the user
                         var newUser            = new User();
@@ -101,12 +120,10 @@ module.exports = function(passport) {
                         newUser.local.email    = email;
                         newUser.local.password = newUser.generateHash(password);
                         newUser.local.username = req.body.username;
+
                         // check to see if they checked off the contributor box
-                        if (req.body.contributor) {
-                            newUser.local.contributor = true;
-                        } else {
-                            newUser.local.contributor = false;
-                        }
+                        // need true and false case because req.body.contributor does not produce boolean
+                        newUser.local.contributor = req.body.contributor ? true : false;
 
                         newUser.save(function(err) {
                             if (err)
@@ -118,6 +135,8 @@ module.exports = function(passport) {
 
                 });
             // if the user is logged in but has no local account...
+            // TODO:    Maybe remove this? We don't really have a need to unlink local accounts.
+            //          Maybe make it so that you have to make a local account before linking facebook, etc..
             } else if ( !req.user.local.email ) {
                 // ...presumably they're trying to connect a local account
                 // BUT let's check if the email used to connect a local account is being used by another user
@@ -128,10 +147,8 @@ module.exports = function(passport) {
                     if (user) {
                         return done(null, false, req.flash('loginMessage', 'That email is already taken.'));
                         // Using 'loginMessage instead of signupMessage because it's used by /connect/local'
-                    } else if (password != req.body.passwordConfirm) {
-                        return done(null, false, req.flash('signupMessage', 'Oops! Your passwords do not match.'));
-                    } else if (!req.body.terms) {
-                        return done(null, false, req.flash('signupMessage', 'Please accept the terms and conditions.'));
+                    } else if (usernameExists) {
+                        return done(null, false, req.flash('signupMessage', 'That username is already taken.'));
                     } else {
                         var user = req.user;
                         user.local.email = email;

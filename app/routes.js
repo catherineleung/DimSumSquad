@@ -43,9 +43,14 @@ var Router = (function () {
             });
             // UPLOAD SECTION =========================
             app.get('/upload', isLoggedIn, function (req, res) {
-                res.render('upload.ejs', {
-                    user: req.user
-                });
+                if (req.user.local.contributor) {
+                    res.render('upload.ejs', {
+                        user: req.user
+                    });
+                }
+                else {
+                    res.redirect('/');
+                }
             });
             // LOGOUT ==============================
             app.get('/logout', function (req, res) {

@@ -58,9 +58,16 @@ class Router {
 
             // UPLOAD SECTION =========================
             app.get('/upload', isLoggedIn, function(req, res) {
-                res.render('upload.ejs', {
-                    user: req.user
-                });
+                // can only access page if user has contributor status
+                // the button is removed for non-contributors, but this is so that 
+                //     typing /upload in the browser will do nothing
+                if (req.user.local.contributor) {
+                    res.render('upload.ejs', {
+                        user: req.user
+                    });
+                } else {
+                    res.redirect('/');
+                }
             });
 
             // LOGOUT ==============================
@@ -115,7 +122,7 @@ class Router {
                     if (err) {
                         return res.end("Error uploading file.");
                     }
-                    var imageFilePath = new Image({path: imageFileName, creatorID: req.user._id})
+                    var imageFilePath = new Image({ path: imageFileName, creatorID: req.user._id });
                     
                     User.findByIdAndUpdate(
                         req.user._id, 
