@@ -14,6 +14,7 @@ var Application = (function () {
         var morgan = require('morgan');
         var cookieParser = require('cookie-parser');
         var bodyParser = require('body-parser');
+        var methodOverride = require('method-override');
         var session = require('express-session');
         var configDB = require('./config/database.js');
         var url = configDB.url;
@@ -27,6 +28,8 @@ var Application = (function () {
         app.use(cookieParser()); // read cookies (needed for auth)
         app.use(bodyParser.json()); // get information from html forms
         app.use(bodyParser.urlencoded({ extended: true }));
+        app.use(bodyParser.json({ type: 'application/vnd.api+json' }));
+        app.use(methodOverride());
         app.set('view engine', 'ejs'); // set up ejs for templating
         // required for passport
         app.use(session({ secret: 'ilovescotchscotchyscotchscotch' })); // session secret

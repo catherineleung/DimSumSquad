@@ -23,6 +23,7 @@ class Application {
         var morgan = require('morgan');
         var cookieParser = require('cookie-parser');
         var bodyParser = require('body-parser');
+        var methodOverride = require('method-override');
         var session = require('express-session');
 
         var configDB = require('./config/database.js');
@@ -40,6 +41,8 @@ class Application {
         app.use(cookieParser()); // read cookies (needed for auth)
         app.use(bodyParser.json()); // get information from html forms
         app.use(bodyParser.urlencoded({ extended: true }));
+        app.use(bodyParser.json({ type: 'application/vnd.api+json' }));
+        app.use(methodOverride());
 
         app.set('view engine', 'ejs'); // set up ejs for templating
 

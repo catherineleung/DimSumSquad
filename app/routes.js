@@ -11,13 +11,27 @@ var ImageFile = (function () {
 })();
 var Router = (function () {
     function Router() {
+        var Image = require('../app/models/image');
+        var User = require('../app/models/user');
+        function getUsers(res) {
+            User.find(function (err, users) {
+                if (err) {
+                    res.send(err);
+                }
+                res.json(users);
+            });
+        }
+        ;
         module.exports = function (app, passport) {
-            var Image = require('../app/models/image');
-            var User = require('../app/models/user');
             // normal routes ===============================================================
             // show the home page (will also have our login links)
             app.get('/', function (req, res) {
                 res.render('index.ejs', {
+                    user: req.user
+                });
+            });
+            app.get('/angular', function (req, res) {
+                res.render('angular.ejs', {
                     user: req.user
                 });
             });
@@ -255,6 +269,26 @@ var Router = (function () {
                 user.google.token = undefined;
                 user.save(function (err) {
                     res.redirect('/profile');
+                });
+            });
+            // =============================================================================
+            // ANGULARJS ROUTES ============================================================
+            // =============================================================================
+            app.get('/api/users', function (req, res) {
+                getUsers(res);
+            });
+            app.post('/api/users', function (req, res) {
+                // FINISH THIS
+                getUsers(res);
+            });
+            app.delete('/api/users/:user_id', function (req, res) {
+                User.remove({
+                    _id: req.params.user_id
+                }, function (err, user) {
+                    if (err) {
+                        res.send(err);
+                    }
+                    getUsers(res);
                 });
             });
         };
