@@ -356,8 +356,23 @@ class Router {
             });
 
             app.post('/api/users', function (req, res) {
-                // FINISH THIS
-                getUsers(res);
+                var newUser            = new User();
+
+                newUser.local.email = req.body.email;
+                newUser.local.password = newUser.generateHash(req.body.password);
+                newUser.local.username = req.body.username;
+
+                // check to see if they checked off the contributor box
+                // need true and false case because req.body.contributor does not produce boolean
+                newUser.local.contributor = req.body.contributor ? true : false;
+
+                newUser.save(function(err) {
+                    if (err)
+                        res.send(err);
+
+                    getUsers(res);
+                });
+
             });
 
             app.delete('/api/users/:user_id', function(req, res) {

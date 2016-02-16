@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" ng-app="scotchUser" ng-cloak>
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -15,9 +15,23 @@
   <link href="/bootstrap/docs/assets/css/ie10-viewport-bug-workaround.css" rel="stylesheet">
   <link href="/bootstrap/docs/examples/navbar-static-top/navbar-static-top.css" rel="stylesheet">
   <script src="/bootstrap/docs/assets/js/ie-emulation-modes-warning.js"></script>
+
+  <!-- AngularJS -->
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular.min.js"></script>
+  <script src="/js/controllers/main.js"></script> <!-- load up our controller -->
+  <script src="/js/services/users.js"></script> <!-- load our user service -->
+  <script src="/js/core.js"></script> <!-- load our main application -->
+
+  <!-- ng cloak -->
+  <style>
+    [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+      display: none !important;
+    }
+  </style>
+
 </head>
 
-<body>
+<body ng-controller="mainController">
 
   <!-- Static navbar -->
   <nav class="navbar navbar-default navbar-static-top">
@@ -69,19 +83,12 @@
             <li><a href="/logout">Log Out</a></li>
         <% } %>
         </ul>
-        
-
-
-          <!--<ul class="nav navbar-nav navbar-right">
-            <li><a href="#">Default</a></li>
-            <li class="active"><a href="#">Static top <span class="sr-only">(current)</span></a></li>
-            <li><a href="#">Fixed top</a></li>
-          </ul>-->
-        </div><!--/.nav-collapse -->
+      
+        </div>
       </div>
     </nav>
 
-<div class="container">
+<!-- <div class="container">
   <div class="col-sm-6 col-sm-offset-3">
     <div class="well">
       <form class="form-horizontal" action="/signup" method="post">
@@ -133,6 +140,86 @@
 
           <hr>
 
+          <p>Already have an account? <a href="/login">Login here</a>.</p>
+          <p>Or go <a href="/">home</a>.</p>
+
+        </fieldset>
+      </form>
+    </div>
+  </div>
+</div> -->
+
+<div class="container">
+  <div class="col-sm-6 col-sm-offset-3">
+    <div class="well">
+      <form class="form-horizontal">
+        <fieldset>
+
+          <legend>Sign Up</legend>
+
+          <!-- Loading icon -->
+          <p class="text-center" ng-show="loading">
+            <span class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></span> Loading...
+          </p>
+
+          <div class="popover">Hey</div>
+
+          <div class="form-group {{ emailError }}">
+            <label for="inputEmail" class="col-lg-2 control-label">Email</label>
+            <div class="col-lg-10">
+              <input type="text" class="form-control" id="inputEmail" placeholder="Email" ng-model="formData.email">
+              <span class="label label-danger" ng-show="emailFlash">That email has already been taken.</span>
+            </div>
+          </div>
+
+          <div class="form-group {{ passwordError }}">
+            <label for="inputPassword" class="col-lg-2 control-label">Password</label>
+            <div class="col-lg-10">
+              <input type="password" class="form-control" id="inputPassword" placeholder="Password" ng-model="formData.password">
+            </div>
+          </div>
+
+          <div class="form-group {{ passwordError }}">
+            <label for="inputPasswordConfirm" class="col-lg-2 control-label"></label>
+            <div class="col-lg-10">
+              <input type="password" class="form-control" id="inputPasswordConfirm" placeholder="Confirm Password" ng-model="formData.passwordConfirm">
+              <span class="label label-danger" ng-show="passwordFlash">Oops! Your passwords do not match.</span>
+            </div>
+          </div>
+
+          <div class="form-group {{ usernameError }}">
+            <label for="username" class="col-lg-2 control-label">Username</label>
+            <div class="col-lg-10">
+              <input type="text" class="form-control" id="username" placeholder="Username" ng-model="formData.username">
+              <span class="label label-danger" ng-show="usernameFlash">That username is already taken.</span>
+            </div>
+          </div>
+
+          <div class="col-lg-10 col-lg-offset-2">
+            <label>
+              <input type="checkbox" ng-model="formData.contributor"> I would like to become a contributor.
+            </label>
+          </div>
+
+          <div class="col-lg-10 col-lg-offset-2">
+            <label>
+              <input type="checkbox" ng-model="formData.terms"> I agree to the <a href data-toggle="modal" data-target="#conditions">terms and conditions</a>.
+            </label>
+          </div>
+
+          <br><br><br>
+
+          <div class="col-lg-10 col-lg-offset-2 alert alert-danger" ng-show="termsFlash">
+            <strong>Oh snap!</strong> Did you read the terms and conditions?
+          </div>
+
+          <div class="form-group">
+            <div class="col-lg-10 col-lg-offset-2">
+              <button type="submit" class="btn btn-primary" ng-click="createUser()">Submit</button>
+            </div>
+          </div>
+
+          <hr>
           <p>Already have an account? <a href="/login">Login here</a>.</p>
           <p>Or go <a href="/">home</a>.</p>
 

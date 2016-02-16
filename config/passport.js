@@ -99,7 +99,7 @@ module.exports = function(passport) {
                 // setting a boolean instead and flash/call done further down
         });
 
-        // asynchronous <-- is this even necessary? i think we could remove process.nextTick()? 221 TAs advice pls
+        // asynchronous 
         process.nextTick(function() {
             // if the user is not already logged in:
             if (!req.user) {
@@ -112,7 +112,7 @@ module.exports = function(passport) {
                     if (user) {
                         return done(null, false, req.flash('signupMessage', 'That email is already taken.'));
                     } else if (usernameExists) {
-                        return done(null, false, req.flash('signuppMessage', 'That username is already taken.'));
+                        return done(null, false, req.flash('signupMessage', 'That username is already taken.'));
                     } else {
                         // create the user
                         var newUser            = new User();

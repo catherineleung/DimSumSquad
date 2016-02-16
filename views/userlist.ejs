@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" ng-app="scotchUser">
+<html lang="en" ng-app="scotchUser" ng-cloak>
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -21,6 +21,14 @@
   <script src="/js/controllers/main.js"></script> <!-- load up our controller -->
   <script src="/js/services/users.js"></script> <!-- load our user service -->
   <script src="/js/core.js"></script> <!-- load our main application -->
+
+  <!-- ng cloak -->
+  <style>
+    [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+      display: none !important;
+    }
+  </style>
+
 </head>
 
 <body ng-controller="mainController">
@@ -76,33 +84,9 @@
           <% } %>
         </ul>
 
-      
-
-
-          <!--<ul class="nav navbar-nav navbar-right">
-            <li><a href="#">Default</a></li>
-            <li class="active"><a href="#">Static top <span class="sr-only">(current)</span></a></li>
-            <li><a href="#">Fixed top</a></li>
-          </ul>-->
-        </div><!--/.nav-collapse -->
+        </div>
       </div>
     </nav>
-
-<!--     <div class="container">
-      <div class="well">
-        <h2> User List (Admin Panel Only)</h2>
-        <hr>
-        <small>
-          <% for (i = 0; i < userlist.length; i++) { %>
-            <div class="col-sm-4"><b>Email:</b><br> <%= userlist[i].local.email %></div>
-            <div class="col-sm-4"><b>Username:</b><br> <%= userlist[i].local.username %></div>
-            <div class="col-sm-4"><b>Contributor?</b><br> <%= userlist[i].local.contributor %></div>
-            <br><br>
-            <hr>
-          <% } %>
-        </small>
-      </div>
-    </div> -->
 
     <div class="container">
       <div class="well">
@@ -113,15 +97,13 @@
             <div class="col-sm-4"><b>Email:</b><br> {{ user.local.email }} </div>
             <div class="col-sm-4"><b>Username:</b><br> {{ user.local.username }} </div>
             <div class="col-sm-2"><b>Contributor?</b><br> {{ user.local.contributor }} </div>
-            <div class="col-sm-2"><button class="btn btn-danger" ng-click="deleteUser(user._id)">Delete</button></div>
+            <div class="col-sm-2"><button class="btn btn-sm btn-danger" ng-click="deleteUser(user._id)">Delete</button></div>
             <br><br>
             <hr>
           </div>
         </small>
       </div>
     </div>
-
-
 
     <!-- Bootstrap core JavaScript and IE10 viewport hack-->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
