@@ -2,6 +2,7 @@ selenium = require 'selenium-webdriver'
 chai = require 'chai'
 chai.use require 'chai-as-promised'
 expect = chai.expect
+loginInfo = Date.now().toString()
 
 before ->
   @timeout 10000
@@ -11,22 +12,52 @@ before ->
   @driver.getWindowHandle()
 
 after ->
-  
+  @driver.quit()
 
 describe 'DimSumSquad Automated Tests', ->
   beforeEach ->
-    @timeout 10000 #default was 2000ms, too short
-    @driver.get 'https://young-harbor-75843.herokuapp.com/'
+    @timeout 50000 #default was 2000ms, too short
+    @driver.get 'localhost:8080'
 
   it 'has \'SumComics\' as the window\'s title', ->
     expect(@driver.getTitle()).to.eventually.contain 'SumComics'
 
-  it 'links to the login page', ->
+  it 'log in with default account', ->
     @driver.findElement(linkText: 'LOG IN').click()
     @driver.manage().timeouts().implicitlyWait(10000)
     @driver.findElement(id: 'inputEmail').sendKeys('asdf')
     @driver.findElement(id: 'inputPassword').sendKeys('asdf')
-    @driver.findElement(linkText: 'LOGIN').click()
+    @driver.findElement(id: 'loginButton').click()
+
+  it 'log out of default account', ->
+    @driver.findElement(linkText: 'Log Out').click()
+
+  it 'sign up for a new account', ->
+    @driver.findElement(linkText: 'SIGN UP').click()
+    @driver.manage().timeouts().implicitlyWait(10000)
+    @driver.findElement(id: 'inputEmail').sendKeys(loginInfo)
+    @driver.findElement(id: 'inputPassword').sendKeys(loginInfo)
+    @driver.findElement(id: 'inputPasswordConfirm').sendKeys(loginInfo)
+    @driver.findElement(id: 'inputUsername').sendKeys(loginInfo)
+    @driver.findElement(id: 'contributor').click()
+    @driver.findElement(id: 'terms').click()
+    @driver.findElement(id: 'submit').click()
+
+  it 'log in with newly created account', ->
+    @driver.findElement(linkText: 'LOG IN').click()
+    @driver.manage().timeouts().implicitlyWait(10000)
+    @driver.findElement(id: 'inputEmail').sendKeys(loginInfo)
+    @driver.findElement(id: 'inputPassword').sendKeys(loginInfo)
+    @driver.findElement(id: 'loginButton').click()
+
+  it 'log out of newly created account', ->
+    @driver.findElement(linkText: 'Log Out').click()
+
+  it 'delete newly created account', ->
+    @driver.findElement(linkText: 'VIEW USERS').click()
+    @driver.manage().timeouts().implicitlyWait(10000)
+    @driver.findElement(id: loginInfo).click()
+
 
   # it 'has publication date', ->
   #   text = @driver.findElement(css: '.post .meta time').getText()

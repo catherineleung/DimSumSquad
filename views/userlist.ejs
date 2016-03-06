@@ -97,7 +97,7 @@
             <div class="col-sm-4"><b>Email:</b><br> {{ user.local.email }} </div>
             <div class="col-sm-4"><b>Username:</b><br> {{ user.local.username }} </div>
             <div class="col-sm-2"><b>Contributor?</b><br> {{ user.local.contributor }} </div>
-            <div class="col-sm-2"><button class="btn btn-sm btn-danger" ng-click="deleteUser(user._id)">Delete</button></div>
+            <div class="col-sm-2"><button class="btn btn-sm btn-danger" ng-click="deleteUser(user._id)" id="{{user.local.username}}">Delete</button></div>
             <br><br>
             <hr>
           </div>

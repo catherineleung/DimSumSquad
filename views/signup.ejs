@@ -190,20 +190,20 @@
           <div class="form-group {{ usernameError }}">
             <label for="username" class="col-lg-2 control-label">Username</label>
             <div class="col-lg-10">
-              <input type="text" class="form-control" id="username" placeholder="Username" ng-model="formData.username">
+              <input type="text" class="form-control" id="inputUsername" placeholder="Username" ng-model="formData.username">
               <span class="label label-danger" ng-show="usernameFlash">That username is already taken.</span>
             </div>
           </div>
 
           <div class="col-lg-10 col-lg-offset-2">
             <label>
-              <input type="checkbox" ng-model="formData.contributor"> I would like to become a contributor.
+              <input type="checkbox" ng-model="formData.contributor" id="contributor"> I would like to become a contributor.
             </label>
           </div>
 
           <div class="col-lg-10 col-lg-offset-2">
             <label>
-              <input type="checkbox" ng-model="formData.terms"> I agree to the <a href data-toggle="modal" data-target="#conditions">terms and conditions</a>.
+              <input type="checkbox" ng-model="formData.terms" id="terms"> I agree to the <a href data-toggle="modal" data-target="#conditions">terms and conditions</a>.
             </label>
           </div>
 
@@ -215,7 +215,7 @@
 
           <div class="form-group">
             <div class="col-lg-10 col-lg-offset-2">
-              <button type="submit" class="btn btn-primary" ng-click="createUser()">Submit</button>
+              <button type="submit" class="btn btn-primary" ng-click="createUser()" id="submit">Submit</button>
             </div>
           </div>
 
