@@ -1,22 +1,22 @@
 ///<reference path='../../types/DefinitelyTyped/node/node.d.ts'/>
 ///<reference path='../../types/DefinitelyTyped/express/express.d.ts'/>
 
-class Comic{
+class Comic {
 
-	constructor(){
+	constructor() {
 
 		var mongoose = require('mongoose');
 
 		// schema
-		var imageSchema = mongoose.Schema({
-			name: String,
-			creationDate: Date,
-			creatorID: {},
-
+		var comicSchema = mongoose.Schema({
+			title: String,
+			caption: String,
+			description: String,
+			creatorID: {}
 		});
 
 		// create the model
-		module.exports = mongoose.model('Image', imageSchema);
+		module.exports = mongoose.model('Comic', comicSchema);
 
 	}
 

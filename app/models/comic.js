@@ -1,12 +1,13 @@
 var mongoose = require('mongoose');
 
 // schema
-var imageSchema = mongoose.Schema({
-    name: String,
-    creationDate: Date,
-    creatorID: {},
-    
+var comicSchema = mongoose.Schema({
+    title: String,
+    caption: String,
+    description: String,
+    creatorID: {}
 });
 
 // create the model
-module.exports = mongoose.model('Image', imageSchema);
+module.exports = mongoose.model('Comic', comicSchema);
+

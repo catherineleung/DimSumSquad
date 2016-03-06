@@ -8,11 +8,12 @@ var ImageFile = (function () {
         return this.fileName;
     };
     return ImageFile;
-})();
+}());
 var Router = (function () {
     function Router() {
         var Image = require('../app/models/image');
         var User = require('../app/models/user');
+        var Comic = require('../app/models/comic.js');
         function getUsers(res) {
             User.find(function (err, users) {
                 if (err) {
@@ -141,9 +142,26 @@ var Router = (function () {
                         imageFilePath.save(function (err, imageFilePath) {
                             if (err)
                                 return console.error(err);
+                            console.log('photo upload successful!');
                             res.redirect('/');
                         });
                     });
+                });
+            });
+            // saves title, description, caption, tags =====================
+            app.post('/api/upload', function (req, res, next) {
+                var newComic = new Comic({
+                    title: req.body.title,
+                    caption: req.body.caption,
+                    description: req.body.description
+                });
+                console.log(req.body.title);
+                console.log(req.body.caption);
+                console.log(req.body.description);
+                newComic.save(function (err, comic) {
+                    if (err)
+                        return next(err);
+                    res.redirect('/');
                 });
             });
             // =============================================================================
@@ -310,5 +328,5 @@ var Router = (function () {
         }
     } // END CONSTRUCTOR
     return Router;
-})(); // END ROUTER CLASS
+}()); // END ROUTER CLASS
 var router = new Router();
