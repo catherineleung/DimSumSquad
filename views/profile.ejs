@@ -81,7 +81,8 @@
           <hr>
           <ul class="nav nav-tabs">
             <li class="active"><a href="#account" data-toggle="tab" aria-expanded="true">Account</a></li>
-            <li class=""><a href="#favourites" data-toggle="tab" aria-expanded="false">Favourites</a></li>
+          <!-- ADD ME BACK
+            <li class=""><a href="#favourites" data-toggle="tab" aria-expanded="false">Favourites</a></li> -->
             <li class=""><a href="#contributions" data-toggle="tab" aria-expanded="false">Contributions</a></li>
           </ul>
           <br>
@@ -97,7 +98,8 @@
                 <div class="panel-body">
                   <div class="row">
                     <div class="col-md-3 col-md-offset-3">
-                      <img src="" alt="profile-pic" width="150" height="150">
+                      <!-- ADD ME BACK -->
+                     <img src="" alt="profile-pic" width="150" height="150"> 
                     </div>
                     <div class="col-md-6">
                       <strong>Username</strong>: <%= user.local.username %><br>
@@ -112,18 +114,30 @@
                 </div>
               </div>
             </div>
-
-            <!-- FAVOURITES TAB -->
+            
+            <!-- ADD ME BACK -->
+            <!-- FAVOURITES TAB
             <div class="tab-pane fade" id="favourites">
               <div class="panel panel-danger">
                 <div class="panel-heading">
                   <h1 class="panel-title"><span class="glyphicon glyphicon-star"></span> My Favourites</h1>
                 </div>
                 <div class="panel-body">
-
+                  <% for (i = 0; i < user.local.favourites.length; i += 6) { %>
+                            <div class="row">
+                              <%  for (j = i; j < (user.local.favourites.length - (i * 6)); j++) { %>
+                                    <div class="col-md-2">
+                                      <a href="/uploads/<%=user.local.images[(i * 6) + j]%>" class="thumbnail">
+                                        <img src="/uploads/<%=user.local.images[(i * 6) + j]%>" alt="" style="width:150px;height:150px">
+                                      </a>
+                                    </div>
+                              <%  } %>
+                            </div>
+                      <%  } %>
                 </div>
               </div>
             </div>
+          -->
 
             <!-- CONTRIBUTIONS TAB -->
             <div class="tab-pane fade" id="contributions">
@@ -131,6 +145,8 @@
                 <div class="panel-heading">
                   <h1 class="panel-title"><span class="glyphicon glyphicon-cloud-upload"></span> My Contributions</h1>
                 </div>
+                <!-- Displays contributions -->
+                <!-- MODIFY: change hyperlink depending on the comic book which the images belongs to-->
                 <div class="panel-body">
                   <%  for (i = 0; i < user.local.images.length; i += 6) { %>
                             <div class="row">
@@ -144,6 +160,7 @@
                             </div>
                       <%  } %>
                 </div>
+                <a href="/uploads"> Create something new?</a>
               </div>
             </div>
 

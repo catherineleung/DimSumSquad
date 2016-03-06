@@ -2,10 +2,13 @@ var mongoose = require('mongoose');
 
 // schema
 var comicSchema = mongoose.Schema({
-    title: String,
-    caption: String,
-    description: String,
-    creatorID: {}
+	// Immutable information
+    title: String,			// Main comic title
+    description: String,	// Describes the comic theme or concept
+    creatorID: {},			// Sole creator
+
+    // Mutable 
+    chapters: Array			// Array of images or chapters
 });
 
 // create the model
