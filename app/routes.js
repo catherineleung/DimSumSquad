@@ -178,9 +178,18 @@ var Router = (function () {
                     tags: req.body.tags,
                     creatorID: req.user.local.username
                 });
+
+                // add comic title to the creator's list of created comics
+                User.findByIdAndUpdate(req.user._id, { $push: { 'local.comics': req.body.title } }, { safe: true, upsert: true, new: true }, function (err, model) {
+                    console.log(err);
+                });
+
+
                 console.log(req.body.title);
                 console.log(req.body.description);
                 console.log(req.body.tags);
+                console.log(req.user.local.username);
+
                 newComic.save(function (err, comic) {
                     if (err)
                         return next(err);

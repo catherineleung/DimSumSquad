@@ -18,6 +18,7 @@ var bcrypt = require('bcrypt-nodejs');
                 birthday: Date,
                 
                 //Comic arrays
+                comics: Array,    // Array of comics created
                 images: Array,    // Array of contributions
                 favourites: Array // Array of favourited comics
 
