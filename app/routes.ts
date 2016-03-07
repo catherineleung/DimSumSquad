@@ -94,11 +94,20 @@ class Router {
             });
 
             // COMICS ==============================
-            app.get('/comics', function(req, res) {
+            /*app.get('/comics', function(req, res) {
                 Image.find({}, function(err, docs){
                     res.render('comics.ejs', {
                         user: req.user,
                         images: docs
+                    });
+                });
+            });*/
+
+            app.get('/comics', function(req, res) {
+                Comic.find({}, function(err, docs) {
+                    res.render('comics.ejs', {
+                        user: req.user,
+                        comics: docs
                     });
                 });
             });
@@ -206,11 +215,13 @@ class Router {
                 var newComic = new Comic({
                     title : req.body.title,
                     description : req.body.description,
-                    tags : req.body.tags
+                    tags : req.body.tags,
+                    creatorID: req.user.local.username 
                 });
                 console.log(req.body.title);
                 console.log(req.body.description);
                 console.log(req.body.tags);
+                console.log(req.user.local.username);
 
                 newComic.save(function (err, comic) {
                     if (err)

@@ -77,17 +77,25 @@ var Router = (function () {
                 res.redirect('/');
             });
             // COMICS ==============================
-            app.get('/comics', function (req, res) {
-                Image.find({}, function (err, docs) {
+            /*app.get('/comics', function(req, res) {
+                Image.find({}, function(err, docs){
                     res.render('comics.ejs', {
                         user: req.user,
                         images: docs
                     });
                 });
+            });*/
+            app.get('/comics', function (req, res) {
+                Comic.find({}, function (err, docs) {
+                    res.render('comics.ejs', {
+                        user: req.user,
+                        comics: docs
+                    });
+                });
             });
             // CREATE A COMIC PAGE ================
             app.get('/create-comic', isLoggedIn, function (req, res) {
-                // can only access page if user ha s contributor status
+                // can only access page if user has contributor status
                 // the button is removed for non-contributors, but this is so that 
                 //     typing /upload in the browser will do nothing
                 if (req.user.local.contributor) {
@@ -162,12 +170,13 @@ var Router = (function () {
                     });
                 });
             });
-            /// CREATES A NEW COMIC ======================================
+            // CREATES A NEW COMIC ======================================
             app.post('/api/upload', function (req, res, next) {
                 var newComic = new Comic({
                     title: req.body.title,
                     description: req.body.description,
-                    tags: req.body.tags
+                    tags: req.body.tags,
+                    creatorID: req.user.local.username
                 });
                 console.log(req.body.title);
                 console.log(req.body.description);
