@@ -4,7 +4,8 @@ var mongoose = require('mongoose');
 // define the schema for our user model
 var imageSchema = mongoose.Schema({
 	//Intial + immutable information
-	creatorID: {},
+	uploaderID: String,
+	imageBelongsTo: String,    // title of comic that the image belongs to
 	chapter: Number,
     path: String,
 

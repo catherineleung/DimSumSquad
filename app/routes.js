@@ -155,11 +155,28 @@ var Router = (function () {
                         if (err) {
                             return res.end("Error uploading file.");
                         }
-                        var imageFilePath = new Image({ path: imageFileName, creatorID: req.user._id });
+
+                        // TESTING THIS =============================
+                        // gets last comic title in user's comic attribute
+                        var usersComicList = req.user.local.comics;
+                        var arrayLength = usersComicList.length;
+                        var mostRecentlyCreatedComic = usersComicList[arrayLength - 1];
+
+                        // prints out last comic contributed to
+                        console.log("User just created this comic: " + mostRecentlyCreatedComic); 
+
+                        // iterate through user's list of comics 
+                        //for (var i = 0; i < arrayLength; i++) {
+                        //    console.log(usersComicList[i]);
+                        //}
+
+                        var imageFilePath = new Image({ path: imageFileName, uploaderID: req.user.local.username, imageBelongsTo: mostRecentlyCreatedComic });
+
                         // add image ID to the creator's list of uploaded images
                         User.findByIdAndUpdate(req.user._id, { $push: { 'local.images': imageFileName } }, { safe: true, upsert: true, new: true }, function (err, model) {
                             console.log(err);
                         });
+
                         // save image path data to db
                         imageFilePath.save(function (err, imageFilePath) {
                             if (err)
@@ -185,10 +202,10 @@ var Router = (function () {
                 });
 
 
-                console.log(req.body.title);
-                console.log(req.body.description);
-                console.log(req.body.tags);
-                console.log(req.user.local.username);
+                // console.log(req.body.title);
+                // console.log(req.body.description);
+                // console.log(req.body.tags);
+                // console.log(req.user.local.username);
 
                 newComic.save(function (err, comic) {
                     if (err)

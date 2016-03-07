@@ -10,7 +10,7 @@ var comicSchema = mongoose.Schema({
     contributors: {},
 
     // Mutable 
-    chapters: Array			// Array of images or chapters
+    images: Array			// Array of images or chapters
 });
 
 // create the model
