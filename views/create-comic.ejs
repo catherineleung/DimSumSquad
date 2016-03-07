@@ -12,6 +12,7 @@
 
     <!-- Bootstrap core, IE10 viewport hack, and custom styles-->
     <link href="/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/bootstrap-tagsinput/dist/bootstrap-tagsinput.css" rel="stylesheet">
     <link href="/bootstrap/docs/assets/css/ie10-viewport-bug-workaround.css" rel="stylesheet">
     <link href="/bootstrap/docs/examples/navbar-static-top/navbar-static-top.css" rel="stylesheet">
     <script src="/bootstrap/docs/assets/js/ie-emulation-modes-warning.js"></script>
@@ -82,27 +83,23 @@
         </div>
       </nav>
 
-      <script language="javascript">
-        function() submitForms {
-          document.getElementById("uploadImageForm");
-          document.getElementById("uploadComicInfoForm");
-        }
-      </script>
-
 
 
 
       <!-- TODO : DISABLE THIS IF USER IS NOT CONTRIBUTOR -->
 
       <!--<div class="jumbotron text-center"> FIX THIS UPLOAD BUTTON TO MAKE IT LOOK PRETTY -->
-      
+
 
 
       <div class="container">
+
         <div class="col-sm-6 col-sm-offset-3">
           <div class="well">
             <fieldset>
               <legend>Create a Comic</legend>
+
+
               <div class="form-group">
 
                 <form id        =  "uploadComicInfoForm"
@@ -116,7 +113,7 @@
                   <input type="text" class="form-control" id="title" placeholder="Title" ng-model"formData.title" name="title">
                   <br>
                 </div>
-                  
+                
                   <!--<label for="caption" class="col-lg-2 control-label">Caption</label>
                 <div class="col-lg-10">
                   <input type="text" class="form-control" id="caption" placeholder="Caption" ng-model="formData.caption" name="caption">
@@ -137,25 +134,27 @@
 
                 <label for="tags" class="col-lg-2 control-label">Tags</label>
                 <div class="col-lg-10">
-                  <br>
-                  ........
+                  
+                  <input type="text" class="form-control" placeholder="Tags" name="tags" id="tags" data-role="tagsinput"/>
+
 
                 </div>
 
                 
-
-                <div class="col-lg-10">
-                  <br>
-                <input class="btn btn-primary" type="submit" value="Create my comic!" name="submit">
+                <div class="form-group">
+                  <div class="col-lg-10">
+                    <br>
+                    <input class="btn btn-primary" type="submit" value="Create my comic!" name="submit">
+                  </div>
                 </div>
 
-                  
+                
               </div>
 
             </fieldset>
 
           </form>
-       
+          
 
         </div>
       </div>
@@ -168,6 +167,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
     <script src="../bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="../bootstrap-tagsinput/dist/bootstrap-tagsinput.js"></script>
     <script src="../bootstrap/docs/assets/js/ie10-viewport-bug-workaround.js"></script>
   </body>
   </html>
