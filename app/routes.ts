@@ -205,7 +205,6 @@ class Router {
             app.post('/api/upload', function (req, res, next) {
                 var newComic = new Comic({
                     title : req.body.title,
-                    caption : req.body.caption,
                     description : req.body.description,
                     tags : req.body.tags
                 });
@@ -216,7 +215,7 @@ class Router {
                 newComic.save(function (err, comic) {
                     if (err)
                         return next(err);
-                    res.redirect('/');
+                    res.redirect('/upload');
                 });
             });
 

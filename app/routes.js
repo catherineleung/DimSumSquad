@@ -175,7 +175,7 @@ var Router = (function () {
                 newComic.save(function (err, comic) {
                     if (err)
                         return next(err);
-                    res.redirect('/');
+                    res.redirect('/upload');
                 });
             });
             // =============================================================================
