@@ -12,25 +12,25 @@ before ->
   @driver.getWindowHandle()
 
 after ->
-  @driver.quit()
+  # @driver.quit()
 
 describe 'DimSumSquad Automated Tests', ->
   beforeEach ->
-    @timeout 50000 #default was 2000ms, too short
+    @timeout 10000 #default was 2000ms, too short
     @driver.get 'localhost:8080'
 
   it 'has \'SumComics\' as the window\'s title', ->
     expect(@driver.getTitle()).to.eventually.contain 'SumComics'
 
-  it 'log in with default account', ->
+  it 'log in and out of default account', ->
     @driver.findElement(linkText: 'LOG IN').click()
     @driver.manage().timeouts().implicitlyWait(10000)
     @driver.findElement(id: 'inputEmail').sendKeys('asdf')
     @driver.findElement(id: 'inputPassword').sendKeys('asdf')
     @driver.findElement(id: 'loginButton').click()
-
-  it 'log out of default account', ->
+    @driver.manage().timeouts().implicitlyWait(10000)
     @driver.findElement(linkText: 'Log Out').click()
+    @driver.manage().timeouts().implicitlyWait(10000)
 
   it 'sign up for a new account', ->
     @driver.findElement(linkText: 'SIGN UP').click()
@@ -42,22 +42,22 @@ describe 'DimSumSquad Automated Tests', ->
     @driver.findElement(id: 'contributor').click()
     @driver.findElement(id: 'terms').click()
     @driver.findElement(id: 'submit').click()
+    @driver.manage().timeouts().implicitlyWait(10000)
 
-  it 'log in with newly created account', ->
+  it 'log in and out of newly created account', ->
     @driver.findElement(linkText: 'LOG IN').click()
     @driver.manage().timeouts().implicitlyWait(10000)
     @driver.findElement(id: 'inputEmail').sendKeys(loginInfo)
     @driver.findElement(id: 'inputPassword').sendKeys(loginInfo)
     @driver.findElement(id: 'loginButton').click()
-
-  it 'log out of newly created account', ->
+    @driver.manage().timeouts().implicitlyWait(10000)
     @driver.findElement(linkText: 'Log Out').click()
+    @driver.manage().timeouts().implicitlyWait(10000)
 
   it 'delete newly created account', ->
     @driver.findElement(linkText: 'VIEW USERS').click()
-    @driver.manage().timeouts().implicitlyWait(10000)
+    @driver.manage().timeouts().implicitlyWait(100000)
     @driver.findElement(id: loginInfo).click()
-
 
   # it 'has publication date', ->
   #   text = @driver.findElement(css: '.post .meta time').getText()
