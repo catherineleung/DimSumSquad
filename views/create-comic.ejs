@@ -102,24 +102,60 @@
         <div class="col-sm-6 col-sm-offset-3">
           <div class="well">
             <fieldset>
-              <legend>Upload to a Comic</legend>
+              <legend>Create a Comic</legend>
               <div class="form-group">
-                <form id        =  "uploadImageForm"
-                enctype   =  "multipart/form-data"
-                action    =  "/api/photo"
+
+                <form id        =  "uploadComicInfoForm"
+                enctype   =  "application/x-www-form-urlencoded"
+                action    =  "/api/upload"
                 method    =  "post">
-​
-                <input type="file" name="userPhoto" /> 
-                <br></br>
-                <input class="btn btn-primary" type="submit" value="Upload" name="submit">
-                </form>
+
+
+                <label for="title" class="col-lg-2 control-label">Title</label>
+                <div class="col-lg-10">
+                  <input type="text" class="form-control" id="title" placeholder="Title" ng-model"formData.title" name="title">
+                  <br>
+                </div>
+                  
+                  <!--<label for="caption" class="col-lg-2 control-label">Caption</label>
+                <div class="col-lg-10">
+                  <input type="text" class="form-control" id="caption" placeholder="Caption" ng-model="formData.caption" name="caption">
+                  <br>
+                </div>-->
+
+
+                <label for="description" class="col-lg-2 control-label">Description</label>
+                <div class="col-lg-10">
+                  <!--<input type="text" class="form-control" id="description" placeholder="Description" ng-model="formData.description" name="description">-->
+
+                  <textarea class = "form-control" id="description" placeholder="Description" ng-model="formData.description" name="description" style="overflow:auto;resize:none" rows = "3"></textarea>
+                  <br>
+                </div>
+
+
+
+
+                <label for="tags" class="col-lg-2 control-label">Tags</label>
+                <div class="col-lg-10">
+                  <br>
+                  ........
+
+                </div>
+
+                
+
+                <div class="col-lg-10">
+                  <br>
+                <input class="btn btn-primary" type="submit" value="Create my comic!" name="submit">
+                </div>
+
+                  
               </div>
-​
-  
+
             </fieldset>
 
           </form>
-        </form>
+       
 
         </div>
       </div>
