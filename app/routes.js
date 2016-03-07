@@ -148,7 +148,7 @@ var Router = (function () {
                 }
             });
             var upload = multer({ storage: storage }).single('userPhoto');
-            // POST/UPLOAD PICTURE ========================================
+            // POST/UPLOAD PICTURE ======================================== (after creating a new comic)
             app.post('/api/photo', function (req, res) {
                 process.nextTick(function () {
                     upload(req, res, function (err) {
@@ -170,7 +170,7 @@ var Router = (function () {
                         //    console.log(usersComicList[i]);
                         //}
 
-                        var imageFilePath = new Image({ path: imageFileName, uploaderID: req.user.local.username, imageBelongsTo: mostRecentlyCreatedComic });
+                        var imageFilePath = new Image({ path: imageFileName, uploaderID: req.user.local.username, imageBelongsTo: mostRecentlyCreatedComic, chapter: 1 });
 
                         // add image ID to the creator's list of uploaded images
                         User.findByIdAndUpdate(req.user._id, { $push: { 'local.images': imageFileName } }, { safe: true, upsert: true, new: true }, function (err, model) {
@@ -193,7 +193,8 @@ var Router = (function () {
                     title: req.body.title,
                     description: req.body.description,
                     tags: req.body.tags,
-                    creatorID: req.user.local.username
+                    creatorID: req.user.local.username,
+                    chapters: 1
                 });
 
                 // add comic title to the creator's list of created comics
