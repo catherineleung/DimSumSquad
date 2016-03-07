@@ -5,6 +5,7 @@ var comicSchema = mongoose.Schema({
 	// Immutable information
     title: String,			// Main comic title
     description: String,	// Describes the comic theme or concept
+    tags: String,           // Tags ... list of Strings (e.g. "Funny,Sad,Happy")
     creatorID: {},			// Sole creator
 
     // Mutable 
