@@ -38,7 +38,7 @@
         <ul class="nav navbar-nav">
           <li><a href="/comics">Browse</a></li>
           <li><a href="#">About</a></li>
-      </ul>
+        </ul>
 
         <form class="navbar-form navbar-left" role="search">
           <div class="form-group">
@@ -47,133 +47,135 @@
           <button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-search"></span></button>
         </form>
 
-      <ul class="nav navbar-nav navbar-right">
-        <% if (!user) { %>
-        <li><a href="/signup">Sign Up</a></li>
-        <li class="divider-vertical"></li>
-        <li class="dropdown">
-          <a class="dropdown-toggle" href="#" data-toggle="dropdown">Sign In<strong class="caret"></strong></a>
-          <div class="dropdown-menu" style="padding: 20px; padding-bottom: 15px;">
-            <!-- Login form here-->
-            <form action="/login" method="post" accept-charset="UTF-8">
-              <input id="username" style="margin-bottom: 15px;" type="text" name="email" size="30" placeholder="Username">
-              <input id="password" style="margin-bottom: 15px;" type="password" name="password" size="30" placeholder="Password">
-              <input id="user_remember_me" style="float: left; margin-right: 10px;" type="checkbox" name="remember_me" value="1" />
-              <label class="string optional" for="user_remember_me"> Remember me</label>
-
-              <input class="btn btn-primary" style="clear: left; width: 100%; height: 32px; font-size: 13px;" type="submit" name="commit" value="Sign In" />
-            </form>
-          </div>
-          <% } else { %>
-          <li><a href="/profile">Welcome, <%= user.local.username %>!</a></li>
+        <ul class="nav navbar-nav navbar-right">
+          <% if (!user) { %>
+          <li><a href="/signup">Sign Up</a></li>
           <li class="divider-vertical"></li>
-          <li><a href="/logout">Log Out</a></li>
-          <% } %>
-        </ul>
+          <li class="dropdown">
+            <a class="dropdown-toggle" href="#" data-toggle="dropdown">Sign In<strong class="caret"></strong></a>
+            <div class="dropdown-menu" style="padding: 20px; padding-bottom: 15px;">
+              <!-- Login form here-->
+              <form action="/login" method="post" accept-charset="UTF-8">
+                <input id="username" style="margin-bottom: 15px;" type="text" name="email" size="30" placeholder="Username">
+                <input id="password" style="margin-bottom: 15px;" type="password" name="password" size="30" placeholder="Password">
+                <input id="user_remember_me" style="float: left; margin-right: 10px;" type="checkbox" name="remember_me" value="1" />
+                <label class="string optional" for="user_remember_me"> Remember me</label>
+
+                <input class="btn btn-primary" style="clear: left; width: 100%; height: 32px; font-size: 13px;" type="submit" name="commit" value="Sign In" />
+              </form>
+            </div>
+            <% } else { %>
+            <li><a href="/profile">Welcome, <%= user.local.username %>!</a></li>
+            <li class="divider-vertical"></li>
+            <li><a href="/logout">Log Out</a></li>
+            <% } %>
+          </ul>
         </div>
       </div>
     </nav>
 
-      <!-- PROFILE BODY CONTENT -->
-      <div class="container">
-        <div class="well">
-          <h1>My Profile</h1>
-          <hr>
-          <ul class="nav nav-tabs">
-            <li class="active"><a href="#account" data-toggle="tab" aria-expanded="true">Account</a></li>
-          <!-- ADD ME BACK
-            <li class=""><a href="#favourites" data-toggle="tab" aria-expanded="false">Favourites</a></li> -->
-            <li class=""><a href="#contributions" data-toggle="tab" aria-expanded="false">Contributions</a></li>
-          </ul>
-          <br>
+    <!-- PROFILE BODY CONTENT -->
+    <div class="container">
+      <div class="well">
+        <h1>My Profile</h1>
+        <hr>
+        <ul class="nav nav-tabs">
+          <li class="active"><a href="#account" data-toggle="tab" aria-expanded="true">Account</a></li>
+          <li class=""><a href="#favourites" data-toggle="tab" aria-expanded="false">Favourites</a></li>
+          <li class=""><a href="#contributions" data-toggle="tab" aria-expanded="false">Contributions</a></li>
+        </ul>
+        <br>
 
-          <div id="myTabContent" class="tab-content">
+        <div id="myTabContent" class="tab-content">
 
-            <!-- ACCOUNT TAB -->
-            <div class="tab-pane fade active in" id="account">
-              <div class="panel panel-primary">
-                <div class="panel-heading">
-                  <h1 class="panel-title"><span class="glyphicon glyphicon-user"></span> Local Account</h1>
-                </div>
-                <div class="panel-body">
-                  <div class="row">
-                    <div class="col-md-3 col-md-offset-3">
-                      <!-- ADD ME BACK -->
-                     <img src="" alt="profile-pic" width="150" height="150"> 
-                    </div>
-                    <div class="col-md-6">
-                      <strong>Username</strong>: <%= user.local.username %><br>
-                      <strong>Email</strong>: <%= user.local.email %><br><br>
-                      <%  if (user.local.contributor) { %>
-                            <span class="label label-success">You are a contributor!</span><br>
-                      <%  } else { %>
-                            <a href="/contribute" class="btn btn-success"><span class="fa fa-user"></span> Become a Contributor</a><br>
-                      <%  } %>
-                    </div>
+          <!-- ACCOUNT TAB -->
+          <div class="tab-pane fade active in" id="account">
+            <div class="panel panel-primary">
+              <div class="panel-heading">
+                <h1 class="panel-title"><span class="glyphicon glyphicon-user"></span> Local Account</h1>
+              </div>
+              <div class="panel-body">
+                <div class="row">
+                  <div class="col-md-3 col-md-offset-3">
+                    <% if (user.local.picture) {%>
+                    <img src="/pictures/<%=user.local.picture%>" alt="Profile picture" style="width:150px;height:150px"> 
+                    <% } else { %>
+                    <img src="app_images/generic_picture.png" alt="Generic" style="max-width:50%;max-height:50%"> 
+                    <% } %>
+                  </div>
+                  <div class="col-md-6">
+                    <strong>Username</strong>: <%= user.local.username %><br>
+                    <strong>Email</strong>: <%= user.local.email %><br>
+                    <strong>Birthday</strong>: <%= user.local.birthday %><br>
+                    <strong>Description</strong>: <%= user.local.description %><br><br>
+                    <%  if (user.local.contributor) { %>
+                    <span class="label label-success">You are a contributor!</span><br>
+                    <%  } else { %>
+                    <a href="/contribute" class="btn btn-success"><span class="fa fa-user"></span> Become a Contributor</a><br>
+                    <%  } %>
                   </div>
                 </div>
               </div>
             </div>
-            
-            <!-- ADD ME BACK -->
-            <!-- FAVOURITES TAB
-            <div class="tab-pane fade" id="favourites">
-              <div class="panel panel-danger">
-                <div class="panel-heading">
-                  <h1 class="panel-title"><span class="glyphicon glyphicon-star"></span> My Favourites</h1>
-                </div>
-                <div class="panel-body">
-                  <% for (i = 0; i < user.local.favourites.length; i += 6) { %>
-                            <div class="row">
-                              <%  for (j = i; j < (user.local.favourites.length - (i * 6)); j++) { %>
-                                    <div class="col-md-2">
-                                      <a href="/uploads/<%=user.local.images[(i * 6) + j]%>" class="thumbnail">
-                                        <img src="/uploads/<%=user.local.images[(i * 6) + j]%>" alt="" style="width:150px;height:150px">
-                                      </a>
-                                    </div>
-                              <%  } %>
-                            </div>
-                      <%  } %>
-                </div>
-              </div>
-            </div>
-          -->
-
-            <!-- CONTRIBUTIONS TAB -->
-            <div class="tab-pane fade" id="contributions">
-              <div class="panel panel-success">
-                <div class="panel-heading">
-                  <h1 class="panel-title"><span class="glyphicon glyphicon-cloud-upload"></span> My Contributions</h1>
-                </div>
-                <!-- Displays contributions -->
-                <!-- MODIFY: change hyperlink depending on the comic book which the images belongs to-->
-                <div class="panel-body">
-                  <%  for (i = 0; i < user.local.images.length; i += 6) { %>
-                            <div class="row">
-                              <%  for (j = i; j < (user.local.images.length - (i * 6)); j++) { %>
-                                    <div class="col-md-2">
-                                      <a href="/uploads/<%=user.local.images[(i * 6) + j]%>" class="thumbnail">
-                                        <img src="/uploads/<%=user.local.images[(i * 6) + j]%>" alt="" style="width:150px;height:150px">
-                                      </a>
-                                    </div>
-                              <%  } %>
-                            </div>
-                      <%  } %>
-                </div>
-                <a href="/uploads"> Create something new?</a>
-              </div>
-            </div>
-
           </div>
-          
-        </div>
-      </div>
-      <!-- END PROFILE BODY CONTENT -->
 
-      <!-- Bootstrap core JavaScript and IE10 viewport hack-->
-      <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-      <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
-      <script src="../bootstrap/dist/js/bootstrap.min.js"></script>
-      <script src="../bootstrap/docs/assets/js/ie10-viewport-bug-workaround.js"></script>
-    </body>
-    </html>
+          <!-- FAVOURITES TAB -->
+          <div class="tab-pane fade" id="favourites">
+            <div class="panel panel-danger">
+              <div class="panel-heading">
+                <h1 class="panel-title"><span class="glyphicon glyphicon-star"></span> My Favourites</h1>
+              </div>
+              <div class="panel-body">
+                <% for (i = 0; i < user.local.favourites.length; i += 6) { %>
+                <div class="row">
+                  <%  for (j = i; j < (user.local.favourites.length - (i * 6)); j++) { %>
+                  <div class="col-md-2">
+                    <a href="/uploads/<%=user.local.images[(i * 6) + j]%>" class="thumbnail">
+                      <img src="/uploads/<%=user.local.images[(i * 6) + j]%>" alt="" style="width:150px;height:150px">
+                    </a>
+                  </div>
+                  <%  } %>
+                </div>
+                <%  } %>
+              </div>
+            </div>
+          </div>
+
+          <!-- CONTRIBUTIONS TAB -->
+          <div class="tab-pane fade" id="contributions">
+            <div class="panel panel-success">
+              <div class="panel-heading">
+                <h1 class="panel-title"><span class="glyphicon glyphicon-cloud-upload"></span> My Contributions</h1>
+              </div>
+              <!-- Displays contributions -->
+              <!-- MODIFY: change hyperlink depending on the comic book which the images belongs to-->
+              <div class="panel-body">
+                <%  for (i = 0; i < user.local.images.length; i += 6) { %>
+                <div class="row">
+                  <%  for (j = i; j < (user.local.images.length - (i * 6)); j++) { %>
+                  <div class="col-md-2">
+                    <a href="/uploads/<%=user.local.images[(i * 6) + j]%>" class="thumbnail">
+                      <img src="/uploads/<%=user.local.images[(i * 6) + j]%>" alt="" style="width:150px;height:150px">
+                    </a>
+                  </div>
+                  <%  } %>
+                </div>
+                <%  } %>
+              </div>
+              <a href="/upload"> Start something new?</a>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+    <!-- END PROFILE BODY CONTENT -->
+
+    <!-- Bootstrap core JavaScript and IE10 viewport hack-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
+    <script src="../bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="../bootstrap/docs/assets/js/ie10-viewport-bug-workaround.js"></script>
+  </body>
+  </html>
