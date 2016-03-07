@@ -201,16 +201,17 @@ class Router {
             });
 
 
-            // saves title, description, caption, tags =====================
+            // CREATES A NEW COMIC ======================================
             app.post('/api/upload', function (req, res, next) {
                 var newComic = new Comic({
                     title : req.body.title,
                     caption : req.body.caption,
-                    description : req.body.description
+                    description : req.body.description,
+                    tags : req.body.tags
                 });
                 console.log(req.body.title);
-                console.log(req.body.caption);
                 console.log(req.body.description);
+                console.log(req.body.tags);
 
                 newComic.save(function (err, comic) {
                     if (err)
