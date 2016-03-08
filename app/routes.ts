@@ -93,6 +93,20 @@ class Router {
                 res.redirect('/');
             });
 
+
+            // COMIC PAGE =========================
+            app.get('/comic', function(req, res) {
+                // var hidden_value = req.getElementbyId("comic_get").innerHTML = req.getElementById("comic_get").value;
+                // console.log("This should be the title of the comic");
+                // console.log(hidden_value);
+                Comic.find({}, function(err, docs) {
+                    res.render('comic.ejs', {
+                        user: req.user,
+                        // comic: docs[req.index]
+                    });
+                });
+            });
+
             // COMICS ==============================
             /*app.get('/comics', function(req, res) {
                 Image.find({}, function(err, docs){

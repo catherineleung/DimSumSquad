@@ -76,6 +76,17 @@ var Router = (function () {
                 req.logout();
                 res.redirect('/');
             });
+            // COMIC PAGE =========================
+            app.get('/comic', function (req, res) {
+                // var hidden_value = req.getElementbyId("comic_get").innerHTML = req.getElementById("comic_get").value;
+                // console.log("This should be the title of the comic");
+                // console.log(hidden_value);
+                Comic.find({}, function (err, docs) {
+                    res.render('comic.ejs', {
+                        user: req.user
+                    });
+                });
+            });
             // COMICS ==============================
             /*app.get('/comics', function(req, res) {
                 Image.find({}, function(err, docs){
@@ -148,35 +159,18 @@ var Router = (function () {
                 }
             });
             var upload = multer({ storage: storage }).single('userPhoto');
-            // POST/UPLOAD PICTURE ======================================== (after creating a new comic)
+            // POST/UPLOAD PICTURE ========================================
             app.post('/api/photo', function (req, res) {
                 process.nextTick(function () {
                     upload(req, res, function (err) {
                         if (err) {
                             return res.end("Error uploading file.");
                         }
-
-                        // TESTING THIS =============================
-                        // gets last comic title in user's comic attribute
-                        var usersComicList = req.user.local.comics;
-                        var arrayLength = usersComicList.length;
-                        var mostRecentlyCreatedComic = usersComicList[arrayLength - 1];
-
-                        // prints out last comic contributed to
-                        console.log("User just created this comic: " + mostRecentlyCreatedComic); 
-
-                        // iterate through user's list of comics 
-                        //for (var i = 0; i < arrayLength; i++) {
-                        //    console.log(usersComicList[i]);
-                        //}
-
-                        var imageFilePath = new Image({ path: imageFileName, uploaderID: req.user.local.username, imageBelongsTo: mostRecentlyCreatedComic, chapter: 1 });
-
+                        var imageFilePath = new Image({ path: imageFileName, creatorID: req.user._id });
                         // add image ID to the creator's list of uploaded images
                         User.findByIdAndUpdate(req.user._id, { $push: { 'local.images': imageFileName } }, { safe: true, upsert: true, new: true }, function (err, model) {
                             console.log(err);
                         });
-
                         // save image path data to db
                         imageFilePath.save(function (err, imageFilePath) {
                             if (err)
@@ -193,21 +187,12 @@ var Router = (function () {
                     title: req.body.title,
                     description: req.body.description,
                     tags: req.body.tags,
-                    creatorID: req.user.local.username,
-                    chapters: 1
+                    creatorID: req.user.local.username
                 });
-
-                // add comic title to the creator's list of created comics
-                User.findByIdAndUpdate(req.user._id, { $push: { 'local.comics': req.body.title } }, { safe: true, upsert: true, new: true }, function (err, model) {
-                    console.log(err);
-                });
-
-
-                // console.log(req.body.title);
-                // console.log(req.body.description);
-                // console.log(req.body.tags);
-                // console.log(req.user.local.username);
-
+                console.log(req.body.title);
+                console.log(req.body.description);
+                console.log(req.body.tags);
+                console.log(req.user.local.username);
                 newComic.save(function (err, comic) {
                     if (err)
                         return next(err);
