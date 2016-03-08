@@ -83,7 +83,8 @@ var Router = (function () {
                 // console.log(hidden_value);
                 Comic.find({}, function (err, docs) {
                     res.render('comic.ejs', {
-                        user: req.user
+                        user: req.user,
+                        comics: docs
                     });
                 });
             });

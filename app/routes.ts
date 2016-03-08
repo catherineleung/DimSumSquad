@@ -102,7 +102,7 @@ class Router {
                 Comic.find({}, function(err, docs) {
                     res.render('comic.ejs', {
                         user: req.user,
-                        // comic: docs[req.index]
+                        comics: docs
                     });
                 });
             });
