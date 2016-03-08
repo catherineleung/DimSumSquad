@@ -17,6 +17,18 @@
   <script src="/bootstrap/docs/assets/js/ie-emulation-modes-warning.js"></script>
 </head>
 
+<!-- Bootstrap core JavaScript and IE10 viewport hack-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
+    <script src="../bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="../bootstrap/docs/assets/js/ie10-viewport-bug-workaround.js"></script>
+
+    <!-- AngularJS -->
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular.min.js"></script>
+  <script src="/js/controllers/main.js"></script> <!-- load up our controller -->
+  <script src="/js/services/users.js"></script> <!-- load our user service -->
+  <script src="/js/core.js"></script> <!-- load our main application -->
+
 <body>
 
   <!-- Static navbar -->
@@ -120,6 +132,25 @@ document.write(param1var);
         <h5>This comic was started by: <%= comics[0].creatorID %>!</h5>
         </div>
       </div>
+
+      <!-- LIKE <3 BUTTON -->
+
+        <div class="like button" type="submit">
+        <body ng-app="userController" ng-controller="comicController">
+        <a href="#" class="btn btn-success btn-med">
+        <span class="glyphicon glyphicon-heart"></span>
+            <a ng-click="like()" ng-init= "numberOfLikes=0">
+            <p> Likes: {{ numberOfLikes }} </p>
+            </a>
+        </body>
+        </a>
+        </div>
+
+
+        </div>
+      </div>
+
+
 
 
 
