@@ -196,8 +196,15 @@ var upload = multer({ storage: storage }).single('userPhoto');
                             console.log(err);
                         });
 
+                        // add image ID to the comic's list of images
+                        Comic.findOne({title : mostRecentlyCreatedComic}, function(err, obj) {
+                            Comic.findByIdAndUpdate(obj._id, { $push: { 'images' : imageFileName } }, { safe: true, upsert: true, new: true }, function (err, model) {
+                                console.log(err);
+                            });
+                        });
 
 
+    
                         // save image path data to db
                         imageFilePath.save(function (err, imageFilePath) {
                             if (err)
