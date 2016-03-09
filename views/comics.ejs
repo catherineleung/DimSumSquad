@@ -74,6 +74,12 @@
       </div>
     </nav>
 
+    <script type="text/javascript">
+    alert("get path");
+    var path = <% comics[5].title %>;
+    alert(path);
+    </script>
+
     <div class="container-two">
       <div class="well">
         <h2>Browse Comics 2</h2>
@@ -82,10 +88,10 @@
               <div class="row">
                   <% for (k = i; k < comics.length; k++) { %>
                       <div class="col-md-2">
-                        <h5> Title: <%= comics[k].title %>!</h5>
-                        <h5> Contributors: <%= comics[k].creatorID %>!</h5>
+                        <h5> Title: <%= comics[k].title %></h5>
+                        <h5> Contributors: <%= comics[k].creatorID %></h5>
                         <a href="/comic" class="thumbnail">
-                          <img src="/app_images/generic_picture.png" alt="" style="width:150px;height:150px">
+                          <img src="/uploads/" + <%= comics[k].images[0] %> alt="" style="width:150px;height:150px">
                         </a>
 
                 <!-- testing variable passing -->
@@ -104,7 +110,10 @@
                                 method    =  "get">  
 
 
-                                <input type="hidden" id="comic_get" name="comic_get" value= <%= k %>> 
+                                <input type="hidden" id="comic_title" name="comic_title" value= <%= comics[k].title %>> 
+                                <input type="hidden" id="comic_description" name="comic_description" value= <%= comics[k].description %>> 
+                                <input type="hidden" id="comic_creatorID" name="comic_creatorID" value= <%= comics[k].creatorID %>> 
+                                <input type="hidden" id="comic_tags" name="comic_tags" value= <%= comics[k].tags %>> 
 
                                 <!-- (1) TRY TO PASS THE TITLE IN AS A HIDDEN VALUE, ALERT WITH TITLE SHOULD POP UP -->
                                 <!-- <input class="btn btn-primary" onclick="printIt()" value="Read"> -->

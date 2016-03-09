@@ -91,8 +91,12 @@
 
 <script>
 
-var param1var = getQueryVariable("comic_get");
-alert(param1var);
+var title = getQueryVariable("comic_title");
+var description = getQueryVariable("comic_description");
+var creatorID = getQueryVariable("comic_creatorID");
+var tags = getQueryVariable("comic_tags");
+
+
 
 function getQueryVariable(variable) {
   var query = window.location.search.substring(1);
@@ -100,7 +104,6 @@ function getQueryVariable(variable) {
   for (var i=0;i<vars.length;i++) {
     var pair = vars[i].split("=");
     if (pair[0] == variable) {
-      alert(pair[1]);
       return pair[1];
     }
   } 
@@ -108,7 +111,13 @@ function getQueryVariable(variable) {
 }
 
 window.onload = function() {
-  document.getElementById("display_title").innerHTML = param1var;
+  
+  document.getElementById("display_title").innerHTML = title;
+  document.getElementById("display_description").innerHTML = description;
+  document.getElementById("display_creatorID").innerHTML = creatorID;
+  document.getElementById("display_tags").innerHTML = tags;
+
+
 }
 </script>
 
@@ -116,7 +125,8 @@ window.onload = function() {
 
 <h2>
 <script type="text/javascript">
-document.write(param1var);
+// document.write(title);
+// document.write(description);
 </script>
 </h2>
 
@@ -127,13 +137,35 @@ document.write(param1var);
 
 <!-- TITLE, CAPTION, DATE, TAGS -->
 
-        <h2>Title: <%= comics[0].title %></h2>
-        <h3>Description: <%= comics[0].description %></h3>
-        <h5>This comic was started by: <%= comics[0].creatorID %>!</h5>
+        <div style=" float: left; width: 50%">
+        <h2>Title: </h2> 
         </div>
-      </div>
+        <div style=" float: right; width: 50%">
+        <h2 id="display_title"></h2>
+        </div>
+        <br>
+        <div style=" float: left; width: 50%">
+        <h3>Description: </h3>
+        </div>
+        <div style=" float: right; width: 50%">
+        <h3><div id="display_description"></h3>
+        </div>
+        <br>
+        <div style=" float: left; width: 50%">
+        <h3>Comic started by:</h3>
+        </div>
+        <div style=" float: right; width: 50%">
+         <h3 id="display_creatorID"></h3>
+        </div>
+        <br>
+        <div style=" float: left; width: 50%">
+        <h5>Tags: </h5>
+        </div>
+        <div style=" float: right; width: 50%">
+         <h5><div id="display_tags"></h5>
+         </div>
 
-      <!-- LIKE <3 BUTTON -->
+        <!-- LIKE <3 BUTTON -->
 
         <div class="like button" type="submit">
         <body ng-app="userController" ng-controller="comicController">
@@ -145,6 +177,11 @@ document.write(param1var);
         </body>
         </a>
         </div>
+
+        </div>
+      </div>
+
+      
 
 
         </div>
