@@ -95,6 +95,13 @@ var title = getQueryVariable("comic_title");
 var description = getQueryVariable("comic_description");
 var creatorID = getQueryVariable("comic_creatorID");
 var tags = getQueryVariable("comic_tags");
+var images = getQueryVariable("comic_images");
+alert(images);
+var path = new String(images);
+alert(path);
+path = "/uploads/" + path;
+alert(path);
+
 
 
 
@@ -116,7 +123,7 @@ window.onload = function() {
   document.getElementById("display_description").innerHTML = description;
   document.getElementById("display_creatorID").innerHTML = creatorID;
   document.getElementById("display_tags").innerHTML = tags;
-
+  document.getElementById("display_images").src = path;
 
 }
 </script>
@@ -164,6 +171,14 @@ window.onload = function() {
         <div style=" float: right; width: 50%">
          <h5><div id="display_tags"></h5>
          </div>
+         <br>
+         <div style=" float: left; width: 50%">
+        <h5>Images: </h5>
+        </div>
+        <div style=" float: right; width: 50%">
+        <h5><div id="display_images"></h5>
+        </div>         
+        <img src="nothing.jpeg" id="display_images" name="display_images" />
 
         <!-- LIKE <3 BUTTON -->
 
