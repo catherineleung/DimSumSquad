@@ -19,15 +19,15 @@
 
   <script src="/bootstrap/docs/assets/js/ie-emulation-modes-warning.js"></script>
 
-    <!-- AngularJS -->
+  <!-- AngularJS -->
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular.min.js"></script>
   <script src="/js/controllers/profile.js"></script> <!-- load up our controller -->
 
   <!-- ng cloak -->
   <style>
-    [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
-      display: none !important;
-    }
+  [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+    display: none !important;
+  }
   </style>
 
 </head>
@@ -117,17 +117,20 @@
                   </div>
                   <div class="col-md-6">
                     <div ng-hide="editToggle">
-                    <strong>Username</strong>: <%= user.local.username %><br>
+                      <strong>Username</strong>: <%= user.local.username %><br>
                       <strong>Email</strong>: <%= user.local.email %><br>
                       <strong>Birthday</strong>: <%= user.local.birthday %><br>
-                      <strong>Description</strong>: <%= user.local.description %><br><br>
+                      <strong>Description</strong>: <%= user.local.description %><br>
+                      <button ng-click="toggleEdit()">Change Profile</button>
                     </div>
-                    <form ng-show="editToggle">
-                      <strong>Email</strong>:<input type="text" name="email"><br>
-                      <strong>Birthday</strong>:<input type="text" name="birthday"><br>
-                      <strong>Description</strong>:<input type="text" name="description"><br><br>                       
-                    </form>
-                    <button ng-click = "toggleEdit()"> Change Profile</button> 
+                    <form ng-show="editToggle" method="post" action="profile">
+                      <strong>Username</strong>: <%= user.local.username %><br>
+                      <strong>Email</strong>:<input type="email" class="form-control" id="editEmail" placeholder="Email" name="email">
+                      <strong>Birthday</strong>:<input type="date" class="form-control" id="editBirthday" name="birthday">
+                      <strong>Description</strong>:<input type="text" class="form-control" id="editDescription" placeholder="Description" name="description"><br>  
+                      <input ng-show="editToggle" class="btn btn-primary" type="submit" value="Save Changes">  
+                    </form>                  
+                      <button ng-show="editToggle" ng-click="toggleEdit()">Cancel</button> 
                     <%  if (user.local.contributor) { %>
                     <span class="label label-success">You are a contributor!</span><br>
                     <%  } else { %>
@@ -182,7 +185,7 @@
                 </div>
                 <%  } %>
               </div>
-              <a href="/upload"> Start something new?</a>
+              <a href="/create-comic"> Start something new?</a>
             </div>
           </div>
 

@@ -57,6 +57,36 @@ var Router = (function () {
                     });
                 });
             });
+
+            app.post('/profile', function (req, res) {
+                var query = { 'local.username': req.user.local.username };
+                if(req.body.email){
+                var newEmail = { $set: {'local.email': req.body.email}};                   
+                    User.findOneAndUpdate(query, newEmail, { upsert: true }, function (err, doc) {
+                        if (err)
+                            return res.send(500, { error: err });
+                    });
+                }
+                if(req.body.birthday){
+                var date = new Date(req.body.birthday);
+                var dateFormatted = date.toISOString().substr(0,10);
+                var newBirthday =  { $set: {'local.birthday': dateFormatted}}; 
+                    User.findOneAndUpdate(query, newBirthday, { upsert: true }, function (err, doc) {
+                        if (err)
+                            return res.send(500, { error: err });
+                    });
+                }
+                if(req.body.description){
+                var newDescription =  { $set: {'local.description': req.body.description }};  
+                    User.findOneAndUpdate(query, newDescription, { upsert: true }, function (err, doc) {
+                        if (err)
+                            return res.send(500, { error: err });
+                    });
+                }
+                res.redirect('/profile');
+            });
+
+
             // UPLOAD SECTION =========================
             app.get('/upload', isLoggedIn, function (req, res) {
                 // can only access page if user has contributor status
@@ -65,9 +95,9 @@ var Router = (function () {
                 if (req.user.local.contributor) {
                     Comic.find({}, function (err, docs) {
                         res.render('upload.ejs', {
-                             user: req.user,
-                             comics: docs
-                         });    
+                           user: req.user,
+                           comics: docs
+                       });    
                     });
 
                 }
@@ -109,6 +139,7 @@ app.get('/comics', function (req, res) {
         });
     });
 });
+
             // CREATE A COMIC PAGE ================
             app.get('/create-comic', isLoggedIn, function (req, res) {
                 // can only access page if user has contributor status
@@ -117,9 +148,9 @@ app.get('/comics', function (req, res) {
                 if (req.user.local.contributor) {
                     Comic.find({}, function (err, docs) {
                         res.render('create-comic.ejs', {
-                             user: req.user,
-                             comics: docs
-                         });    
+                           user: req.user,
+                           comics: docs
+                       });    
                     });
 
                 }
@@ -180,17 +211,17 @@ var upload = multer({ storage: storage }).single('userPhoto');
                          var usersComicList = req.user.local.comics;
                          var arrayLength = usersComicList.length;
                          var mostRecentlyCreatedComic = usersComicList[arrayLength - 1];
- 
+
                          // prints out last comic contributed to
                          console.log("User just created this comic: " + mostRecentlyCreatedComic); 
- 
+
                          // iterate through user's list of comics 
                          //for (var i = 0; i < arrayLength; i++) {
                          //    console.log(usersComicList[i]);
                          //}
- 
-                        var imageFilePath = new Image({ path: imageFileName, uploaderID: req.user.local.username, imageBelongsTo: mostRecentlyCreatedComic, chapter: 1 });
-                       
+
+                         var imageFilePath = new Image({ path: imageFileName, uploaderID: req.user.local.username, imageBelongsTo: mostRecentlyCreatedComic, chapter: 1 });
+
                         // add image ID to the creator's list of uploaded images
                         User.findByIdAndUpdate(req.user._id, { $push: { 'local.images': imageFileName } }, { safe: true, upsert: true, new: true }, function (err, model) {
                             console.log(err);
@@ -204,7 +235,7 @@ var upload = multer({ storage: storage }).single('userPhoto');
                         });
 
 
-    
+
                         // save image path data to db
                         imageFilePath.save(function (err, imageFilePath) {
                             if (err)
@@ -213,7 +244,7 @@ var upload = multer({ storage: storage }).single('userPhoto');
                             res.redirect('/');
                         });
                     });
-                });
+});
 });
             // CREATES A NEW COMIC ======================================
             app.post('/api/upload', function (req, res, next) {
@@ -226,10 +257,9 @@ var upload = multer({ storage: storage }).single('userPhoto');
                 });
 
                 // add comic title to the creator's list of created comics
-                 User.findByIdAndUpdate(req.user._id, { $push: { 'local.comics': req.body.title } }, { safe: true, upsert: true, new: true }, function (err, model) {
-                     console.log(err);
-                     creatorID: req.user.local.username
-                  });
+                User.findByIdAndUpdate(req.user._id, { $push: { 'local.comics': req.body.title } }, { safe: true, upsert: true, new: true }, function (err, model) {
+                   console.log(err);
+               });
 
                 //console.log(req.body.title);
                 //console.log(req.body.description);
