@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" ng-app="profileController" ng-cloak>
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -18,9 +18,21 @@
   <link href="/bootstrap/custom/custom.css" rel="stylesheet"> <!-- CUSTOM CSS FOR THIS PAGE ONLY - MICHAEL -->
 
   <script src="/bootstrap/docs/assets/js/ie-emulation-modes-warning.js"></script>
+
+    <!-- AngularJS -->
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular.min.js"></script>
+  <script src="/js/controllers/profile.js"></script> <!-- load up our controller -->
+
+  <!-- ng cloak -->
+  <style>
+    [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+      display: none !important;
+    }
+  </style>
+
 </head>
 
-<body>
+<body ng-controller = "toggleController">
 
   <!-- Static navbar -->
   <nav class="navbar navbar-default navbar-static-top">
@@ -104,10 +116,18 @@
                     <% } %>
                   </div>
                   <div class="col-md-6">
+                    <div ng-hide="editToggle">
                     <strong>Username</strong>: <%= user.local.username %><br>
-                    <strong>Email</strong>: <%= user.local.email %><br>
-                    <strong>Birthday</strong>: <%= user.local.birthday %><br>
-                    <strong>Description</strong>: <%= user.local.description %><br><br>
+                      <strong>Email</strong>: <%= user.local.email %><br>
+                      <strong>Birthday</strong>: <%= user.local.birthday %><br>
+                      <strong>Description</strong>: <%= user.local.description %><br><br>
+                    </div>
+                    <form ng-show="editToggle">
+                      <strong>Email</strong>:<input type="text" name="email"><br>
+                      <strong>Birthday</strong>:<input type="text" name="birthday"><br>
+                      <strong>Description</strong>:<input type="text" name="description"><br><br>                       
+                    </form>
+                    <button ng-click = "toggleEdit()"> Change Profile</button> 
                     <%  if (user.local.contributor) { %>
                     <span class="label label-success">You are a contributor!</span><br>
                     <%  } else { %>
