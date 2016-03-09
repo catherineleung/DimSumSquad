@@ -15,7 +15,7 @@ var bcrypt = require('bcrypt-nodejs');
                 //Editable content
                 picture: String,
                 description: String,
-                birthday: Date,
+                birthday: String,
                 
                 //Comic arrays
                 comics: Array,    // Array of comics created
