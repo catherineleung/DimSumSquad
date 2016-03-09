@@ -12,7 +12,7 @@ before ->
   @driver.getWindowHandle()
 
 after ->
-  @driver.quit()
+  # @driver.quit()
 
 describe 'DimSumSquad Automated Tests', ->
   beforeEach ->
@@ -101,19 +101,25 @@ describe 'DimSumSquad Automated Tests', ->
     @driver.manage().timeouts().implicitlyWait(10000)
     @driver.findElement(xpath: "//*[contains(text(),'" + 'You are a contributor!' + "')]")
 
-  # UPLOAD COMIC
+  it 'upload a new comic', ->
+    @driver.findElement(linkText: 'CREATE A COMIC').click()
+    @driver.manage().timeouts().implicitlyWait(10000)
+    @driver.findElement(id: 'title').sendKeys(loginInfo)
+    @driver.findElement(id: 'description').sendKeys(loginInfo)
+    @driver.findElement(id: 'tags').sendKeys(loginInfo)
 
-  it 'log out of newly created account', ->
-    @driver.findElement(linkText: 'Log Out').click()
-    @driver.manage().timeouts().implicitlyWait(10000)
 
-  it 'delete newly created account', ->
-    @driver.findElement(linkText: 'VIEW USERS').click()
-    @driver.manage().timeouts().implicitlyWait(10000)
-    @driver.findElement(id: loginInfo).click()
-    @driver.manage().timeouts().implicitlyWait(10000)
-    @driver.findElement(xpath: "//*[contains(text(),'" + 'There are currently' + "')]")
-    @driver.findElement(xpath: "//*[contains(text(),'" + 'registered users' + "')]")
+  # it 'log out of newly created account', ->
+  #   @driver.findElement(linkText: 'Log Out').click()
+  #   @driver.manage().timeouts().implicitlyWait(10000)
+
+  # it 'delete newly created account', ->
+  #   @driver.findElement(linkText: 'VIEW USERS').click()
+  #   @driver.manage().timeouts().implicitlyWait(10000)
+  #   @driver.findElement(id: loginInfo).click()
+  #   @driver.manage().timeouts().implicitlyWait(10000)
+  #   @driver.findElement(xpath: "//*[contains(text(),'" + 'There are currently' + "')]")
+  #   @driver.findElement(xpath: "//*[contains(text(),'" + 'registered users' + "')]")
 
 
 
