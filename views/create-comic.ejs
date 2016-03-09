@@ -19,7 +19,7 @@
 
     <!-- AngularJS -->
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular.min.js"></script>
-    <script src="/js/controllers/comicCreate.js"></script> <!-- load up our controller -->
+    <script src="/js/controllers/comic-creation.js"></script> <!-- load up our controller -->
     <script src="/js/core.js"></script> <!-- load our main application -->
 
     <!-- ng cloak -->
@@ -32,7 +32,7 @@
 
   </head>
 
-  <body>
+  <body ng-controller="mainController2">
 
     <!-- Static navbar -->
     <nav class="navbar navbar-default navbar-static-top">
@@ -121,9 +121,9 @@
 
 
                 <label for="title" class="col-lg-2 control-label">Title</label>
-                <div class="form-group {{ titleError }} col-lg-10">
-                  <input type="text" class="form-control" id="title" placeholder="Title" ng-model"formData.title" name="title">
-                  <span class="label label-danger" ng-show="titleFlash">Please enter a title!</span>
+                <div class="{{ titleError }} col-lg-10">
+                  <input type="text" class="form-control" id="title" placeholder="Title" ng-model"formData.title" name="title" required>
+                  <!--<span class="label label-danger" ng-show="titleFlash">Please enter a title!</span>-->
                   <br>
                 </div>
 
@@ -135,18 +135,18 @@
 
 
                 <label for="description" class="col-lg-2 control-label">Description</label>
-                <div class="col-lg-10">
-                  <textarea class = "form-control" id="description" placeholder="Description" ng-model="formData.description" name="description" style="overflow:auto;resize:none" rows = "3"></textarea>
-                  <span class="label label-danger" ng-show="descriptionFlash">Please enter a description!</span>
+                <div class="{{ descriptionError }} col-lg-10">
+                  <textarea class = "form-control" id="description" placeholder="Description" ng-model="formData.description" name="description" style="overflow:auto;resize:none" rows = "3" required></textarea>
+                  <!--<span class="label label-danger" ng-show="descriptionFlash">Please enter a description!</span>-->
                   <br>
                 </div>
 
 
 
                 <label for="tags" class="col-lg-2 control-label">Tags</label>
-                <div class="col-lg-10">
-                  <input type="text" class="form-control" name="tags" id="tags" ng-model="formData.tags" data-role="tagsinput"/> 
-                  <span class="label label-danger" ng-show="tagsFlash">Please enter at least one tag!</span>
+                <div class=" {{ tagsError }} col-lg-10">
+                  <input type="text" class="form-control" name="tags" id="tags" ng-model="formData.tags" data-role="tagsinput" required/> 
+                  <!--<span class="label label-danger" ng-show="tagsFlash">Please enter at least one tag!</span>-->
               </div>
 
                 

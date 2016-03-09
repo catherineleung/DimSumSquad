@@ -1,1 +1,1 @@
-angular.module('scotchUser', ['userController', 'userService']);
+angular.module('scotchUser', ['userController', 'userService', 'comicController']);
