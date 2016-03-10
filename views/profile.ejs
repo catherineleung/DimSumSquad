@@ -121,7 +121,7 @@
                       <strong>Email</strong>: <%= user.local.email %><br>
                       <strong>Birthday</strong>: <%= user.local.birthday %><br>
                       <strong>Description</strong>: <%= user.local.description %><br>
-                      <button ng-click="toggleEdit()">Change Profile</button>
+                      <button class="btn btn-primary" ng-click="toggleEdit()">Change Profile</button>
                     </div>
                     <form ng-show="editToggle" method="post" action="profile">
                       <strong>Username</strong>: <%= user.local.username %><br>
@@ -129,8 +129,9 @@
                       <strong>Birthday</strong>:<input type="date" class="form-control" id="editBirthday" name="birthday">
                       <strong>Description</strong>:<input type="text" class="form-control" id="editDescription" placeholder="Description" name="description"><br>  
                       <input ng-show="editToggle" class="btn btn-primary" type="submit" value="Save Changes">  
+                      <button class="btn btn-primary" ng-show="editToggle" ng-click="toggleEdit()">Cancel</button> 
                     </form>                  
-                      <button ng-show="editToggle" ng-click="toggleEdit()">Cancel</button> 
+                      
                     <%  if (user.local.contributor) { %>
                     <span class="label label-success">You are a contributor!</span><br>
                     <%  } else { %>
