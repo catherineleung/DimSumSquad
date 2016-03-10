@@ -1,6 +1,6 @@
 # DimSumSquad
 
-Sprint 1 deployed at: <br>
+<b>Sprint 2 deployed at:</b> <br>
 <a href="https://sumcomics.herokuapp.com/">https://sumcomics.herokuapp.com/</a>
 
 Install dependencies:
