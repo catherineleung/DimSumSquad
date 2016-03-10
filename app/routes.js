@@ -111,17 +111,30 @@ var Router = (function () {
                 res.redirect('/');
             });
             // COMIC PAGE =========================
-            app.get('/comic', function (req, res) {
+            app.get('/comic/:index', function (req, res) {
                 // var hidden_value = req.getElementbyId("comic_get").innerHTML = req.getElementById("comic_get").value;
                 // console.log("This should be the title of the comic");
                 // console.log(hidden_value);
                 Comic.find({}, function (err, docs) {
                     res.render('comic.ejs', {
                         user: req.user,
-                        comics: docs
+                        comics: docs,
+                        index: req.params.index
                     });
                 });
             });
+
+            // app.get('/comic' + comic_index, function(req, res) {
+            //     Comic.find({}, function (err, docs) {
+            //         res.render('comic.ejs', {
+            //             user: req.user,
+            //             comics: docs,
+            //             comic: docs[comic_index]
+            //             // id: comic_id
+            //         });
+            //     });
+            // }
+
             // COMICS ==============================
             /*app.get('/comics', function(req, res) {
                 Image.find({}, function(err, docs){
@@ -130,15 +143,15 @@ var Router = (function () {
                         images: docs
                     });
                 });
-});*/
-app.get('/comics', function (req, res) {
-    Comic.find({}, function (err, docs) {
-        res.render('comics.ejs', {
-            user: req.user,
-            comics: docs
-        });
-    });
-});
+            });*/
+            app.get('/comics', function (req, res) {
+                Comic.find({}, function (err, docs) {
+                    res.render('comics.ejs', {
+                        user: req.user,
+                        comics: docs
+                    });
+                });
+            });
 
             // CREATE A COMIC PAGE ================
             app.get('/create-comic', isLoggedIn, function (req, res) {

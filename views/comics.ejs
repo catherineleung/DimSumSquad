@@ -29,7 +29,7 @@
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
         </button>
-        <a class="navbar-brand" href="./"><span class="glyphicon glyphicon-heart"></span> DimSumSquad</a>
+        <a class="navbar-brand" href="/"><span class="glyphicon glyphicon-heart"></span> DimSumSquad</a>
       </div>
       <div id="navbar" class="navbar-collapse collapse">
         <ul class="nav navbar-nav">
@@ -74,12 +74,6 @@
       </div>
     </nav>
 
-    <script type="text/javascript">
-    alert("get path");
-    var path = <% comics[5].title %>;
-    alert(path);
-    </script>
-
     <div class="container-two">
       <div class="well">
         <h2>Browse Comics</h2>
@@ -87,14 +81,13 @@
         <% for (i = 0; i < comics.length; i += 6) {  %> 
         <div class="row">
           <% var j = i+6;
-          console.log(j);
           for (k = i; k < j; k++) { 
             if(k < comics.length){ %>
             <div class="col-md-2">
               <h5> Title: <%= comics[k].title %></h5>
               <h5> Contributors: <%= comics[k].creatorID %></h5>
-              <a href="/comic" class="thumbnail">
-                <img src="/uploads/" + <%= comics[k].images[0] %> alt="" style="width:150px;height:150px">
+              <a href="/comic/<%= k %>" class="thumbnail">
+                <img src="<%= '/uploads/' + comics[k].images[0] %>" alt="" style="width:150px;height:150px">
               </a>
 
               <!-- testing variable passing -->
@@ -112,7 +105,7 @@
               action    =  "/comic"
               method    =  "get">  
 
-
+              <input type="hidden" id="comic_index" name="comic_index" value= <%= k %>>
               <input type="hidden" id="comic_title" name="comic_title" value= <%= comics[k].title %>> 
               <input type="hidden" id="comic_description" name="comic_description" value= <%= comics[k].description %>> 
               <input type="hidden" id="comic_creatorID" name="comic_creatorID" value= <%= comics[k].creatorID %>> 
@@ -137,8 +130,8 @@
   </div>
 
   <script type="text/javascript">
-  var tracker = document.getElementById('comic_get').value;
-  alert(tracker);
+  // var tracker = document.getElementById('comic_get').value;
+  // alert(tracker);
   </script>
 
   <!-- Bootstrap core JavaScript and IE10 viewport hack-->
