@@ -24,9 +24,9 @@
 
     <!-- ng cloak -->
     <style>
-      [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
-        display: none !important;
-      }
+    [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+      display: none !important;
+    }
     </style>
 
 
@@ -114,48 +114,74 @@
 
               <div class="form-group">
 
-                <form id        =  "uploadComicInfoForm"
-                enctype   =  "application/x-www-form-urlencoded"
-                action    =  "/api/upload"
-                method    =  "post">
+                <!-- TESTING !!!!!!!!!!!!!!!!!!!!!!!!!!!!!-->
+                <form id = "uploadComicInfoForm"
+                      enctype   =  "application/x-www-form-urlencoded"
+                      action    =  "/api/upload"
+                      method    =  "post"
+                      ng-app="myValidateApp" 
+                      ng-controller="validateCtrl" 
+                      name="myTestForm" 
+                      ng-submit="submitForm(myTestForm.$valid)" 
+                      novalidate>
 
 
-                <label for="title" class="col-lg-2 control-label">Title</label>
-                <div class="{{ titleError }} col-lg-10">
-                  <input type="text" class="form-control" id="title" placeholder="Title" ng-model"formData.title" name="title" required>
-                  <!--<span class="label label-danger" ng-show="titleFlash">Please enter a title!</span>-->
-                  <br>
-                </div>
-
-                  <!--<label for="caption" class="col-lg-2 control-label">Caption</label>
-                <div class="col-lg-10">
-                  <input type="text" class="form-control" id="caption" placeholder="Caption" ng-model="formData.caption" name="caption">
-                  <br>
-                </div>-->
-
-
-                <label for="description" class="col-lg-2 control-label">Description</label>
-                <div class="{{ descriptionError }} col-lg-10">
-                  <textarea class = "form-control" id="description" placeholder="Description" ng-model="formData.description" name="description" style="overflow:auto;resize:none" rows = "3" required></textarea>
-                  <!--<span class="label label-danger" ng-show="descriptionFlash">Please enter a description!</span>-->
-                  <br>
-                </div>
-
-
-
-                <label for="tags" class="col-lg-2 control-label">Tags</label>
-                <div class=" {{ tagsError }} col-lg-10">
-                  <input type="text" class="form-control" name="tags" id="tags" ng-model="formData.tags" data-role="tagsinput" required/> 
-                  <!--<span class="label label-danger" ng-show="tagsFlash">Please enter at least one tag!</span>-->
-              </div>
-
-                
-                <div class="form-group">
+                  <label for="title" class="col-lg-2 control-label">Title</label>
                   <div class="col-lg-10">
-                    <br>
-                    <input class="btn btn-primary" type="submit" value="Create my comic!" name="submit">
+                    <input type="text" class="form-control" name="title" placeholder="Title" ng-model="formData.title" ng-model-options="{ updateOn: 'blur' }" name = "title" required><br />
+                    <span style="color:red" ng-show="myTestForm.title.$dirty && myTestForm.title.$invalid">
+                      <span class="label label-danger" ng-show="myTestForm.title.$error.required">Please enter a title!</span>
+                    </span>
                   </div>
-                </div>
+                
+
+                    <label for="description" class="col-lg-2 control-label">Description</label>
+                    <div class="col-lg-10">
+                    <textarea class="form-control" id="description" placeholder="Description" ng-model="formData.description" name="description" style="overflow:auto;resize:none" rows = "3" ng-model-options= " { updateOn: 'blur' }" required></textarea><br>
+
+                    <span style="color:red" ng-show="myTestForm.description.$dirty && myTestForm.description.$invalid">
+                      <span class="label label-danger" ng-show="myTestForm.description.$error.required">Description is required.</span>
+                    </span>
+                  </div>
+
+
+                    <label for="tags" class="col-lg-2 control-label">Tags</label> <!-- data-role="tagsinput"-->
+                    <div class="col-lg-10">
+                    <input type="text" name="tags" class="form-control" ng-model="formData.tags" ng-model-options="{ updateOn: 'blur' }" required/><br />
+                    <span style="color:red" ng-show="myTestForm.tags.$dirty && myTestForm.tags.$invalid">
+                      <span class="label label-danger" ng-show="myTestForm.tags.$error.required">Tags are required.</span>
+                    </span>
+                  </div>
+                  
+
+
+                  <div class="col-lg-10"><br>
+                    <input class="btn btn-primary" type="submit" value="Create my comic!" name="submit" ng-disabled="(myTestForm.description.$dirty && myTestForm.description.$invalid) || (myTestForm.title.$dirty && myTestForm.title.$invalid) || (myTestForm.tags.$dirty && myTestForm.tags.$invalid) || myTestForm.description.$pristine || myTestForm.title.$pristine || myTestForm.tags.$pristine">
+                  </div>
+                </form>
+
+                <script>
+                var app = angular.module('myValidateApp', []);
+                app.controller('validateCtrl', function($scope) {
+
+                      $scope.formData = {};
+                      // function to call on form submit       
+                      $scope.submitForm = function(isValid) {
+
+                          if ($scope.formData.title == undefined) {
+                            return;
+                          }
+                          // check all goes fine?
+                          if (isValid) {
+                              alert('You are done to understand angularjs form validation');
+                          }
+                      }; 
+                });
+                </script>
+
+                <!-- END OF TESTING !!!!!!!!!!!!!!!!!!!!!!!!!!!!-->
+
+              
 
                 <h5>This is how many comics there are <%= comics.length %>!</h5>
 
@@ -173,7 +199,7 @@
     </div>
 
 
-   
+
 
 
 
