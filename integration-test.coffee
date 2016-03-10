@@ -101,26 +101,33 @@ describe 'DimSumSquad Automated Tests', ->
     @driver.manage().timeouts().implicitlyWait(10000)
     @driver.findElement(xpath: "//*[contains(text(),'" + 'You are a contributor!' + "')]")
 
-  it 'upload a new comic', ->
+  it 'create a new comic', ->
     @driver.findElement(linkText: 'CREATE A COMIC').click()
     @driver.manage().timeouts().implicitlyWait(10000)
     @driver.findElement(id: 'title').sendKeys(loginInfo)
     @driver.findElement(id: 'description').sendKeys(loginInfo)
     @driver.findElement(id: 'tags').sendKeys(loginInfo)
+    @driver.findElement(id: 'description').click()
+    @driver.findElement(id: 'submit').click()
+    @driver.manage().timeouts().implicitlyWait(10000)
+    @driver.findElement(id: 'submit').click()
 
+  it 'check for newly created comic', ->
+    @driver.findElement(linkText: 'Browse').click()
+    @driver.manage().timeouts().implicitlyWait(10000)
+    @driver.findElement(xpath: "//*[contains(text(),'" + loginInfo + "')]")
 
-  # it 'log out of newly created account', ->
-  #   @driver.findElement(linkText: 'Log Out').click()
-  #   @driver.manage().timeouts().implicitlyWait(10000)
+  it 'log out of newly created account', ->
+    @driver.findElement(linkText: 'Log Out').click()
+    @driver.manage().timeouts().implicitlyWait(10000)
 
-  # it 'delete newly created account', ->
-  #   @driver.findElement(linkText: 'VIEW USERS').click()
-  #   @driver.manage().timeouts().implicitlyWait(10000)
-  #   @driver.findElement(id: loginInfo).click()
-  #   @driver.manage().timeouts().implicitlyWait(10000)
-  #   @driver.findElement(xpath: "//*[contains(text(),'" + 'There are currently' + "')]")
-  #   @driver.findElement(xpath: "//*[contains(text(),'" + 'registered users' + "')]")
-
+  it 'delete newly created account', ->
+    @driver.findElement(linkText: 'VIEW USERS').click()
+    @driver.manage().timeouts().implicitlyWait(10000)
+    @driver.findElement(id: loginInfo).click()
+    @driver.manage().timeouts().implicitlyWait(10000)
+    @driver.findElement(xpath: "//*[contains(text(),'" + 'There are currently' + "')]")
+    @driver.findElement(xpath: "//*[contains(text(),'" + 'registered users' + "')]")
 
 
 # run test with:
