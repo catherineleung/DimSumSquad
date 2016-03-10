@@ -114,6 +114,16 @@
            <!-- <button class="btn btn-primary" ng-show="editToggle" ng-click="toggleEdit()">Cancel</button>--> 
           </form>
 
+          <strong>Likes:</strong>
+  <%= comics[index].likes %>
+
+  <form action="/like" method="post" enctype="application/x-www-form-urlencoded">
+    <input type="hidden" name="comic_id" id="comic_id" value= <%= comics[index]._id %> >
+    <input type="hidden" name="comic_likes" id="comic_likes" value= <%= comics[index].likes %>>
+    <input type="hidden" name="temp_user" id="temp_user" value= <%= user._id %>>
+    <input class="btn btn-success btn-med" value="Like" type="submit">
+  </form>
+
           <hr>
 
           <% for (i = 0; i < comics[index].images.length; i += 6) {  %> 

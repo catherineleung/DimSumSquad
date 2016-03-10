@@ -48,6 +48,18 @@ var Router = (function () {
                     });
                 });
             });
+
+            // SEARCH BAR ==============================
+            app.get('/search', function(req, res){
+                Comic.find({}, function (err, docs) {
+                    res.render('search.ejs', {
+                        user: req.user,
+                        comics: docs,
+                        query : req.body.query
+                    });
+                });         
+            });
+
             // PROFILE SECTION =========================
             app.get('/profile', isLoggedIn, function (req, res) {
                 Comic.find({}, function (err, docs) {
@@ -173,6 +185,38 @@ var Router = (function () {
                 });
             });
 
+            app.post('/like', function(req, res){
+
+                // check first to see if you've liked the comic already
+                // NEED TO WORK ON THIS
+
+                var current_likes = req.body.comic_likes;
+                // called parseFloat to work with integers
+                var new_likes = parseFloat(current_likes) + 1;
+
+
+                Comic.update({_id: req.body.comic_id}, {
+                    likes: new_likes
+                }, function (err, affected) {
+                    console.log(err);
+                });
+
+                // working on 2 way dependency ... not sure if this is a good idea 
+                // Comic.findByIdAndUpdate(req.comic_id, { $push: { 'likers': req.user._id } }, { safe: true, upsert: true, new: true }, function (err, model) {
+                //             console.log(err);
+                //         });
+
+                console.log("check");
+                console.log(req.user._id);
+
+                User.findByIdAndUpdate(req.user._id, { $push: { 'local.favourites': req.body.comic_id } }, { safe: true, upsert: true, new: true }, function (err, model) {
+                            console.log(err);
+                        });
+
+                // reloads the comic page
+                res.redirect('/comics/' + req.body.comic_id);
+            });
+
             // CREATE A COMIC PAGE ================
             app.get('/create-comic', isLoggedIn, function (req, res) {
                 // can only access page if user has contributor status
@@ -286,7 +330,8 @@ var Router = (function () {
                     description: req.body.description,
                     tags: req.body.tags,
                     creatorID: req.user.local.username,
-                    chapters: 1
+                    chapters: 1,
+                    likes: 0
                 });
 
                 // add comic title to the creator's list of created comics
