@@ -129,8 +129,10 @@
                       <strong>Birthday</strong>:<input type="date" class="form-control" id="editBirthday" name="birthday" value= <%= user.local.birthday %> >
                       <strong>Description</strong>:<input type="text" class="form-control" id="editDescription" placeholder="Description" name="description" value= <%= user.local.description %> ><br>  
                       <input ng-show="editToggle" class="btn btn-primary" type="submit" value="Save Changes">  
-                      <button class="btn btn-primary" ng-show="editToggle" ng-click="toggleEdit()">Cancel</button> 
-                    </form>                  
+                    </form>   
+
+
+                    <button class="btn btn-primary" ng-show="editToggle" ng-click="toggleEdit()">Cancel</button>                
                       
                     <%  if (user.local.contributor) { %>
                     <span class="label label-success">You are a contributor!</span><br>

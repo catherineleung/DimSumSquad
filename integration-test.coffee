@@ -12,12 +12,12 @@ before ->
   @driver.getWindowHandle()
 
 after ->
-  # @driver.quit()
+  @driver.quit()
 
 describe 'DimSumSquad Automated Tests', ->
   beforeEach ->
     @timeout 10000 #default was 2000ms, too short
-    @driver.get 'localhost:8080'
+    @driver.get 'http://sumcomics.herokuapp.com'
 
   it 'has \'SumComics\' as the window\'s title', ->
     expect(@driver.getTitle()).to.eventually.contain 'SumComics'
@@ -101,21 +101,21 @@ describe 'DimSumSquad Automated Tests', ->
     @driver.manage().timeouts().implicitlyWait(10000)
     @driver.findElement(xpath: "//*[contains(text(),'" + 'You are a contributor!' + "')]")
 
-  it 'create a new comic', ->
-    @driver.findElement(linkText: 'CREATE A COMIC').click()
-    @driver.manage().timeouts().implicitlyWait(10000)
-    @driver.findElement(id: 'title').sendKeys(loginInfo)
-    @driver.findElement(id: 'description').sendKeys(loginInfo)
-    @driver.findElement(id: 'tags').sendKeys(loginInfo)
-    @driver.findElement(id: 'description').click()
-    @driver.findElement(id: 'submit').click()
-    @driver.manage().timeouts().implicitlyWait(10000)
-    @driver.findElement(id: 'submit').click()
+  # it 'create a new comic', ->
+  #   @driver.findElement(linkText: 'CREATE A COMIC').click()
+  #   @driver.manage().timeouts().implicitlyWait(10000)
+  #   @driver.findElement(id: 'title').sendKeys(loginInfo)
+  #   @driver.findElement(id: 'description').sendKeys(loginInfo)
+  #   @driver.findElement(id: 'tags').sendKeys(loginInfo)
+  #   @driver.findElement(id: 'description').click()
+  #   @driver.findElement(id: 'submit').click()
+  #   @driver.manage().timeouts().implicitlyWait(10000)
+  #   @driver.findElement(id: 'submit').click()
 
-  it 'check for newly created comic', ->
-    @driver.findElement(linkText: 'Browse').click()
-    @driver.manage().timeouts().implicitlyWait(10000)
-    @driver.findElement(xpath: "//*[contains(text(),'" + loginInfo + "')]")
+  # it 'check for newly created comic', ->
+  #   @driver.findElement(linkText: 'Browse').click()
+  #   @driver.manage().timeouts().implicitlyWait(10000)
+  #   @driver.findElement(xpath: "//*[contains(text(),'" + loginInfo + "')]")
 
   it 'log out of newly created account', ->
     @driver.findElement(linkText: 'Log Out').click()
