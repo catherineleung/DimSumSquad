@@ -48,6 +48,18 @@ var Router = (function () {
                     });
                 });
             });
+
+            // SEARCH BAR ==============================
+            app.get('/search', function(req, res){
+                Comic.find({}, function (err, docs) {
+                    res.render('search.ejs', {
+                        user: req.user,
+                        comics: docs,
+                        query : req.body.query
+                    });
+                });         
+            });
+
             // PROFILE SECTION =========================
             app.get('/profile', isLoggedIn, function (req, res) {
                 Comic.find({}, function (err, docs) {
