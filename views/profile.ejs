@@ -174,19 +174,34 @@
               <!-- Displays contributions -->
               <!-- MODIFY: change hyperlink depending on the comic book which the images belongs to-->
               <div class="panel-body">
-                <%  for (i = 0; i < user.local.images.length; i += 6) { %>
+                <%  for (i = 0; i < user.local.comics.length; i += 6) { %>
                 <div class="row">
-                  <%  for (j = i; j < (user.local.images.length - (i * 6)); j++) { %>
-                  <div class="col-md-2">
-                    <a href="/uploads/<%=user.local.images[(i * 6) + j]%>" class="thumbnail">
-                      <img src="/uploads/<%=user.local.images[(i * 6) + j]%>" alt="" style="width:150px;height:150px">
-                    </a>
-                  </div>
-                  <%  } %>
+                  <%  for (j = i; j < i + 6; j++) {
+                    if (j < user.local.comics.length) {
+                      var comic_id;
+                      var comic_path;
+                      var comic_title;
+                      title = user.local.comics[j];
+                      for (k = 0; k < comics.length; k++) {
+                        if (user.local.comics[j] == comics[k].title) {
+                          comic_id = comics[k]._id;
+                          comic_path = comics[k].images[0];
+                          comic_title = comics[k].title;
+                        }
+                      } %>
+                      <div class="col-md-2" align="center">
+                        <a href="/comics/<%= comic_id %>" class="thumbnail">
+                          <img src="/uploads/<%= comic_path %>" alt="" style="width:150px;height:150px">
+                        </a>
+                        <strong><%= comic_title %></strong>
+                      </div>
+                      <% } %>
+                    <%  } %>
                 </div>
+                <hr>
                 <%  } %>
+                <a href="/create-comic"> Start something new?</a>
               </div>
-              <a href="/create-comic"> Start something new?</a>
             </div>
           </div>
 

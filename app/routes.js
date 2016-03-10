@@ -50,10 +50,10 @@ var Router = (function () {
             });
             // PROFILE SECTION =========================
             app.get('/profile', isLoggedIn, function (req, res) {
-                Image.find({}, function (err, docs) {
+                Comic.find({}, function (err, docs) {
                     res.render('profile.ejs', {
                         user: req.user,
-                        images: docs
+                        comics: docs
                     });
                 });
             });
@@ -237,8 +237,8 @@ var Router = (function () {
                             res.redirect('/');
                         });
                     });
-});
-});
+            });
+            });
             // CREATES A NEW COMIC ======================================
             app.post('/api/upload', function (req, res, next) {
                 var newComic = new Comic({
@@ -252,7 +252,7 @@ var Router = (function () {
                 // add comic title to the creator's list of created comics
                 User.findByIdAndUpdate(req.user._id, { $push: { 'local.comics': req.body.title } }, { safe: true, upsert: true, new: true }, function (err, model) {
                    console.log(err);
-               });
+                });
 
                 //console.log(req.body.title);
                 //console.log(req.body.description);
@@ -262,6 +262,7 @@ var Router = (function () {
                 newComic.save(function (err, comic) {
                     if (err)
                         return next(err);
+
                     res.redirect('/upload');
                 });
             });
