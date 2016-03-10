@@ -124,26 +124,6 @@ var Router = (function () {
                 });
             });
 
-            // app.get('/comic' + comic_index, function(req, res) {
-            //     Comic.find({}, function (err, docs) {
-            //         res.render('comic.ejs', {
-            //             user: req.user,
-            //             comics: docs,
-            //             comic: docs[comic_index]
-            //             // id: comic_id
-            //         });
-            //     });
-            // }
-
-            // COMICS ==============================
-            /*app.get('/comics', function(req, res) {
-                Image.find({}, function(err, docs){
-                    res.render('comics.ejs', {
-                        user: req.user,
-                        images: docs
-                    });
-                });
-            });*/
             app.get('/comics', function (req, res) {
                 Comic.find({}, function (err, docs) {
                     res.render('comics.ejs', {
@@ -211,7 +191,7 @@ var Router = (function () {
                     i++;
                 }
             });
-var upload = multer({ storage: storage }).single('userPhoto');
+            var upload = multer({ storage: storage }).single('userPhoto');
             // POST/UPLOAD PICTURE ======================================== (after creating a comic)
             app.post('/api/photo', function (req, res) {
                 process.nextTick(function () {
