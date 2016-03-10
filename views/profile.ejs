@@ -154,13 +154,16 @@
                 <div class="row">
                   <%  for (j = i; j < (user.local.favourites.length - (i * 6)); j++) { %>
                   <div class="col-md-2">
-                    <a href="/uploads/<%=user.local.images[(i * 6) + j]%>" class="thumbnail">
-                      <img src="/uploads/<%=user.local.images[(i * 6) + j]%>" alt="" style="width:150px;height:150px">
+                    <a href="/comics/<%=user.local.favourites[(i * 6) + j]%>" class="thumbnail">
+                    Favourite # <%= j + 1 %>!
+<!--                       <img src="/uploads/<%=user.local.images[(i * 6) + j]%>" alt="" style="width:150px;height:150px">
+ --> 
                     </a>
                   </div>
                   <%  } %>
                 </div>
                 <%  } %>
+
               </div>
             </div>
           </div>
