@@ -75,7 +75,7 @@
 
     <div class="container">
       <div class="well">
-        <h2>Found Comics</h2>
+        <h2>Comic Search Results</h2>
         <hr>
         <%
         var i = 0;
@@ -87,7 +87,6 @@
             <% while(i<comics.length && k<6) {
               var str = new String(comics[i].title);
               match = str.includes(query);
-              console.log(match);
               if(match) { 
                 k = k + 1; %>
                 <div class="col-md-2" align="center">
