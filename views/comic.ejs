@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" ng-app="comicController">
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -25,11 +25,9 @@
 
     <!-- AngularJS -->
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular.min.js"></script>
-  <script src="/js/controllers/main.js"></script> <!-- load up our controller -->
-  <script src="/js/services/users.js"></script> <!-- load our user service -->
-  <script src="/js/core.js"></script> <!-- load our main application -->
+  <script src="/js/controllers/comic.js"></script> <!-- load up our controller -->
 
-<body>
+<body ng-controller = "toggleController">
 
   <!-- Static navbar -->
   <nav class="navbar navbar-default navbar-static-top">
@@ -98,17 +96,23 @@
           }
           %>
 
-          <h2><%= comics[index].title %></h2>
-          <hr>
-
-          <strong>Description:</strong> <br>
-          <%= comics[index].description %> <br><br>
-
-          <strong>Tags:</strong><br>
-          <%= comics[index].tags %> <br><br>
-
-          <strong>Creator:</strong><br> 
-          <%= comics[index].creatorID %> <br>
+          <div ng-hide="editToggle">
+            <strong>Title:</strong><br> <%= comics[index].title %><br><br>
+            <strong>Description:</strong> <br><%= comics[index].description %> <br><br>
+            <strong>Tags:</strong> <br> <%= comics[index].tags %> <br><br>
+             <strong>Creator:</strong><br> <%= comics[index].creatorID %> <br><br>
+            <button class="btn btn-primary" ng-click="toggleEdit()">Edit Comic</button>
+          </div>
+          <form ng-show="editToggle" method="post" action="/comics/<%=comics[index]._id%>">
+            <strong>Title:</strong>
+              <input type="text" class="form-control" id="editTitle" value="<%= comics[index].title %>" name="title">
+            <strong>Description:</strong>
+              <input type="text" class="form-control" id="editDescription" value="<%= comics[index].description %>" name="description">
+            <strong>Tags:</strong>
+              <input type="text" class="form-control" id="editTags" value="<%= comics[index].tags %>" name="tags"><br>
+            <input ng-show="editToggle" class="btn btn-primary" type="submit" ng-click="toggleEdit()" value="Save Changes">  
+           <!-- <button class="btn btn-primary" ng-show="editToggle" ng-click="toggleEdit()">Cancel</button>--> 
+          </form>
 
           <hr>
 
@@ -148,15 +152,3 @@
 
         </div>
       </div>
-
-
-
-
-
-
-
-     
-
-     
-       
-

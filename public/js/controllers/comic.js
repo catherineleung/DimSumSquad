@@ -1,9 +1,19 @@
-angular.module('userController', [])
+angular.module('comicController', [])
 
-	function.controller('comicController', ['$scope','$http', function($scope, $http) {
+	// inject the Todo service factory into our controller
+	.controller('toggleController', ['$scope','$http', function($scope, $http) {
+		$scope.editData = {};
+		$scope.editToggle = false;
 
-		$scope.like = function () {
-			$scope.numberOfLikes += 1;
-		};
 
-	}]
+		//EDIT PROFILE =====================================================================	
+
+		$scope.toggleEdit = function() {
+			if($scope.editToggle){
+				$scope.editToggle = false;
+			}
+			else {
+				$scope.editToggle = true;
+			}
+		}
+	}]);
