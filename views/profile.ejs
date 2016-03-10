@@ -125,9 +125,9 @@
                     </div>
                     <form ng-show="editToggle" method="post" action="profile">
                       <strong>Username</strong>: <%= user.local.username %><br>
-                      <strong>Email</strong>:<input type="email" class="form-control" id="editEmail" placeholder="Email" name="email">
-                      <strong>Birthday</strong>:<input type="date" class="form-control" id="editBirthday" name="birthday">
-                      <strong>Description</strong>:<input type="text" class="form-control" id="editDescription" placeholder="Description" name="description"><br>  
+                      <strong>Email</strong>:<input type="email" class="form-control" id="editEmail" placeholder="Email" name="email" value = <%= user.local.email %> >
+                      <strong>Birthday</strong>:<input type="date" class="form-control" id="editBirthday" name="birthday" value= <%= user.local.birthday %> >
+                      <strong>Description</strong>:<input type="text" class="form-control" id="editDescription" placeholder="Description" name="description" value= <%= user.local.description %> ><br>  
                       <input ng-show="editToggle" class="btn btn-primary" type="submit" value="Save Changes">  
                       <button class="btn btn-primary" ng-show="editToggle" ng-click="toggleEdit()">Cancel</button> 
                     </form>                  

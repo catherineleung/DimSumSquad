@@ -108,7 +108,8 @@ var Router = (function () {
                     Comic.find({}, function (err, docs) {
                         res.render('upload.ejs', {
                            user: req.user,
-                           comics: docs
+                           comics: docs,
+                           id: req.params.id
                        });    
                     });
 
@@ -117,6 +118,30 @@ var Router = (function () {
                     res.redirect('/');
                 }
             });
+
+
+
+            app.get('/comics/:id/addpanel', isLoggedIn, function (req, res) {
+                // can only access page if user has contributor status
+                // the button is removed for non-contributors, but this is so that 
+                //     typing /upload in the browser will do nothing
+                if (req.user.local.contributor) {
+                    Comic.find({}, function (err, docs) {
+                        res.render('addpanel.ejs', {
+                           user: req.user,
+                           comics: docs,
+                           id: req.params.id
+                       });    
+                    });
+
+                }
+                else {
+                    res.redirect('/');
+                }
+            });
+
+
+
             // LOGOUT ==============================
             app.get('/logout', function (req, res) {
                 req.logout();
@@ -226,7 +251,8 @@ var Router = (function () {
                     Comic.find({}, function (err, docs) {
                         res.render('create-comic.ejs', {
                            user: req.user,
-                           comics: docs
+                           comics: docs,
+                           id: req.params.id
                        });    
                     });
 
@@ -297,6 +323,7 @@ var Router = (function () {
                          //    console.log(usersComicList[i]);
                          //}
 
+                        //NEEED TO FIX THIS SO IT WILL TAKE IN COMIC ID FOR imageBelongsTo FIELD !!!!!!!!!!!!!!!! still works tho
                          var imageFilePath = new Image({ path: imageFileName, uploaderID: req.user.local.username, imageBelongsTo: mostRecentlyCreatedComic, chapter: 1 });
 
                         // add image ID to the creator's list of uploaded images
@@ -322,6 +349,46 @@ var Router = (function () {
                         });
                     });
             });
+            });
+
+
+            app.post('/comics/:id/addpanel', function (req, res) {
+                process.nextTick(function () {
+                    upload(req, res, function (err) {
+                        if (err) {
+                            return res.end("Error uploading file.");
+                        }
+                        // TESTING THIS =============================
+                        var comicID = { '_id': req.params.id };
+
+
+                        // creates a new image
+                        // TODO: UPDATE IT SO THAT IT CHECKS WHAT CHAPTER THE COMIC IS CURRENTLY ON
+                         var imageFilePath = new Image({ path: imageFileName, uploaderID: req.user.local.username, imageBelongsTo: req.params.id});
+
+
+                        // get image name and add it to user's image array    GOOD2GO
+                         User.findByIdAndUpdate(req.user._id, { $push: { 'local.images': imageFileName } }, { safe: true, upsert: true, new: true }, function (err, model) {
+                            console.log(err);
+                        });
+
+                        //add image name to the comic's list of images
+                        Comic.findOne({ _id : req.params.id }, function(err, obj) {
+                            Comic.findByIdAndUpdate(obj._id, { $push: { 'images' : imageFileName } }, { safe: true, upsert: true, new: true }, function (err, model) {
+                                console.log(err);
+                            });
+                        });
+
+
+                        // save image path data to db
+                        imageFilePath.save(function (err, imageFilePath) {
+                            if (err)
+                                return console.error(err);
+                            console.log('photo upload successful!');
+                            res.redirect('/');
+                        });
+                    });
+                 });
             });
             // CREATES A NEW COMIC ======================================
             app.post('/api/upload', function (req, res, next) {

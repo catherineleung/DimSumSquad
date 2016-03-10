@@ -101,7 +101,9 @@
             <strong>Description:</strong> <br><%= comics[index].description %> <br><br>
             <strong>Tags:</strong> <br> <%= comics[index].tags %> <br><br>
              <strong>Creator:</strong><br> <%= comics[index].creatorID %> <br><br>
+             <% if (user.local.username == comics[index].creatorID) { %>
             <button class="btn btn-primary" ng-click="toggleEdit()">Edit Comic</button>
+            <% } %>
           </div>
           <form ng-show="editToggle" method="post" action="/comics/<%=comics[index]._id%>">
             <strong>Title:</strong>
@@ -113,16 +115,25 @@
             <input ng-show="editToggle" class="btn btn-primary" type="submit" ng-click="toggleEdit()" value="Save Changes">  
            <!-- <button class="btn btn-primary" ng-show="editToggle" ng-click="toggleEdit()">Cancel</button>--> 
           </form>
-
+<br>
           <strong>Likes:</strong>
   <%= comics[index].likes %>
-
+  <% if (user) { %>
   <form action="/like" method="post" enctype="application/x-www-form-urlencoded">
     <input type="hidden" name="comic_id" id="comic_id" value= <%= comics[index]._id %> >
     <input type="hidden" name="comic_likes" id="comic_likes" value= <%= comics[index].likes %>>
     <input type="hidden" name="temp_user" id="temp_user" value= <%= user._id %>>
     <input class="btn btn-success btn-med" value="Like" type="submit">
   </form>
+  <% } %>
+
+<br>
+<!-- CANNOT CONTRIBUTE TO YOUR OWN COMIC ???? ask team-->
+      
+        <form method="get" action="/comics/<%=comics[index]._id%>/addpanel">
+        <button class="btn btn-primary">Add a panel?</button>
+      </form>
+
 
           <hr>
 
@@ -131,9 +142,10 @@
               <% for (k = i; k < i + 6; k++) { 
                     if (k < comics[index].images.length) { %>
                       <div class="col-md-2">
-                        <a href="<%= '/uploads/' + comics[index].images[i] %>" class="thumbnail">
-                          <img src="<%= '/uploads/' + comics[index].images[i] %>" alt="" style="width:150px;height:150px">
+                        <a href="<%= '/uploads/' + comics[index].images[k] %>" class="thumbnail">
+                          <img src="<%= '/uploads/' + comics[index].images[k] %>" alt="" style="width:150px;height:150px">
                         </a>
+                        <!-- WANT TO GET THE CURRENT IMAGE AND GET THE CREATOR OF THAT IMAGE -->
                       </div>
                     <% } %>
                   <% } %>
