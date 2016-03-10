@@ -88,6 +88,16 @@
 
 <div class="container">
         <div class="well">
+
+          <% 
+          var index;
+          for (i = 0; i < comics.length; i++) {
+            if (String(id) == String(comics[i]._id)) {
+              index = i;
+            }
+          }
+          %>
+
           <h2><%= comics[index].title %></h2>
           <hr>
 
@@ -104,7 +114,7 @@
 
           <% for (i = 0; i < comics[index].images.length; i += 6) {  %> 
             <div class="row">
-              <%  for (k = i; k < i + 6; k++) { 
+              <% for (k = i; k < i + 6; k++) { 
                     if (k < comics[index].images.length) { %>
                       <div class="col-md-2">
                         <a href="<%= '/uploads/' + comics[index].images[i] %>" class="thumbnail">

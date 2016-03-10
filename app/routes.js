@@ -111,7 +111,7 @@ var Router = (function () {
                 res.redirect('/');
             });
             // COMIC PAGE =========================
-            app.get('/comics/:index', function (req, res) {
+            app.get('/comics/:id', function (req, res) {
                 // var hidden_value = req.getElementbyId("comic_get").innerHTML = req.getElementById("comic_get").value;
                 // console.log("This should be the title of the comic");
                 // console.log(hidden_value);
@@ -119,7 +119,7 @@ var Router = (function () {
                     res.render('comic.ejs', {
                         user: req.user,
                         comics: docs,
-                        index: req.params.index
+                        id: req.params.id
                     });
                 });
             });
