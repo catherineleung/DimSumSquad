@@ -55,7 +55,7 @@ var Router = (function () {
                     res.render('search.ejs', {
                         user: req.user,
                         comics: docs,
-                        query : req.body.query
+                        query : req.query.query
                     });
                 });         
             });

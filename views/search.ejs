@@ -29,11 +29,11 @@
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
         </button>
-        <a class="navbar-brand" href="./"><span class="glyphicon glyphicon-heart"></span> DimSumSquad</a>
+        <a class="navbar-brand" href="/"><span class="glyphicon glyphicon-heart"></span> DimSumSquad</a>
       </div>
       <div id="navbar" class="navbar-collapse collapse">
         <ul class="nav navbar-nav">
-          <li><a href="/comics">Browse</a></li>
+          <li class="active"><a href="/comics">Browse</a></li>
           <li><a href="#">About</a></li>
         </ul>
 
@@ -44,13 +44,12 @@
           <button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-search"></span></button>
         </form>
 
-
         
         <ul class="nav navbar-nav navbar-right">
-        <% if (!user) { %>
-            <li><a href="/signup">Sign Up</a></li>
-            <li class="divider-vertical"></li>
-            <li class="dropdown">
+          <% if (!user) { %>
+          <li><a href="/signup">Sign Up</a></li>
+          <li class="divider-vertical"></li>
+          <li class="dropdown">
             <a class="dropdown-toggle" href="#" data-toggle="dropdown">Sign In<strong class="caret"></strong></a>
             <div class="dropdown-menu" style="padding: 20px; padding-bottom: 15px;">
               <!-- Login form here-->
@@ -63,39 +62,52 @@
                 <input class="btn btn-primary" style="clear: left; width: 100%; height: 32px; font-size: 13px;" type="submit" name="commit" value="Sign In" />
               </form>
             </div>
-        <% } else { %>
+            <% } else { %>
             <li><a href="/profile">Welcome, <%= user.local.username %>!</a></li>
             <li class="divider-vertical"></li>
             <li><a href="/logout">Log Out</a></li>
-        <% } %>
-        </ul>
-        
+            <% } %>
+          </ul>
 
-
-          <!--<ul class="nav navbar-nav navbar-right">
-            <li><a href="#">Default</a></li>
-            <li class="active"><a href="#">Static top <span class="sr-only">(current)</span></a></li>
-            <li><a href="#">Fixed top</a></li>
-          </ul>-->
-        </div><!--/.nav-collapse -->
+        </div>
       </div>
     </nav>
 
     <div class="container">
+      <div class="well">
+        <h2>Comic Search Results</h2>
+        <hr>
+        <%
+        var i = 0;
+        var k = 0;
+        var match = false;
+        while (i<comics.length) {
+          k = 0;  %> 
+          <div class="row">
+            <% while(i<comics.length && k<6) {
+              var str = new String(comics[i].title);
+              match = str.includes(query);
+              if(match) { 
+                k = k + 1; %>
+                <div class="col-md-2" align="center">
+                  <a href="/comics/<%= comics[i]._id %>" class="thumbnail">
+                    <img src="<%= '/uploads/' + comics[i].images[0] %>" alt="" style="width:150px;height:150px">
+                  </a>
+                  <strong><%= comics[i].title %></strong> <br>
+                  By <strong><%= comics[i].creatorID %></strong>
+                </div>
+                <% } %>
+                <% i = i + 1; } %>
+              </div>
+            </div>
+            <%  } %>
+          </div>
 
-      <!-- Main component for a primary marketing message or call to action -->
-      
-        <p><%= message %></p>
-        <p><%= error.status %></p>
-        <pre id="<%= error.stack %>"></pre>
-      
-
-    </div> <!-- /container -->
-
-    <!-- Bootstrap core JavaScript and IE10 viewport hack-->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-    <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
-    <script src="../bootstrap/dist/js/bootstrap.min.js"></script>
-    <script src="../bootstrap/docs/assets/js/ie10-viewport-bug-workaround.js"></script>
-  </body>
-  </html>
+          <!-- Bootstrap core JavaScript and IE10 viewport hack-->
+          <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+          <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
+          <script src="../bootstrap/dist/js/bootstrap.min.js"></script>
+          <script src="../bootstrap/docs/assets/js/ie10-viewport-bug-workaround.js"></script>
+        }
+      </body>
+      </html>
