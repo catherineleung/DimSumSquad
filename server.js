@@ -19,6 +19,25 @@ var Application = (function () {
         var configDB = require('./config/database.js');
         var url = configDB.url;
         var path = require('path');
+        var http = require('http');
+        var aws = require('aws-sdk');
+
+        var AWS_ACCESS_KEY = 'AKIAIB7G6MWNC4MGB55A';
+        var AWS_SECRET_KEY = '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';
+        var S3_BUCKET = 'dimsumsquad';
+
+        // Use the following when deploying to Heroku:
+
+        // var AWS_ACCESS_KEY = process.env.AWS_ACCESS_KEY;
+        // var AWS_SECRET_KEY = process.env.AWS_SECRET_KEY;
+        // var S3_BUCKET = process.env.S3_BUCKET;
+
+        // Set keys with
+        // heroku config:set AWS_ACCESS_KEY=xxx AWS_SECRET_KEY=yyy
+
+        // and
+        // heroku config:set S3_BUCKET = zzz
+
         var contributions = [];
         // configuration ===============================================================
         mongoose.connect(url); // connect to our database

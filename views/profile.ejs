@@ -154,17 +154,28 @@
               <div class="panel-body">
                 <% for (i = 0; i < user.local.favourites.length; i += 6) { %>
                 <div class="row">
-                  <%  for (j = i; j < (user.local.favourites.length - (i * 6)); j++) { %>
+                  <%  for (j = i; j < i + 6; j++) {
+                    if (j < user.local.favourites.length) {
+                      var fav_id;
+                      var fav_path;
+                      var fav_title;
+                      fav_id = user.local.favourites[j];
+                      for (k = 0; k < comics.length; k++) {
+                        if (String(comic_id) == String(comics[k]._id)) {
+                          fav_path = comics[k].images[0];
+                          fav_title = comics[k].title;
+                        }
+                      } %>
                   <div class="col-md-2">
-                    <a href="/comics/<%=user.local.favourites[(i * 6) + j]%>" class="thumbnail">
-                    Favourite # <%= j + 1 %>!
-<!--                       <img src="/uploads/<%=user.local.images[(i * 6) + j]%>" alt="" style="width:150px;height:150px">
- --> 
+                    <a href="/comics/<%=fav_id%>" class="thumbnail">
+                      <img src="/uploads/<%= fav_path %>" alt="" style="width:150px;height:150px">
                     </a>
+                    <strong><%= fav_title %></strong>
                   </div>
                   <%  } %>
-                </div>
                 <%  } %>
+                </div>
+                <% } %>
 
               </div>
             </div>
