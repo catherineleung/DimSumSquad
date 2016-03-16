@@ -26,6 +26,18 @@ var Application = (function () {
         var AWS_SECRET_KEY = 'xd4kOU8eWJcBs3MNYUhXdGzIdbjeYkF9PLDn+EOT';
         var S3_BUCKET = 'dimsumsquad';
 
+        var fs = require('fs');
+        var S3FS = require('s3fs');
+        var s3fsImpls = new S3FS(S3_BUCKET, {
+            accessKeyId: AWS_ACCESS_KEY,
+            secretAccessKey: AWS_SECRET_KEY
+        });
+
+        var multiparty = require('connect-multiparty');
+        var multipartyMiddleware = multiparty();
+
+        app.use(multipartyMiddleware);
+
         // Use the following when deploying to Heroku:
 
         // var AWS_ACCESS_KEY = process.env.AWS_ACCESS_KEY;
@@ -37,6 +49,8 @@ var Application = (function () {
 
         // and
         // heroku config:set S3_BUCKET = zzz
+
+        
 
         var contributions = [];
         // configuration ===============================================================

@@ -14,6 +14,8 @@ var Router = (function () {
         var Image = require('../app/models/image');
         var User = require('../app/models/user');
         var Comic = require('../app/models/comic.js');
+        
+
         function getUsers(res) {
             User.find(function (err, users) {
                 if (err) {
@@ -24,6 +26,7 @@ var Router = (function () {
         }
         ;
         module.exports = function (app, passport) {
+
             // normal routes ===============================================================
             // show the home page (will also have our login links)
             app.get('/', function (req, res) {
@@ -431,6 +434,18 @@ var Router = (function () {
                         res.write(JSON.stringify(return_data));
                         res.end();
                     }
+                });
+            });
+
+            app.post('/testupload', function(req, res) {
+                var file = req.files.file;
+                var stream = fs.createReadStream(file.path);
+                return s3fsImpl.writeFile(file.originalFileName, stream).then(function () {
+                    fs.unlink(file.path, function (err) {
+                        if (err) {
+                            console.error(err);
+                        }
+                    });
                 });
             });
             
