@@ -334,9 +334,10 @@ var Router = (function () {
                          var usersComicList = req.user.local.comics;
                          var arrayLength = usersComicList.length;
                          var mostRecentlyCreatedComic = usersComicList[arrayLength - 1];
+                         var comicID = { '_id': req.params.id };
 
                          // prints out last comic contributed to
-                         console.log("User just created this comic: " + mostRecentlyCreatedComic); 
+                         console.log("User just created this comic: " + req.params.id); 
 
                          // iterate through user's list of comics 
                          //for (var i = 0; i < arrayLength; i++) {
