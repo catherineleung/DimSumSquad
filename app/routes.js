@@ -345,7 +345,6 @@ var Router = (function () {
                          //}
 
                         //NEEED TO FIX THIS SO IT WILL TAKE IN COMIC ID FOR imageBelongsTo FIELD !!!!!!!!!!!!!!!! still works tho
-                         var imageFilePath = new Image({ path: imageFileName, uploaderID: req.user.local.username, imageBelongsTo: mostRecentlyCreatedComic, chapter: 1 });
 
                         // add image ID to the creator's list of uploaded images
                         User.findByIdAndUpdate(req.user._id, { $push: { 'local.images': imageFileName } }, { safe: true, upsert: true, new: true }, function (err, model) {
@@ -357,17 +356,23 @@ var Router = (function () {
                             Comic.findByIdAndUpdate(obj._id, { $push: { 'images' : imageFileName } }, { safe: true, upsert: true, new: true }, function (err, model) {
                                 console.log(err);
                             });
+                           var imageFilePath = new Image({ path: imageFileName, uploaderID: req.user.local.username, imageBelongsTo: obj._id, chapter: 1 });
+
+                            // save image path data to db
+                            imageFilePath.save(function (err, imageFilePath) {
+                                if (err)
+                                    return console.error(err);
+                                console.log('photo upload successful!');
+                                res.redirect('/');
+                            });
+
+
                         });
 
 
 
-                        // save image path data to db
-                        imageFilePath.save(function (err, imageFilePath) {
-                            if (err)
-                                return console.error(err);
-                            console.log('photo upload successful!');
-                            res.redirect('/');
-                        });
+                        
+                        
                     });
             });
             });
