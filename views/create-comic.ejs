@@ -147,7 +147,7 @@
 
                     <label for="tags" class="col-lg-2 control-label">Tags</label> <!-- data-role="tagsinput"-->
                     <div class="col-lg-10">
-                    <input type="text" id="tags" name="tags" class="form-control" data-role="tagsinput" ng-model="formData.tags" ng-model-options="{ updateOn: 'blur' }" required/><br />
+                    <input type="text" id="tags" name="tags" class="form-control" ng-model="formData.tags" ng-model-options="{ updateOn: 'blur' }" required/><br />
                     <span style="color:red" ng-show="myTestForm.tags.$dirty && myTestForm.tags.$invalid">
                       <span class="label label-danger" ng-show="myTestForm.tags.$error.required">Tags are required.</span>
                     </span>
@@ -156,7 +156,7 @@
 
 
                   <div class="col-lg-10"><br>
-                    <input class="btn btn-primary" type="submit" id="submit" value="Create my comic!" name="submit" ng-disabled="(myTestForm.description.$dirty && myTestForm.description.$invalid) || (myTestForm.title.$dirty && myTestForm.title.$invalid) || (myTestForm.tags.$dirty && myTestForm.tags.$invalid) || myTestForm.description.$pristine || myTestForm.title.$pristine">
+                    <input class="btn btn-primary" type="submit" id="submit" value="Create my comic!" name="submit" ng-disabled="(myTestForm.description.$dirty && myTestForm.description.$invalid) || (myTestForm.title.$dirty && myTestForm.title.$invalid) || (myTestForm.tags.$dirty && myTestForm.tags.$invalid) || myTestForm.description.$pristine || myTestForm.title.$pristine || myTestForm.tags.$pristine">
                   </div>
                 </form>
 
