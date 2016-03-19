@@ -30,10 +30,14 @@ var Router = (function () {
             // normal routes ===============================================================
             // show the home page (will also have our login links)
             app.get('/', function (req, res) {
-                res.render('index.ejs', {
-                    user: req.user
+                Comic.find({}).sort({likes: 'desc'}).exec(function(err, docs) {
+                    res.render('index.ejs', {
+                        user: req.user,
+                        topcomics: docs
+                    });
                 });
             });
+
             app.get('/angular', function (req, res) {
                 res.render('angular.ejs', {
                     user: req.user
@@ -225,6 +229,16 @@ var Router = (function () {
                         comics: docs
                     });
                 });
+            });
+
+            // gets the topcomics
+            app.get('/topcomics', function (req, res) {
+                Comic.find({}).sort({likes: 'desc'}).exec(function(err, docs) {
+                    res.render('topcomics.ejs', {
+                        user: req.user,
+                        topcomics: docs
+                    });
+            });
             });
 
             app.post('/like', function(req, res){
