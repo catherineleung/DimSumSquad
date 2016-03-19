@@ -86,7 +86,8 @@
           <div class="row">
             <% while(i<comics.length && k<6) {
               var str = new String(comics[i].title);
-              match = str.includes(query);
+              var tags = new String(comics[i].tags);
+              match = str.includes(query) || tags.includes(query);
               if(match) { 
                 k = k + 1; %>
                 <div class="col-md-2" align="center">
