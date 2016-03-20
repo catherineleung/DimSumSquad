@@ -173,15 +173,17 @@
       </div>
 
       <div class="container">
-        <div class="well">
+        <div class="well" style='padding: 20px'>
 
-      <h5>Comments</h5>
-
-       <% for (i = 0; i < comics[index].comments.length; i++) {  %> 
-      <div class="row" style='padding: 10px'>
+      <strong>Comments: </strong>
+      <br>
+      <br>
+      <% for (i = 0; i < comics[index].comments.length; i++) {  %> 
+      <div class="row" style='padding: 20px; border:1px solid #bbb; background:white'>
       <strong> User: <%= comics[index].comments[i].user %> </strong>
       <p><%= comics[index].comments[i].comment %></p>
       </div>
+      <br>
       <% } %>
 
 
