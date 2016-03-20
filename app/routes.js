@@ -278,6 +278,64 @@ var Router = (function () {
                     res.redirect('/');
                 }
             });
+
+
+            // DELETE A COMIC ====================
+            app.post('/deletecomic/:id', function (req, res) {
+                console.log("hey" + req.params.id);
+
+                Comic.find({}, function(err, comics) {
+                    var comicCreatorID;
+                    var comicTitle;
+
+                    for (j = 0; j < comics.length; j++) {
+                        if (String(comics[j]._id) == String(req.params.id)) {
+                            comicCreatorID = comics[j].creatorID;
+                            comicTitle = comics[j].title;
+                            User.find({}, function(err, users) {
+                                for (i = 0; i < users.length; i++) {
+                                    if (String(users[i].local.username) == String(comicCreatorID)) {
+                                        console.log(comicTitle);
+                                        console.log(users[i].local.username);
+                                        User.update({ 'local.username': users[i].local.username}, 
+                                            { $pull: { 'local.comics': comicTitle }
+                                        });
+                                    }
+                                }
+                            });
+                        }
+                    } 
+                });
+                // removes comic from user's comic list
+                
+
+                // removes images associated with that comic
+                Image.find({}, function(err, docs) {
+                    for (i = 0; i < docs.length; i++) {
+                        if (String(docs[i].imageBelongsTo) == String(req.params.id)) {
+                            Image.remove({
+                                _id: docs[i]._id
+                            }, function (err, user) {
+                                if (err) {
+                                    res.send(err);
+                                }
+                            });
+                        }
+                    }
+                });
+
+                // removes comic
+                Comic.remove({
+                    _id: req.params.id
+                }, function (err, user) {
+                    if (err) {
+                        res.send(err);
+                    }
+                    res.redirect('/profile'); // testing
+                });
+            });
+
+
             // BECOMING A CONTRIBUTOR ==============
             app.get('/contribute', function (req, res) {
                 var query = { 'local.username': req.user.local.username };

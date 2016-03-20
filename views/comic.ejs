@@ -115,6 +115,16 @@
             <input ng-show="editToggle" class="btn btn-primary" type="submit" ng-click="toggleEdit()" value="Save Changes">  
            <!-- <button class="btn btn-primary" ng-show="editToggle" ng-click="toggleEdit()">Cancel</button>--> 
           </form>
+
+          <!-- DELETE COMIC BUTTON only shows up if you are creator of that comic -->
+          <% if (user.local.username == comics[index].creatorID) { %>
+            <!-- comic from user's comics list-->
+            <form method="post" action="<%= '/deletecomic/' + comics[index]._id %>">
+            <button class="btn btn-primary" type="submit"><%= comics[index]._id %></button>
+            </form>
+            <% } %>
+
+
 <br>
           <strong>Likes:</strong>
   <%= comics[index].likes %>
