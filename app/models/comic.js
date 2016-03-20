@@ -10,6 +10,7 @@ var comicSchema = mongoose.Schema({
     contributors: {},
     chapters: Number,       // Number of chapters the comic has
     likes: Number,
+    comments: Array,        // list of comments
 
     // Mutable 
     images: Array			// Array of images or chapters
