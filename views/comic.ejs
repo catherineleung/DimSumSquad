@@ -176,11 +176,41 @@
         </a>
         </div> -->
 
-        </div>
-      </div>
-
       
 
 
         </div>
+      </div>
+
+      <div class="container">
+        <div class="well" style='padding: 20px'>
+
+      <strong>Comments: </strong>
+      <br>
+      <br>
+      <% for (i = 0; i < comics[index].comments.length; i++) {  %> 
+      <div class="row" style='padding: 20px; border:1px solid #bbb; background:white'>
+      <strong> User: <%= comics[index].comments[i].user %> </strong>
+      <p><%= comics[index].comments[i].comment %></p>
+      </div>
+      <br>
+      <% } %>
+
+
+      <div class="form-group">
+                <form id  =  "commentForm"
+                enctype   =  "application/x-www-form-urlencoded"
+                action    =  "/comment"
+                method    =  "post">
+      <label for="comment">Comment:</label>
+      <textarea class="form-control" rows="3" id="comment" name="comment"></textarea>
+      <input type="hidden" name="comic_id" id="comic_id" value= <%= comics[index]._id %> >
+      </div>
+      <input class="btn btn-primary" type="submit" id="submit" value="Comment!" name="submit">
+      </form>
+
+        </div>
+      </div>
+
+      </div>
       </div>

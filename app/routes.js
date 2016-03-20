@@ -14,6 +14,7 @@ var Router = (function () {
         var Image = require('../app/models/image');
         var User = require('../app/models/user');
         var Comic = require('../app/models/comic.js');
+        var Comment = require('../app/models/comment.js');
         
 
         function getUsers(res) {
@@ -30,10 +31,14 @@ var Router = (function () {
             // normal routes ===============================================================
             // show the home page (will also have our login links)
             app.get('/', function (req, res) {
-                res.render('index.ejs', {
-                    user: req.user
+                Comic.find({}).sort({likes: 'desc'}).exec(function(err, docs) {
+                    res.render('index.ejs', {
+                        user: req.user,
+                        topcomics: docs
+                    });
                 });
             });
+
             app.get('/angular', function (req, res) {
                 res.render('angular.ejs', {
                     user: req.user
@@ -227,6 +232,16 @@ var Router = (function () {
                 });
             });
 
+            // gets the topcomics
+            app.get('/topcomics', function (req, res) {
+                Comic.find({}).sort({likes: 'desc'}).exec(function(err, docs) {
+                    res.render('topcomics.ejs', {
+                        user: req.user,
+                        topcomics: docs
+                    });
+            });
+            });
+
             app.post('/like', function(req, res){
 
                 // check first to see if you've liked the comic already
@@ -258,6 +273,37 @@ var Router = (function () {
                 // reloads the comic page
                 res.redirect('/comics/' + req.body.comic_id);
             });
+
+             app.post('/comment', function (req, res) {
+
+                    // console.log("commenting!!");
+
+                    var newComment = new Comment({
+                        user: req.user.local.username,
+                        comment: req.body.comment
+                    });
+
+                    // console.log(newComment.user);
+                    // console.log(newComment.comment);
+
+                    // query using id of current comic
+                    var comicID = req.body.comic_id;
+
+                    // console.log(comicID);
+
+                   Comic.findByIdAndUpdate(comicID, { $push: { 'comments': newComment } }, { safe: true, upsert: true, new: true }, function (err, model) {
+                   console.log(err);
+
+                    Comic.find({}, function (err, docs) {
+                    res.render('comic.ejs', {
+                        user: req.user,
+                        comics: docs,
+                        id: comicID
+                    });
+                });
+                });
+            });
+
 
             // CREATE A COMIC PAGE ================
             app.get('/create-comic', isLoggedIn, function (req, res) {
