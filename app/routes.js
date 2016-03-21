@@ -364,18 +364,18 @@ var Router = (function () {
                     for (i = 0; i < docs.length; i++) {
                         if (String(docs[i].imageBelongsTo) == String(req.params.id)) {
 
-                            // need to remove these images from user's image list !!!!!!!!!!!!!!
+                            // removes images associated with the comic from user's image list
                             console.log("this is the path: " + docs[i].path);
                             var nameOfImage = docs[i].path;
 
                             User.find({}, function(err, users) {
                                 for (j = 0; j < users.length; j++) {
-                                    User.update(
-                                        {}, 
-                                    { $pull: { 'local.images' : nameOfImage }});
-                                    // I NEED TO FIX THIS PART
+                                    var userID = users[j]._id;
+                                    User.findByIdAndUpdate(users[j]._id,
+                                        { $pull: { 'local.images' : nameOfImage }}, function (err, data) {
+                                            console.log(err, data);
+                                        });
                                 }
-                                
                             });
 
 
