@@ -365,7 +365,7 @@ var Router = (function () {
                         if (String(docs[i].imageBelongsTo) == String(req.params.id)) {
 
                             // removes images associated with the comic from user's image list
-                            console.log("this is the path: " + docs[i].path);
+                            console.log("this is the path: " + docs[i].path + "!!!!!!!!");
                             var nameOfImage = docs[i].path;
 
                             User.find({}, function(err, users) {
