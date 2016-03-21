@@ -358,12 +358,28 @@ var Router = (function () {
                     } 
                 });
                 
-                
 
-                // removes images associated with that comic from the database
+                
                 Image.find({}, function(err, docs) {
                     for (i = 0; i < docs.length; i++) {
                         if (String(docs[i].imageBelongsTo) == String(req.params.id)) {
+
+                            // need to remove these images from user's image list !!!!!!!!!!!!!!
+                            console.log("this is the path: " + docs[i].path);
+                            var nameOfImage = docs[i].path;
+
+                            User.find({}, function(err, users) {
+                                for (j = 0; j < users.length; j++) {
+                                    User.update(
+                                        {}, 
+                                    { $pull: { 'local.images' : nameOfImage }});
+                                    // I NEED TO FIX THIS PART
+                                }
+                                
+                            });
+
+
+                            // removes images associated with that comic from the database
                             Image.remove({
                                 _id: docs[i]._id
                             }, function (err, user) {
@@ -371,8 +387,11 @@ var Router = (function () {
                                     res.send(err);
                                 }
                             });
+
                         }
                     }
+
+                    
                 });
 
                 // removes comic from database
