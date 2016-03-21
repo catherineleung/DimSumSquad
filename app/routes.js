@@ -330,6 +330,7 @@ var Router = (function () {
             app.post('/deletecomic/:id', function (req, res) {
                 console.log("hey" + req.params.id);
 
+                // removes comic from user's comic list on the database
                 Comic.find({}, function(err, comics) {
                     var comicCreatorID;
                     var comicTitle;
@@ -341,10 +342,14 @@ var Router = (function () {
                             User.find({}, function(err, users) {
                                 for (i = 0; i < users.length; i++) {
                                     if (String(users[i].local.username) == String(comicCreatorID)) {
-                                        console.log(comicTitle);
+                                        console.log(comicCreatorID);
                                         console.log(users[i].local.username);
-                                        User.update({ 'local.username': users[i].local.username}, 
+                                        console.log(users[i]._id);
+                                        console.log(comicTitle);
+                                        User.findByIdAndUpdate(users[i]._id, 
                                             { $pull: { 'local.comics': comicTitle }
+                                        }, function(err, data) {
+                                            console.log(err, data);
                                         });
                                     }
                                 }
@@ -352,10 +357,10 @@ var Router = (function () {
                         }
                     } 
                 });
-                // removes comic from user's comic list
+                
                 
 
-                // removes images associated with that comic
+                // removes images associated with that comic from the database
                 Image.find({}, function(err, docs) {
                     for (i = 0; i < docs.length; i++) {
                         if (String(docs[i].imageBelongsTo) == String(req.params.id)) {
@@ -370,7 +375,7 @@ var Router = (function () {
                     }
                 });
 
-                // removes comic
+                // removes comic from database
                 Comic.remove({
                     _id: req.params.id
                 }, function (err, user) {
@@ -438,17 +443,15 @@ var Router = (function () {
                          var usersComicList = req.user.local.comics;
                          var arrayLength = usersComicList.length;
                          var mostRecentlyCreatedComic = usersComicList[arrayLength - 1];
-                         var comicID = { '_id': req.params.id };
+                         //var comicID = { '_id': req.params.id };
 
                          // prints out last comic contributed to
-                         console.log("User just created this comic: " + req.params.id); 
+                         //console.log("User just created this comic: " + req.params.id); 
 
                          // iterate through user's list of comics 
                          //for (var i = 0; i < arrayLength; i++) {
                          //    console.log(usersComicList[i]);
                          //}
-
-                        //NEEED TO FIX THIS SO IT WILL TAKE IN COMIC ID FOR imageBelongsTo FIELD !!!!!!!!!!!!!!!! still works tho
 
                         // add image ID to the creator's list of uploaded images
                         User.findByIdAndUpdate(req.user._id, { $push: { 'local.images': imageFileName } }, { safe: true, upsert: true, new: true }, function (err, model) {
