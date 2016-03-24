@@ -78,6 +78,10 @@ var Router = (function () {
                 });
             });
 
+            app.get('/removeprofilepic', function (req, res) {
+                res.redirect('/profile');
+            });
+
             app.post('/profile', function (req, res) {
                 var query = { 'local.username': req.user.local.username };
                 if(req.body.email){
@@ -103,6 +107,33 @@ var Router = (function () {
                             return res.send(500, { error: err });
                     });
                 }
+                res.redirect('/profile');
+            });
+
+            app.post('/uploadprofilepic', function(req, res) {
+                var query = { 'local.username': req.user.local.username };
+                process.nextTick(function () {
+                    upload(req, res, function(err) {
+                        if (err) {
+                            return res.end("Error uploading file.");
+                        }
+                        var imageFilePath = new Image({ path: imageFileName, uploaderID: req.user.local.username, chapter: -1 });
+
+                        imageFilePath.save(function (err, imageFilePath) {
+                            if (err)
+                                return console.error(err);
+                            console.log("photo upload successful");
+                        });
+
+                        console.log(imageFileName + "THIS IS THE PROFILE PIC PATH");
+
+                        var newPicture = { $set: { 'local.picture': imageFileName }};
+                        User.findOneAndUpdate(query, newPicture, { upsert: true}, function(err, doc) {
+                            if (err)
+                                return console.error(err);
+                        });
+                    });
+                });
                 res.redirect('/profile');
             });
 

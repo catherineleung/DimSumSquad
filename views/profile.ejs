@@ -108,12 +108,19 @@
               </div>
               <div class="panel-body">
                 <div class="row">
-                  <div class="col-md-3 col-md-offset-3">
+                  <div class="col-md-3 col-md-offset-3" style="text-align:center">
                     <% if (user.local.picture) {%>
-                    <img src="/pictures/<%=user.local.picture%>" alt="Profile picture" style="width:150px;height:150px"> 
+                    <img src="/uploads/<%=user.local.picture%>" alt="Profile picture" style="width:150px;height:150px"> 
+                    <br>
+                    <a href data-toggle="modal" data-target="#upload_picture"><small>Change profile picture</small></a>
+                    <br>
+                    <a href="/removeprofilepic"><small>Remove profile picture</small></a>
                     <% } else { %>
                     <img src="app_images/generic_picture.png" alt="Generic" style="max-width:50%;max-height:50%"> 
+                    <br>
+                    <a href data-toggle="modal" data-target="#upload_picture"><small>Upload profile picture</small></a>
                     <% } %>
+
                   </div>
                   <div class="col-md-6">
                     <div ng-hide="editToggle">
@@ -215,6 +222,40 @@
       </div>
     </div>
     <!-- END PROFILE BODY CONTENT -->
+
+
+
+    <div id="upload_picture" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Upload Profile Picture</h4>
+      </div>
+      <div class="modal-body">
+            <fieldset>
+              <div class="form-group">
+                <form id        =  "uploadImageForm"
+                enctype   =  "multipart/form-data"
+                action    =  "/uploadprofilepic"
+                method    =  "post">
+​
+                <input type="file" name="userPhoto" /> 
+                <br></br>
+                <input class="btn btn-primary" type="submit" id="submit" value="Upload" name="submit">
+                </form>
+              </div>
+            </fieldset>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+
+  </div>
+</div>
 
     <!-- Bootstrap core JavaScript and IE10 viewport hack-->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
