@@ -222,7 +222,10 @@ var Router = (function () {
             });
 
 
-            app.post('/comics/:id', function (req, res) {
+            app.post('/comics/:id', isLoggedIn, function (req, res) {
+                    
+
+                    if (isLoggedIn) {
 
 
                     // query using id of current comic
@@ -255,10 +258,18 @@ var Router = (function () {
                         comics: docs,
                         id: req.params.id
                     });
-                });
+
                 });
 
+                } else {
+                    res.redirect('/deniedAccess');
+                }
 
+                });
+
+            app.get('/deniedAccess', function (req, res) {
+                res.render('deniedAccess.ejs');
+            });
 
 
             app.get('/comics', function (req, res) {
