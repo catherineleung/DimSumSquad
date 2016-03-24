@@ -4,6 +4,7 @@ angular.module('comicController', [])
 	.controller('toggleController', ['$scope','$http', function($scope, $http) {
 		$scope.editData = {};
 		$scope.editToggle = false;
+		$scope.toggleComment = false;
 
 
 		//EDIT PROFILE =====================================================================	
@@ -14,6 +15,20 @@ angular.module('comicController', [])
 			}
 			else {
 				$scope.editToggle = true;
+			}
+		}
+
+		// POST A COMMENT ==================================================================
+		$scope.toggleComment = function() {
+			if($scope.toggleComment){
+				$scope.toggleComment = false;
+				$scope.$apply();
+
+			}
+			else {
+				$scope.toggleComment = true;
+				$scope.$apply();
+
 			}
 		}
 	}]);
