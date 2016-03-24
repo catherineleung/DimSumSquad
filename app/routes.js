@@ -79,6 +79,13 @@ var Router = (function () {
             });
 
             app.get('/removeprofilepic', function (req, res) {
+                User.find({}, function (err, docs) {
+                    //console.log(req.user._id);
+                    //console.log(req.user.local.picture);
+                    User.findByIdAndUpdate(req.user._id, { $unset: { 'local.picture': req.user.local.picture } }, { safe: true, upsert: true, new: true }, function (err, model) {
+                         console.log(err);
+                    });
+                });
                 res.redirect('/profile');
             });
 
