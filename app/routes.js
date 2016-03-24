@@ -82,6 +82,23 @@ var Router = (function () {
                 User.find({}, function (err, docs) {
                     //console.log(req.user._id);
                     //console.log(req.user.local.picture);
+
+                    // removes old profile picture from database
+                    Image.find({}, function (err, docs) {
+                        for (i = 0; i < docs.length; i++) {
+                            if (docs[i].path == req.user.local.picture ) {
+                                Image.remove({
+                                    path: docs[i].path
+                                }, function( err, docs ) {
+                                    if (err)
+                                        res.send(err);
+                                });
+                            }
+                        }
+                    });
+
+
+                    // removes profile picture from user
                     User.findByIdAndUpdate(req.user._id, { $unset: { 'local.picture': req.user.local.picture } }, { safe: true, upsert: true, new: true }, function (err, model) {
                          console.log(err);
                     });
