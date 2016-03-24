@@ -186,32 +186,52 @@
       <div class="container">
         <div class="well" style='padding: 20px'>
 
+
       <strong>Comments: </strong>
       <br>
       <br>
       <% for (i = 0; i < comics[index].comments.length; i++) {  %> 
-      <div class="row" style='padding: 20px; border:1px solid #bbb; background:white'>
-      <strong> User: <%= comics[index].comments[i].user %> </strong>
-      <p><%= comics[index].comments[i].comment %></p>
-      </div>
-      <br>
-      <% } %>
-
-
-      <div class="form-group">
-                <form id  =  "commentForm"
-                enctype   =  "application/x-www-form-urlencoded"
-                action    =  "/comment"
-                method    =  "post">
-      <label for="comment">Comment:</label>
-      <textarea class="form-control" rows="3" id="comment" name="comment"></textarea>
-      <input type="hidden" name="comic_id" id="comic_id" value= <%= comics[index]._id %> >
-      </div>
-      <input class="btn btn-primary" type="submit" id="submit" value="Comment!" name="submit">
-      </form>
-
+      <div class="row" style='padding: 20px; border:1px solid #bbb; background:white; vertical-align:middle '>
+        <% var currentuser;
+        for (j = 0; j < users.length; j++) {
+          if (users[j].local.username == comics[index].comments[i].user) {
+            currentuser = users[j];
+          }
+        } %>
+        <div class="col-lg-1">
+        <% if (currentuser.local.picture) { %>
+          <img src="/uploads/<%=currentuser.local.picture%>" alt="Profile picture" style="width:50px;height:50px"> 
+          <% } else { %>
+          <img src="/app_images/generic_picture.png" alt="Generic" style="width:50px;height:50px"> 
+          <% } %>
+        </div>
+        <div class="col-lg-4">
+          <strong> <%= comics[index].comments[i].user %></strong> <br><br>
         </div>
       </div>
+      <div class="row" style='padding: 20px; border:1px solid #bbb; background:white'>
+        <p><%= comics[index].comments[i].comment %></p>
+      </div>
+        <br>
+        <% } %>
+        <button class="btn btn-primary" style='background: indigo; border-color: indigo' ng-click="toggleComment()">Post a Comment!</button>
+        <br>
+        <br>
+        <br>
+        <form id  =  "commentForm"
+                  ng-show="!toggleComment"
+                  enctype   =  "application/x-www-form-urlencoded"
+                  action    =  "/comment"
+                  method    =  "post">
+        <label for="comment">Comment:</label>
+        <textarea class="form-control" rows="3" id="comment" name="comment"></textarea>
+        <input type="hidden" name="comic_id" id="comic_id" value= <%= comics[index]._id %> >
+        <input class="btn btn-primary" style='background: indigo; border-color: indigo' type="submit" id="submit" value="Comment!" name="submit" ng-show="!toggleComment" ng-click="toggleComment()">
+        </div>
+        </form>
 
-      </div>
-      </div>
+          </div>
+        </div>
+
+        </div>
+        </div>

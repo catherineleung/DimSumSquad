@@ -229,17 +229,23 @@ var Router = (function () {
                 // var hidden_value = req.getElementbyId("comic_get").innerHTML = req.getElementById("comic_get").value;
                 // console.log("This should be the title of the comic");
                 // console.log(hidden_value);
-                Comic.find({}, function (err, docs) {
-                    res.render('comic.ejs', {
-                        user: req.user,
-                        comics: docs,
-                        id: req.params.id
+                Comic.find({}, function (err, comics) {
+                    User.find({}, function (err, users) {
+                        res.render('comic.ejs', {
+                            user: req.user,
+                            comics: comics,
+                            id: req.params.id,
+                            users: users
+                        });
                     });
                 });
             });
 
 
-            app.post('/comics/:id', function (req, res) {
+            app.post('/comics/:id', isLoggedIn, function (req, res) {
+                    
+
+                    if (isLoggedIn) {
 
 
                     // query using id of current comic
@@ -272,10 +278,18 @@ var Router = (function () {
                         comics: docs,
                         id: req.params.id
                     });
-                });
+
                 });
 
+                } else {
+                    res.redirect('/deniedAccess');
+                }
 
+                });
+
+            app.get('/deniedAccess', function (req, res) {
+                res.render('deniedAccess.ejs');
+            });
 
 
             app.get('/comics', function (req, res) {
