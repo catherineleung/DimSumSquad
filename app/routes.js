@@ -161,6 +161,19 @@ var Router = (function () {
                 res.redirect('/profile');
             });
 
+             app.get('/profile/:id', function (req, res) {
+                Comic.find({}, function (err, comics) {
+                    User.findOne({'local.username' : req.params.id}, function (err, searchUser) {
+                        console.log(req.params.id);
+                        console.log(searchUser.local.username);
+                        res.render('public-profile.ejs', {
+                            user: req.user,
+                            comics: comics,
+                            displayUser: searchUser
+                        });
+                    });
+                });
+            });
 
             // UPLOAD SECTION =========================
             app.get('/upload', isLoggedIn, function (req, res) {

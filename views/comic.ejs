@@ -100,7 +100,8 @@
             <strong>Title:</strong><br> <%= comics[index].title %><br><br>
             <strong>Description:</strong> <br><%= comics[index].description %> <br><br>
             <strong>Tags:</strong> <br> <%= comics[index].tags %> <br><br>
-             <strong>Creator:</strong><br> <%= comics[index].creatorID %> <br><br>
+             <strong>Creator:</strong><br><a href="/profile/<%= comics[index].creatorID %>"><%= comics[index].creatorID %></a> <br><br>
+
              <% if (user.local.username == comics[index].creatorID) { %>
             <button class="btn btn-primary" ng-click="toggleEdit()">Edit Comic</button>
             <% } %>

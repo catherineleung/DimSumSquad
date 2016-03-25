@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="profileController" ng-cloak>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <!-- <link rel="icon" href="../../favicon.ico"> -->
+
+  <title>SumComics</title>
+
+  <!-- Bootstrap core, IE10 viewport hack, and custom styles-->
+  <link href="/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="/bootstrap/docs/assets/css/ie10-viewport-bug-workaround.css" rel="stylesheet">
+  <link href="/bootstrap/docs/examples/navbar-static-top/navbar-static-top.css" rel="stylesheet">
+
+  <link href="/bootstrap/custom/custom.css" rel="stylesheet"> <!-- CUSTOM CSS FOR THIS PAGE ONLY - MICHAEL -->
+
+  <script src="/bootstrap/docs/assets/js/ie-emulation-modes-warning.js"></script>
+
+  <!-- AngularJS -->
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular.min.js"></script>
+  <script src="/js/controllers/profile.js"></script> <!-- load up our controller -->
+
+  <!-- ng cloak -->
+  <style>
+  [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+    display: none !important;
+  }
+  </style>
+
+</head>
+
+<body ng-controller = "toggleController">
+
+  <!-- Static navbar -->
+  <nav class="navbar navbar-default navbar-static-top">
+    <div class="container">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="./"><span class="glyphicon glyphicon-heart"></span> DimSumSquad</a>
+      </div>
+      <div id="navbar" class="navbar-collapse collapse">
+        <ul class="nav navbar-nav">
+          <li><a href="/comics">Browse</a></li>
+          <li><a href="#">About</a></li>
+        </ul>
+
+        <form class="navbar-form navbar-left" role="search" method="get" action="/search">
+          <div class="form-group" >
+            <input type="text" class="form-control" placeholder="Search" name="query">
+          </div>
+          <button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-search"></span></button>
+        </form>
+
+        <ul class="nav navbar-nav navbar-right">
+          <% if (!user) { %>
+          <li><a href="/signup">Sign Up</a></li>
+          <li class="divider-vertical"></li>
+          <li class="dropdown">
+            <a class="dropdown-toggle" href="#" data-toggle="dropdown">Sign In<strong class="caret"></strong></a>
+            <div class="dropdown-menu" style="padding: 20px; padding-bottom: 15px;">
+              <!-- Login form here-->
+              <form action="/login" method="post" accept-charset="UTF-8">
+                <input id="username" style="margin-bottom: 15px;" type="text" name="email" size="30" placeholder="Username">
+                <input id="password" style="margin-bottom: 15px;" type="password" name="password" size="30" placeholder="Password">
+                <input id="user_remember_me" style="float: left; margin-right: 10px;" type="checkbox" name="remember_me" value="1" />
+                <label class="string optional" for="user_remember_me"> Remember me</label>
+
+                <input class="btn btn-primary" style="clear: left; width: 100%; height: 32px; font-size: 13px;" type="submit" name="commit" value="Sign In" />
+              </form>
+            </div>
+            <% } else { %>
+            <li><a href="/profile">Welcome, <%= user.local.username %>!</a></li>
+            <li class="divider-vertical"></li>
+            <li><a href="/logout">Log Out</a></li>
+            <% } %>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- PROFILE BODY CONTENT -->
+    <div class="container">
+      <div class="well">
+        <h1> <%= displayUser.local.username %>'s Profile</h1>
+        <button class="btn btn-primary btn-lg" style='background: midnightblue; border-color: midnightblue' ng-click="toggleComment()">Follow <%= displayUser.local.username %> </button>
+        <hr>
+        <ul class="nav nav-tabs">
+          <li class="active"><a href="#account" data-toggle="tab" aria-expanded="true">Account</a></li>
+          <li class=""><a href="#favourites" data-toggle="tab" aria-expanded="false">Favourites</a></li>
+          <li class=""><a href="#contributions" data-toggle="tab" aria-expanded="false">Contributions</a></li>
+        </ul>
+        <br>
+
+        <div id="myTabContent" class="tab-content">
+
+          <!-- ACCOUNT TAB -->
+          <div class="tab-pane fade active in" id="account">
+            <div class="panel panel-primary">
+              <div class="panel-heading">
+                <h1 class="panel-title"><span class="glyphicon glyphicon-user"></span> <%= displayUser.local.username %>'s Account</h1>
+              </div>
+              <div class="panel-body">
+                <div class="row">
+                  <div class="col-md-3 col-md-offset-3" style="text-align:center">
+                    <% if (displayUser.local.picture) {%>
+                    <img src="/uploads/<%=user.local.picture%>" alt="Profile picture" style="width:150px;height:150px"> 
+                    <br>
+                    <br>
+                    <% } else { %>
+                    <img src="app_images/generic_picture.png" alt="Generic" style="max-width:50%;max-height:50%"> 
+                    <br>
+                    <% } %>
+
+                  </div>
+                  <div class="col-md-6">
+                    <div ng-hide="editToggle">
+                      <strong>Username</strong>: <%= displayUser.local.username %><br>
+                      <strong>Email</strong>: <%= displayUser.local.email %><br>
+                      <strong>Birthday</strong>: <%= displayUser.local.birthday %><br>
+                      <strong>Description</strong>: <%= displayUser.local.description %><br>
+                      <strong>Contributions</strong>: <%= displayUser.local.comics.length %><br>
+
+                    </div>
+                                          
+                    <%  if (displayUser.local.contributor) { %>
+                    <span class="label label-success">Contributor</span><br>
+                    <%  } else { %>
+                    <span class="label label-success"><span class="fa fa-user"></span>Viewer</a><br>
+                    <%  } %>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- FAVOURITES TAB -->
+          <div class="tab-pane fade" id="favourites">
+            <div class="panel panel-danger">
+              <div class="panel-heading">
+                <h1 class="panel-title"><span class="glyphicon glyphicon-star"></span> <%= displayUser.local.username %>'s Favourites</h1>
+              </div>
+              <div class="panel-body">
+                <% for (i = 0; i < displayUser.local.favourites.length; i += 6) { %>
+                <div class="row">
+                  <%  for (j = i; j < (displayUser.local.favourites.length - (i * 6)); j++) { %>
+                  <div class="col-md-2">
+                    <a href="/comics/<%=displayUser.local.favourites[(i * 6) + j]%>" class="thumbnail">
+                    Favourite # <%= j + 1 %>!
+<!--                       <img src="/uploads/<%=user.local.images[(i * 6) + j]%>" alt="" style="width:150px;height:150px">
+ --> 
+                    </a>
+                  </div>
+                  <%  } %>
+                </div>
+                <%  } %>
+
+              </div>
+            </div>
+          </div>
+
+          <!-- CONTRIBUTIONS TAB -->
+          <div class="tab-pane fade" id="contributions">
+            <div class="panel panel-success">
+              <div class="panel-heading">
+                <h1 class="panel-title"><span class="glyphicon glyphicon-cloud-upload"></span> <%= displayUser.local.username %>'s Contributions</h1>
+              </div>
+              <!-- Displays contributions -->
+              <!-- MODIFY: change hyperlink depending on the comic book which the images belongs to-->
+              <div class="panel-body">
+                <%  for (i = 0; i < displayUser.local.comics.length; i += 6) { %>
+                <div class="row">
+                  <%  for (j = i; j < i + 6; j++) {
+                    if (j < displayUser.local.comics.length) {
+                      var comic_id;
+                      var comic_path;
+                      var comic_title;
+                      title = displayUser.local.comics[j];
+                      for (k = 0; k < comics.length; k++) {
+                        if (displayUser.local.comics[j] == comics[k].title) {
+                          comic_id = comics[k]._id;
+                          comic_path = comics[k].images[0];
+                          comic_title = comics[k].title;
+                        }
+                      } %>
+                      <div class="col-md-2" align="center">
+                        <a href="/comics/<%= comic_id %>" class="thumbnail">
+                          <img src="/uploads/<%= comic_path %>" alt="" style="width:150px;height:150px">
+                        </a>
+                        <strong><%= comic_title %></strong>
+                      </div>
+                      <% } %>
+                    <%  } %>
+                </div>
+                <hr>
+                <%  } %>
+<!--                 <a href="/create-comic"> Start something new?</a>
+ -->              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+    <!-- END PROFILE BODY CONTENT -->
+
+
+    <!-- Bootstrap core JavaScript and IE10 viewport hack-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
+    <script src="../bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="../bootstrap/docs/assets/js/ie10-viewport-bug-workaround.js"></script>
+  </body>
+  </html>
