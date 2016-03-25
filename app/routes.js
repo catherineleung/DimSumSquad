@@ -175,6 +175,36 @@ var Router = (function () {
                 });
             });
 
+            app.post('/follow', function(req, res){
+
+                // check first to see if you've liked the comic already
+                // NEED TO WORK ON THIS
+
+                var current_followers = req.body.followers;
+
+                // called parseFloat to work with integers
+                var new_followers = parseFloat(current_followers) + 1;
+
+                // increase the number of followers on displayUser
+                User.update({_id: req.body.follow_id}, {
+                    follows: new_followers
+                }, function (err, affected) {
+                    console.log(err);
+                });
+
+
+                console.log("check");
+                console.log(req.user._id);
+
+
+                User.findByIdAndUpdate(req.user._id, { $push: { 'local.following': req.body.follow_id } }, { safe: true, upsert: true, new: true }, function (err, model) {
+                            console.log(err);
+                        });
+
+                // NEED TO FIX THIS
+                res.redirect('/');
+            }); 
+
             // UPLOAD SECTION =========================
             app.get('/upload', isLoggedIn, function (req, res) {
                 // can only access page if user has contributor status

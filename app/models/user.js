@@ -20,7 +20,11 @@ var bcrypt = require('bcrypt-nodejs');
                 //Comic arrays
                 comics: Array,    // Array of comics created
                 images: Array,    // Array of contributions
-                favourites: Array // Array of favourited comics
+                favourites: Array, // Array of favourited comics
+
+                //Other
+                following: Array,
+                follows: Number
 
             },
             facebook: {
