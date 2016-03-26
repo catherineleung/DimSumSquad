@@ -68,6 +68,17 @@ var Router = (function () {
                 });         
             });
 
+            // PANEL PAGE ==============================
+            app.get('/panel', function(req, res){
+                Comic.find({}, function (err, docs) {
+                    res.render('panel.ejs', {
+                        user: req.user,
+                        comics: docs,
+                        query : req.query.query
+                    });
+                });         
+            });
+
             // PROFILE SECTION =========================
             app.get('/profile', isLoggedIn, function (req, res) {
                 Comic.find({}, function (err, docs) {
@@ -366,6 +377,38 @@ var Router = (function () {
 
                 Comic.update({_id: req.body.comic_id}, {
                     likes: new_likes
+                }, function (err, affected) {
+                    console.log(err);
+                });
+
+                // working on 2 way dependency ... not sure if this is a good idea 
+                // Comic.findByIdAndUpdate(req.comic_id, { $push: { 'likers': req.user._id } }, { safe: true, upsert: true, new: true }, function (err, model) {
+                //             console.log(err);
+                //         });
+
+                console.log("check");
+                console.log(req.user._id);
+
+                User.findByIdAndUpdate(req.user._id, { $push: { 'local.likes': req.body.comic_id } }, { safe: true, upsert: true, new: true }, function (err, model) {
+                            console.log(err);
+                        });
+
+                // reloads the comic page
+                res.redirect('/comics/' + req.body.comic_id);
+            });
+
+            app.post('/favourite', function(req, res){
+
+                // check first to see if you've liked the comic already
+                // NEED TO WORK ON THIS
+
+                var current_favourites = req.body.comic_favourites;
+                // called parseFloat to work with integers
+                var new_favourites = parseFloat(current_favourites) + 1;
+
+
+                Comic.update({_id: req.body.comic_id}, {
+                    favourites: new_favourites
                 }, function (err, affected) {
                     console.log(err);
                 });
@@ -734,7 +777,8 @@ var Router = (function () {
                     tags: req.body.tags,
                     creatorID: req.user.local.username,
                     chapters: 1,
-                    likes: 0
+                    likes: 0,
+                    favourites: 0
                 });
 
                 // add comic title to the creator's list of created comics

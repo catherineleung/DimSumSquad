@@ -127,14 +127,14 @@
 
 
 <br>
-          <strong>Likes:</strong>
-  <%= comics[index].likes %>
+          <strong>Favourites:</strong>
+  <%= comics[index].favourites %>
   <% if (user) { %>
-  <form action="/like" method="post" enctype="application/x-www-form-urlencoded">
+  <form action="/favourite" method="post" enctype="application/x-www-form-urlencoded">
     <input type="hidden" name="comic_id" id="comic_id" value= <%= comics[index]._id %> >
-    <input type="hidden" name="comic_likes" id="comic_likes" value= <%= comics[index].likes %>>
+    <input type="hidden" name="comic_favourites" id="comic_favourites" value= <%= comics[index].favourites %>>
     <input type="hidden" name="temp_user" id="temp_user" value= <%= user._id %>>
-    <input class="btn btn-success btn-med" value="Like" type="submit">
+    <input class="btn btn-success btn-med" value="Favourite" type="submit">
   </form>
   <% } %>
 

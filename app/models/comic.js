@@ -9,6 +9,7 @@ var comicSchema = mongoose.Schema({
     creatorID: String,	    // Sole creator ... this is the username
     contributors: {},
     chapters: Number,       // Number of chapters the comic has
+    favourites: Number,
     likes: Number,
     comments: Array,        // list of comments
 

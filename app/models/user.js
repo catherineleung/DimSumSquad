@@ -21,6 +21,7 @@ var bcrypt = require('bcrypt-nodejs');
                 comics: Array,    // Array of comics created
                 images: Array,    // Array of contributions
                 favourites: Array, // Array of favourited comics
+                likes: Array,      // Array of liked comics
 
                 //Other
                 following: Array,
