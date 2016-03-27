@@ -209,21 +209,19 @@
       </div>
       <br>
       <% } %>
-      <button class="btn btn-primary" style='background: indigo; border-color: indigo' ng-click="toggleComment()">Post a Comment!</button>
-      <br>
-      <br>
-      <br>
+
+      <% if (user) { %>
       <form id  =  "commentForm"
-      ng-show="!toggleComment"
       enctype   =  "application/x-www-form-urlencoded"
       action    =  "/comment"
       method    =  "post">
       <label for="comment">Comment:</label>
       <textarea class="form-control" rows="3" id="comment" name="comment"></textarea>
       <input type="hidden" name="comic_id" id="comic_id" value= <%= comics[index]._id %> >
-      <input class="btn btn-primary" style='background: indigo; border-color: indigo' type="submit" id="submit" value="Comment!" name="submit" ng-show="!toggleComment" ng-click="toggleComment()">
+      <input class="btn btn-primary" style='background: indigo; border-color: indigo' type="submit" id="submit" value="Comment!" name="submit" ng-click="toggleComment()">
     </div>
   </form>
+    <% } %>
 
 </div>
 </div>
