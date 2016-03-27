@@ -65,18 +65,86 @@ var Router = (function () {
 
                 process.nextTick(function(){
                     upload(req, res, function(err) {
-                        if (err) {
+                        if (err)
                             return res.end("Error uploading file.");
-                        }
-                var writestream = gfs.createWriteStream({
-                    filename: imageFileName
+                        
+                        var writestream = gfs.createWriteStream({
+                            filename: imageFileName
+                        });
+
+                        var path = './public/uploads/' + imageFileName; 
+                        fs.createReadStream(path).pipe(writestream);
+                    });
+
+                    res.redirect('/');
+
                 });
-                var path = './public/uploads/' + imageFileName; 
-                fs.createReadStream(path).pipe(writestream);
             });
-                res.redirect('/');
+
+            // RETRIEVE IMAGE FROM MONGODB
+            app.get('/gridfile/:id', function(req, res, next) {
+                var pic_id = req.params.id;
+
+                var readstream = gfs.createReadStream({
+                    filename: pic_id
+                });
+
+                req.on('error', function(err) {
+                    res.send(500, err);
+                });
+
+                readstream.on('error', function (err) {
+                    res.send(500, err);
+                });
+
+                readstream.pipe(res);
             });
-            });
+
+            // FOR REFERENCE - NEED TO ADD ALL THE STUFF TO POST(/UPLOAD_GRID)
+            // app.post('/api/photo', function (req, res) {
+            //     process.nextTick(function () {
+            //         upload(req, res, function (err) {
+            //             if (err) {
+            //                 return res.end("Error uploading file.");
+            //             }
+            //             // TESTING THIS =============================
+            //              // gets last comic title in user's comic attribute
+            //              var usersComicList = req.user.local.comics;
+            //              var arrayLength = usersComicList.length;
+            //              var mostRecentlyCreatedComic = usersComicList[arrayLength - 1];
+            //              //var comicID = { '_id': req.params.id };
+
+            //              // prints out last comic contributed to
+            //              //console.log("User just created this comic: " + req.params.id); 
+
+            //              // iterate through user's list of comics 
+            //              //for (var i = 0; i < arrayLength; i++) {
+            //              //    console.log(usersComicList[i]);
+            //              //}
+
+            //             // add image ID to the creator's list of uploaded images
+            //             User.findByIdAndUpdate(req.user._id, { $push: { 'local.images': imageFileName } }, { safe: true, upsert: true, new: true }, function (err, model) {
+            //                 console.log(err);
+            //             });
+
+            //             // add image ID to the comic's list of images
+            //             Comic.findOne({title : mostRecentlyCreatedComic}, function(err, obj) {
+            //                 Comic.findByIdAndUpdate(obj._id, { $push: { 'images' : imageFileName } }, { safe: true, upsert: true, new: true }, function (err, model) {
+            //                     console.log(err);
+            //                 });
+            //                 var imageFilePath = new Image({ path: imageFileName, uploaderID: req.user.local.username, imageBelongsTo: obj._id, chapter: 1 });
+
+            //                 // save image path data to db
+            //                 imageFilePath.save(function (err, imageFilePath) {
+            //                     if (err)
+            //                         return console.error(err);
+            //                     console.log('photo upload successful!');
+            //                     res.redirect('/');
+            //                 });
+            //             });
+            //         });
+            //     });
+            // });
 
             // TEST PAGE FOR UPLOAD TO AWS ===============
             app.get('/upload_s3', isLoggedIn, function (req, res) {
