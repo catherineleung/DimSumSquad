@@ -777,7 +777,7 @@ res.redirect('/profile');
                             if (err)
                                 return console.error(err);
                             console.log('photo upload successful!');
-                            res.redirect('/');
+                            res.redirect('/comics/' + req.params.id);
                         });
                     });
                 });

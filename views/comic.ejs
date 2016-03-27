@@ -179,9 +179,7 @@
         <!-- CANNOT CONTRIBUTE TO YOUR OWN COMIC ???? ask team-->
 
         <% if ((user) && (user.local.contributor == true)) { %>
-        <form method="get" action="/comics/<%=comics[index]._id%>/addpanel">
-          <button class="btn btn-primary">Add a panel?</button>
-        </form>
+          <a class="btn btn-danger" data-toggle="modal" data-target="#addpanel">Add a panel</a>
         <% } %>
         <hr>
 
@@ -264,5 +262,39 @@
 </div>
 </div>
 
+
+
 </div>
+</div>
+
+<div id="addpanel" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Add Comic Panel</h4>
+      </div>
+      <div class="modal-body">
+            <fieldset>
+              <div class="form-group">
+                <form id        =  "contribute"
+                enctype   =  "multipart/form-data"
+                action    =  "/comics/<%=comics[index]._id%>/addpanel"
+                method    =  "post">
+​
+                <input type="file" name="userPhoto" /> 
+                <br></br>
+                <input class="btn btn-primary" type="submit" id="submit" value="Upload" name="submit">
+                </form>
+              </div>
+          </fieldset>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+
+  </div>
 </div>
