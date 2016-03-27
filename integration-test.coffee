@@ -133,13 +133,3 @@ describe 'DimSumSquad Automated Tests', ->
 # run test with:
 # mocha integration-test.coffee --compilers coffee:coffee-script/register
 
-
-
-
-  # it 'has publication date', -> 
-  #   text = @driver.findElement(css: '.post .meta time').getText()
-  #   expect(text).to.eventually.equal 'December 30th, 2014'
-
-  # it 'links back to the homepage', ->
-  #   @driver.findElement(linkText: 'Bites').click()
-  #   expect(@driver.getCurrentUrl()).to.eventually.equal 'http://bites.goodeggs.com/'
