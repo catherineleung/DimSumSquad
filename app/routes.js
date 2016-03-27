@@ -45,22 +45,6 @@ var Router = (function () {
                 });
             });
 
-            // TEST PAGE FOR UPLOAD TO GRID ===============
-            app.get('/upload_grid', isLoggedIn, function (req, res) {
-                if (req.user.local.contributor) {
-                    Comic.find({}, function (err, docs) {
-                        res.render('upload_grid.ejs', {
-                         user: req.user,
-                         comics: docs,
-                         id: req.params.id
-                     });    
-                    });
-                }
-                else {
-                    res.redirect('/');
-                }
-            });
-
             app.post('/upload_grid', function(req, res, file){
 
                 process.nextTick(function(){
@@ -79,12 +63,12 @@ var Router = (function () {
                         var arrayLength = usersComicList.length;
                         var mostRecentlyCreatedComic = usersComicList[arrayLength - 1];
                         
-                        // add image ID to the creator's list of uploaded images
+                        // add image path to the creator's list of uploaded images
                         User.findByIdAndUpdate(req.user._id, { $push: { 'local.images': imageFileName } }, { safe: true, upsert: true, new: true }, function (err, model) {
                             console.log(err);
                         });
 
-                        // add image ID to the comic's list of images
+                        // add image path to the comic's list of images
                         Comic.findOne({title : mostRecentlyCreatedComic}, function(err, obj) {
                             Comic.findByIdAndUpdate(obj._id, { $push: { 'images' : imageFileName } }, { safe: true, upsert: true, new: true }, function (err, model) {
                                 console.log(err);
@@ -125,57 +109,14 @@ var Router = (function () {
             });
 
             // test route for gridfs file deletion
-            app.get('/deletefile/:id', function(req, res) {
+            app.get('/deletefile/:filename', function(req, res) {
                 gfs.remove({
-                    _id: req.params.id
+                    filename: req.params.filename
                 }, function(err) {
                     if (err)
                         console.error(err);
                 });
                 res.redirect('/');
-            });
-
-
-            // TEST PAGE FOR UPLOAD TO AWS ===============
-            app.get('/upload_s3', isLoggedIn, function (req, res) {
-                if (req.user.local.contributor) {
-                    Comic.find({}, function (err, docs) {
-                        res.render('upload_s3.ejs', {
-                         user: req.user,
-                         comics: docs,
-                         id: req.params.id
-                     });    
-                    });
-                }
-                else {
-                    res.redirect('/');
-                }
-            });
-
-            // Generates and returns image upload signature
-            app.get('/sign_s3', function(req, res){
-                aws.config.update({accessKeyId: AWS_ACCESS_KEY, secretAccessKey: AWS_SECRET_KEY});
-                var s3 = new aws.S3();
-                var s3_params = {
-                    Bucket: S3_BUCKET,
-                    Key: req.query.file_name,
-                    Expires: 60,
-                    ContentType: req.query.file_type,
-                    ACL: 'public-read'
-                };
-                s3.getSignedUrl('putObject', s3_params, function(err, data){
-                    if(err){
-                        console.log(err);
-                    }
-                    else{
-                        var return_data = {
-                            signed_request: data,
-                            url: 'https://'+S3_BUCKET+'.s3.amazonaws.com/'+req.query.file_name
-                        };
-                        res.write(JSON.stringify(return_data));
-                        res.end();
-                    }
-                });
             });
 
 
@@ -890,11 +831,12 @@ app.post('/testupload', function(req, res) {
                     if (err)
                         return next(err);
 
-                    res.redirect('/upload');
+                    res.redirect('/comics/' + comic._id);
                 });
             });
 
 // I HAVE NO IDEA WHAT MOST OF THE THINGS UNDER ARE FOR =========================
+// LMAO K
 
 // =============================================================================
 // AUTHENTICATE (FIRST LOGIN) ==================================================
