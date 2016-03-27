@@ -22,6 +22,13 @@ var Application = (function () {
         var contributions = [];
         // configuration ===============================================================
         mongoose.connect(url); // connect to our database
+        var conn = mongoose.connection;
+        var fs = require('fs');
+
+        var grid = require('gridfs-stream');
+        grid.mongo = mongoose.mongo;
+        var gfs = grid(conn.db);
+
         require('./config/passport')(passport); // pass passport for configuration
         // set up our express application
         app.use(morgan('dev')); // log every request to the console
@@ -37,7 +44,7 @@ var Application = (function () {
         app.use(passport.session()); // persistent login sessions
         app.use(flash()); // use connect-flash for flash messages stored in session
         // routes ======================================================================
-        require('./app/routes.js')(app, passport); // load our routes and pass in our app and fully configured passport
+        require('./app/routes.js')(app, passport, gfs, fs); // load our routes and pass in our app and fully configured passport
         app.use(express.static(path.join(__dirname, 'public')));
         // launch ======================================================================
         app.listen(port);

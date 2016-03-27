@@ -26,7 +26,7 @@ var Router = (function () {
                 res.json(users);
             });
         };
-        module.exports = function (app, passport) {
+        module.exports = function (app, passport, gfs, fs) {
 
 // =============================================================================
 // TESTING ROUTES/FUNCTIONS ====================================================
@@ -43,6 +43,39 @@ var Router = (function () {
                         user: req.user
                     });
                 });
+            });
+
+            // TEST PAGE FOR UPLOAD TO GRID ===============
+            app.get('/upload_grid', isLoggedIn, function (req, res) {
+                if (req.user.local.contributor) {
+                    Comic.find({}, function (err, docs) {
+                        res.render('upload_grid.ejs', {
+                         user: req.user,
+                         comics: docs,
+                         id: req.params.id
+                     });    
+                    });
+                }
+                else {
+                    res.redirect('/');
+                }
+            });
+
+            app.post('/upload_grid', function(req, res, file){
+
+                process.nextTick(function(){
+                    upload(req, res, function(err) {
+                        if (err) {
+                            return res.end("Error uploading file.");
+                        }
+                var writestream = gfs.createWriteStream({
+                    filename: imageFileName
+                });
+                var path = './public/uploads/' + imageFileName; 
+                fs.createReadStream(path).pipe(writestream);
+            });
+                res.redirect('/');
+            });
             });
 
             // TEST PAGE FOR UPLOAD TO AWS ===============
@@ -128,7 +161,7 @@ var Router = (function () {
                 });
             });
 
-            //uPLOAD VIEW ==============================
+            //UPLOAD VIEW ==============================
             app.get('/upload', isLoggedIn, function (req, res) {
                 // can only access page if user has contributor status
                 // the button is removed for non-contributors, but this is so that 
@@ -655,7 +688,7 @@ res.redirect('/profile');
                 }
             });
 
-var upload = multer({ storage: storage }).single('userPhoto');
+            var upload = multer({ storage: storage }).single('userPhoto');
 
             // POST/UPLOAD PICTURE ======================================== (after creating a comic)
             app.post('/api/photo', function (req, res) {
@@ -700,8 +733,8 @@ var upload = multer({ storage: storage }).single('userPhoto');
                             });
                         });
                     });
-});
-});
+                });
+            });
 
 
 app.post('/comics/:id/addpanel', function (req, res) {
