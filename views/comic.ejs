@@ -14,6 +14,22 @@
   <link href="/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="/bootstrap/docs/assets/css/ie10-viewport-bug-workaround.css" rel="stylesheet">
   <script src="/bootstrap/docs/assets/js/ie-emulation-modes-warning.js"></script>
+
+  <script>
+    window.onload = function () {
+      //console.log("here");
+      // alert("here");
+      var user_id = <% user._id %>;
+        // alert(user_id);
+        var favourited = user.local.favourites.includes(comics[index]._id);
+        // alert(favourited);
+        // console.log("running script");
+        // console.log(favourited);
+          // alert(favourited);
+        };
+      
+  </script>
+
 </head>
 
 <!-- Bootstrap core JavaScript and IE10 viewport hack-->
@@ -126,16 +142,38 @@
         <br>
         <% } %>
 
+
+      <% if (user) {
+          var favourited = false; 
+          for (i = 0; i < user.local.favourites.length; i++){
+            if (user.local.favourites[i] == comics[index]._id){
+              favourited = true;
+              }
+              }
+            %>
+          <!-- just for testing-->
+          <h1><%= favourited %></h1>
+         <% } %>
+
         <strong>Favourites:</strong>
         <%= comics[index].favourites %>
-        <% if (user) { %>
+        <% if (user && favourited == false) { %>
         <form action="/favourite" method="post" enctype="application/x-www-form-urlencoded">
           <input type="hidden" name="comic_id" id="comic_id" value= <%= comics[index]._id %> >
           <input type="hidden" name="comic_favourites" id="comic_favourites" value= <%= comics[index].favourites %>>
           <input type="hidden" name="temp_user" id="temp_user" value= <%= user._id %>>
           <input class="btn btn-success btn-med" value="Favourite" type="submit">
         </form>
+        <% } else { %>
+        <form action="/unfavourite" method="post" enctype="application/x-www-form-urlencoded">
+          <input type="hidden" name="comic_id" id="comic_id" value= <%= comics[index]._id %> >
+          <input type="hidden" name="comic_favourites" id="comic_favourites" value= <%= comics[index].favourites %>>
+          <input type="hidden" name="temp_user" id="temp_user" value= <%= user._id %>>
+          <input class="btn btn-success btn-med" value="Unfavourite" type="submit">
+        </form>
         <% } %>
+
+          
 
         <br>
         <!-- CANNOT CONTRIBUTE TO YOUR OWN COMIC ???? ask team-->
