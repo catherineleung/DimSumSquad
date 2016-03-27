@@ -696,20 +696,6 @@ res.redirect('/profile');
                         if (err) {
                             return res.end("Error uploading file.");
                         }
-                        // TESTING THIS =============================
-                         // gets last comic title in user's comic attribute
-                         var usersComicList = req.user.local.comics;
-                         var arrayLength = usersComicList.length;
-                         var mostRecentlyCreatedComic = usersComicList[arrayLength - 1];
-                         //var comicID = { '_id': req.params.id };
-
-                         // prints out last comic contributed to
-                         //console.log("User just created this comic: " + req.params.id); 
-
-                         // iterate through user's list of comics 
-                         //for (var i = 0; i < arrayLength; i++) {
-                         //    console.log(usersComicList[i]);
-                         //}
 
                         // add image ID to the creator's list of uploaded images
                         User.findByIdAndUpdate(req.user._id, { $push: { 'local.images': imageFileName } }, { safe: true, upsert: true, new: true }, function (err, model) {
@@ -777,33 +763,17 @@ res.redirect('/profile');
                             if (err)
                                 return console.error(err);
                             console.log('photo upload successful!');
+                        });
+
+                        writestream.on('finish', function() {
                             res.redirect('/comics/' + req.params.id);
                         });
                     });
+                    
                 });
+
             });
 
-app.post('/testupload', function(req, res) {
-    var file = req.files.file;
-    var stream = fs.createReadStream(file.path);
-    return s3fsImpl.writeFile(file.originalFileName, stream).then(function () {
-        fs.unlink(file.path, function (err) {
-            if (err) {
-                console.error(err);
-            }
-        });
-    });
-});
-
-            // Submit on image upload
-            app.post('/submit_form', function(req, res){
-                // username = req.body.username;
-                // full_name = req.body.full_name;
-                // avatar_url = req.body.avatar_url;
-                // update_account(username, full_name, avatar_url); // TODO: create this function
-                // TODO: Return something useful or redirect
-                res.redirect('/');
-            });
 
             // CREATES A NEW COMIC ======================================
             app.post('/api/upload', function (req, res, next) {
@@ -819,13 +789,9 @@ app.post('/testupload', function(req, res) {
 
                 // add comic title to the creator's list of created comics
                 User.findByIdAndUpdate(req.user._id, { $push: { 'local.comics': req.body.title } }, { safe: true, upsert: true, new: true }, function (err, model) {
-                 console.log(err);
-             });
-
-                //console.log(req.body.title);
-                //console.log(req.body.description);
-                //console.log(req.body.tags);
-                //console.log(req.user.local.username);
+                    if (err)
+                        console.log(err);
+                });
 
                 newComic.save(function (err, comic) {
                     if (err)
