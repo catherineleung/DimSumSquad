@@ -16,6 +16,8 @@ angular.module('profileController', [])
 				$scope.editToggle = true;
 			}
 		}
+
+
 /*
 		$scope.editUser = function(user) {
 

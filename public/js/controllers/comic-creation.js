@@ -4,6 +4,8 @@ angular.module('comicController', [])
 	.controller('mainController2', ['$scope','$http','Comics', function($scope, $http, Comics) {
 		$scope.formData = {};
 
+		
+
 		// CREATE ==================================================================
 		// when submitting the add form, send the text to the node API
 		$scope.createComic = function() {

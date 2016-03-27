@@ -599,12 +599,8 @@ res.redirect('/profile');
 
 // IMAGE UPLOADING =============================================================
 
-            // tracks # of posts
-            var i = 0;
-            var image_file_list = new Array;
-            var image_file_list_string = new Array;
             var imageFileName;
-            // added this in for file uploading
+
             var multer = require('multer');
 
             var storage = multer.diskStorage({
@@ -612,19 +608,9 @@ res.redirect('/profile');
                     callback(null, './public/uploads');
                 },
                 filename: function (req, file, callback) {
-                    var uploadDate = Date.now();
-                    // callback(null, file.fieldname + '_' + Date.now());
-                    callback(null, file.fieldname + '_' + uploadDate + '_' + file.originalname);
-                    // name of the image file
-                    imageFileName = file.fieldname + '_' + uploadDate + '_' + file.originalname;
-                    image_file_list.push(new ImageFile(imageFileName));
-                    // image_file_list[i] = new ImageFile(imageFileName);
-                    // debugging
-                    console.log("This is the imageFileName: " + imageFileName);
-                    // adds image name to the array
-                    image_file_list_string.push(imageFileName);
-                    // increment
-                    i++;
+                    imageFileName = file.fieldname + '_' + Date.now() + '_' + file.originalname;
+
+                    callback(null, imageFileName);
                 }
             });
 
@@ -634,6 +620,7 @@ res.redirect('/profile');
             // uploads a new image to MongoDB using GridFS and adds required associations
             //
             app.post('/comics/:id/addpanel', function (req, res) {
+
                 process.nextTick(function () {
                     upload(req, res, function (err) {
                         if (err) {
@@ -675,18 +662,21 @@ res.redirect('/profile');
                             console.log('photo upload successful!');
                         });
 
-                        // waits for stream to complete before refreshing the page
+                        // waits for stream to complete
                         writestream.on('finish', function() {
+
+                            // delete file from local storage
                             fs.unlink(path, function(err) {
                                 if (err)
                                     console.log(err);
                             });
+
+                            // refresh page
                             res.redirect('/comics/' + req.params.id);
                         });
                     });
                     
                 });
-
             });
 
             // DISPLAY IMAGE

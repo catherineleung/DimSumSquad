@@ -6,7 +6,6 @@ angular.module('comicController', [])
 		$scope.editToggle = false;
 		$scope.toggleComment = false;
 
-
 		//EDIT COMIC =====================================================================	
 
 		$scope.toggleEdit = function() {

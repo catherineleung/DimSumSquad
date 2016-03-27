@@ -284,9 +284,9 @@
                 action    =  "/comics/<%=comics[index]._id%>/addpanel"
                 method    =  "post">
 ​
-                <input type="file" name="userPhoto" /> 
+                <input type="file" name="userPhoto" id="userPhoto"/> 
                 <br></br>
-                <input class="btn btn-primary" type="submit" id="submit" value="Upload" name="submit">
+                <input class="btn btn-primary" type="submit" id="submit" value="Upload" name="submit" onclick="buttonSubmitClicked(event)">
                 </form>
               </div>
           </fieldset>
@@ -298,3 +298,16 @@
 
   </div>
 </div>
+
+<script>
+    function buttonSubmitClicked(event) {
+
+        if (!document.getElementById("userPhoto").value) {
+            event.preventDefault();
+            alert("Please choose a file!");
+        }
+    }
+</script>
+
+</body>
+</html>
