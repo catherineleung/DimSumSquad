@@ -17,14 +17,14 @@
 </head>
 
 <!-- Bootstrap core JavaScript and IE10 viewport hack-->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-    <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
-    <script src="../bootstrap/dist/js/bootstrap.min.js"></script>
-    <script src="../bootstrap/docs/assets/js/ie10-viewport-bug-workaround.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
+<script src="../bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="../bootstrap/docs/assets/js/ie10-viewport-bug-workaround.js"></script>
 
-    <!-- AngularJS -->
-  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular.min.js"></script>
-  <script src="/js/controllers/comic.js"></script> <!-- load up our controller -->
+<!-- AngularJS -->
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular.min.js"></script>
+<script src="/js/controllers/comic.js"></script> <!-- load up our controller -->
 
 <body ng-controller = "toggleController">
 
@@ -56,10 +56,10 @@
 
         
         <ul class="nav navbar-nav navbar-right">
-        <% if (!user) { %>
-            <li><a href="/signup">Sign Up</a></li>
-            <li class="divider-vertical"></li>
-            <li class="dropdown">
+          <% if (!user) { %>
+          <li><a href="/signup">Sign Up</a></li>
+          <li class="divider-vertical"></li>
+          <li class="dropdown">
             <a class="dropdown-toggle" href="#" data-toggle="dropdown">Sign In<strong class="caret"></strong></a>
             <div class="dropdown-menu" style="padding: 20px; padding-bottom: 15px;">
               <!-- Login form here-->
@@ -72,99 +72,98 @@
                 <input class="btn btn-primary" style="clear: left; width: 100%; height: 32px; font-size: 13px;" type="submit" name="commit" value="Sign In" />
               </form>
             </div>
-        <% } else { %>
+            <% } else { %>
             <li><a href="/profile">Welcome, <%= user.local.username %>!</a></li>
             <li class="divider-vertical"></li>
             <li><a href="/logout">Log Out</a></li>
-        <% } %>
-        </ul>
-        
+            <% } %>
+          </ul>
+
         </div>
       </div>
     </nav>
 
-<div class="container">
-        <div class="well">
+    <div class="container">
+      <div class="well">
 
-          <% 
-          var index;
-          for (i = 0; i < comics.length; i++) {
-            if (String(id) == String(comics[i]._id)) {
-              index = i;
-            }
+        <% 
+        var index;
+        for (i = 0; i < comics.length; i++) {
+          if (String(id) == String(comics[i]._id)) {
+            index = i;
           }
-          %>
+        }
+        %>
 
-          <div ng-hide="editToggle">
-            <strong>Title:</strong><br> <%= comics[index].title %><br><br>
-            <strong>Description:</strong> <br><%= comics[index].description %> <br><br>
-            <strong>Tags:</strong> <br> <%= comics[index].tags %> <br><br>
-             <strong>Creator:</strong><br><a href="/profile/<%= comics[index].creatorID %>"><%= comics[index].creatorID %></a> <br><br>
+        <div ng-hide="editToggle">
+          <strong>Title:</strong><br> <%= comics[index].title %><br><br>
+          <strong>Description:</strong> <br><%= comics[index].description %> <br><br>
+          <strong>Tags:</strong> <br> <%= comics[index].tags %> <br><br>
+          <strong>Creator:</strong><br><a href="/profile/<%= comics[index].creatorID %>"><%= comics[index].creatorID %></a> <br><br>
 
-             <% if (user.local.username == comics[index].creatorID) { %>
-            <button class="btn btn-primary" ng-click="toggleEdit()">Edit Comic</button>
+          <% if ((user) && (user.local.username == comics[index].creatorID)) { %>
+          <button class="btn btn-primary" ng-click="toggleEdit()">Edit Comic</button>
+          <% } %>
+        </div>
+        <form ng-show="editToggle" method="post" action="/comics/<%=comics[index]._id%>">
+          <strong>Title:</strong>
+          <input type="text" class="form-control" id="editTitle" value="<%= comics[index].title %>" name="title">
+          <strong>Description:</strong>
+          <input type="text" class="form-control" id="editDescription" value="<%= comics[index].description %>" name="description">
+          <strong>Tags:</strong>
+          <input type="text" class="form-control" id="editTags" value="<%= comics[index].tags %>" name="tags"><br>
+          <input ng-show="editToggle" class="btn btn-primary" type="submit" ng-click="toggleEdit()" value="Save Changes">  
+          <!-- <button class="btn btn-primary" ng-show="editToggle" ng-click="toggleEdit()">Cancel</button>--> 
+        </form>
+        <br> 
+
+        <!-- DELETE COMIC BUTTON only shows up if you are creator of that comic -->
+        <% if ((user) && (user.local.username == comics[index].creatorID)) { %>
+        <!-- comic from user's comics list-->
+        <form method="post" action="<%= '/deletecomic/' + comics[index]._id %>">
+          <button class="btn btn-primary" type="submit">Delete Comic</button>
+        </form>
+        <br>
+        <% } %>
+
+        <strong>Favourites:</strong>
+        <%= comics[index].favourites %>
+        <% if (user) { %>
+        <form action="/favourite" method="post" enctype="application/x-www-form-urlencoded">
+          <input type="hidden" name="comic_id" id="comic_id" value= <%= comics[index]._id %> >
+          <input type="hidden" name="comic_favourites" id="comic_favourites" value= <%= comics[index].favourites %>>
+          <input type="hidden" name="temp_user" id="temp_user" value= <%= user._id %>>
+          <input class="btn btn-success btn-med" value="Favourite" type="submit">
+        </form>
+        <% } %>
+
+        <br>
+        <!-- CANNOT CONTRIBUTE TO YOUR OWN COMIC ???? ask team-->
+
+        <% if ((user) && (user.local.contributor == true)) { %>
+        <form method="get" action="/comics/<%=comics[index]._id%>/addpanel">
+          <button class="btn btn-primary">Add a panel?</button>
+        </form>
+        <% } %>
+        <hr>
+
+        <% for (i = 0; i < comics[index].images.length; i += 6) {  %> 
+        <div class="row">
+          <% for (k = i; k < i + 6; k++) { 
+            if (k < comics[index].images.length) { %>
+            <div class="col-md-2">
+              <a href="<%= '/uploads/' + comics[index].images[k] %>" class="thumbnail">
+                <img src="<%= '/uploads/' + comics[index].images[k] %>" alt="" style="width:150px;height:150px">
+              </a>
+              <!-- WANT TO GET THE CURRENT IMAGE AND GET THE CREATOR OF THAT IMAGE -->
+            </div>
+            <% } %>
             <% } %>
           </div>
-          <form ng-show="editToggle" method="post" action="/comics/<%=comics[index]._id%>">
-            <strong>Title:</strong>
-              <input type="text" class="form-control" id="editTitle" value="<%= comics[index].title %>" name="title">
-            <strong>Description:</strong>
-              <input type="text" class="form-control" id="editDescription" value="<%= comics[index].description %>" name="description">
-            <strong>Tags:</strong>
-              <input type="text" class="form-control" id="editTags" value="<%= comics[index].tags %>" name="tags"><br>
-            <input ng-show="editToggle" class="btn btn-primary" type="submit" ng-click="toggleEdit()" value="Save Changes">  
-           <!-- <button class="btn btn-primary" ng-show="editToggle" ng-click="toggleEdit()">Cancel</button>--> 
-          </form>
-          <br>
-
-          <!-- DELETE COMIC BUTTON only shows up if you are creator of that comic -->
-          <% if (user.local.username == comics[index].creatorID) { %>
-            <!-- comic from user's comics list-->
-            <form method="post" action="<%= '/deletecomic/' + comics[index]._id %>">
-            <button class="btn btn-primary" type="submit">Delete Comic</button>
-            </form>
-            <% } %>
-
-
-<br>
-          <strong>Favourites:</strong>
-  <%= comics[index].favourites %>
-  <% if (user) { %>
-  <form action="/favourite" method="post" enctype="application/x-www-form-urlencoded">
-    <input type="hidden" name="comic_id" id="comic_id" value= <%= comics[index]._id %> >
-    <input type="hidden" name="comic_favourites" id="comic_favourites" value= <%= comics[index].favourites %>>
-    <input type="hidden" name="temp_user" id="temp_user" value= <%= user._id %>>
-    <input class="btn btn-success btn-med" value="Favourite" type="submit">
-  </form>
-  <% } %>
-
-<br>
-<!-- CANNOT CONTRIBUTE TO YOUR OWN COMIC ???? ask team-->
-      
-        <form method="get" action="/comics/<%=comics[index]._id%>/addpanel">
-        <button class="btn btn-primary">Add a panel?</button>
-      </form>
-
-
-          <hr>
-
-          <% for (i = 0; i < comics[index].images.length; i += 6) {  %> 
-            <div class="row">
-              <% for (k = i; k < i + 6; k++) { 
-                    if (k < comics[index].images.length) { %>
-                      <div class="col-md-2">
-                        <a href="<%= '/uploads/' + comics[index].images[k] %>" class="thumbnail">
-                          <img src="<%= '/uploads/' + comics[index].images[k] %>" alt="" style="width:150px;height:150px">
-                        </a>
-                        <!-- WANT TO GET THE CURRENT IMAGE AND GET THE CREATOR OF THAT IMAGE -->
-                      </div>
-                    <% } %>
-                  <% } %>
-            </div>
           <% } %>
-      
 
-        <!-- LIKE <3 BUTTON -->
+
+          <!-- LIKE <3 BUTTON -->
 
 <!--    <div class="like button" type="submit">
         <body ng-app="userController" ng-controller="comicController">
@@ -175,16 +174,12 @@
             </a>
         </body>
         </a>
-        </div> -->
+      </div> -->
+    </div>
+  </div>
 
-      
-
-
-        </div>
-      </div>
-
-      <div class="container">
-        <div class="well" style='padding: 20px'>
+  <div class="container">
+    <div class="well" style='padding: 20px'>
 
 
       <strong>Comments: </strong>
@@ -199,7 +194,7 @@
           }
         } %>
         <div class="col-lg-1">
-        <% if (currentuser.local.picture) { %>
+          <% if (currentuser.local.picture) { %>
           <img src="/uploads/<%=currentuser.local.picture%>" alt="Profile picture" style="width:50px;height:50px"> 
           <% } else { %>
           <img src="/app_images/generic_picture.png" alt="Generic" style="width:50px;height:50px"> 
@@ -212,26 +207,26 @@
       <div class="row" style='padding: 20px; border:1px solid #bbb; background:white'>
         <p><%= comics[index].comments[i].comment %></p>
       </div>
-        <br>
-        <% } %>
-        <button class="btn btn-primary" style='background: indigo; border-color: indigo' ng-click="toggleComment()">Post a Comment!</button>
-        <br>
-        <br>
-        <br>
-        <form id  =  "commentForm"
-                  ng-show="!toggleComment"
-                  enctype   =  "application/x-www-form-urlencoded"
-                  action    =  "/comment"
-                  method    =  "post">
-        <label for="comment">Comment:</label>
-        <textarea class="form-control" rows="3" id="comment" name="comment"></textarea>
-        <input type="hidden" name="comic_id" id="comic_id" value= <%= comics[index]._id %> >
-        <input class="btn btn-primary" style='background: indigo; border-color: indigo' type="submit" id="submit" value="Comment!" name="submit" ng-show="!toggleComment" ng-click="toggleComment()">
-        </div>
-        </form>
+      <br>
+      <% } %>
+      <button class="btn btn-primary" style='background: indigo; border-color: indigo' ng-click="toggleComment()">Post a Comment!</button>
+      <br>
+      <br>
+      <br>
+      <form id  =  "commentForm"
+      ng-show="!toggleComment"
+      enctype   =  "application/x-www-form-urlencoded"
+      action    =  "/comment"
+      method    =  "post">
+      <label for="comment">Comment:</label>
+      <textarea class="form-control" rows="3" id="comment" name="comment"></textarea>
+      <input type="hidden" name="comic_id" id="comic_id" value= <%= comics[index]._id %> >
+      <input class="btn btn-primary" style='background: indigo; border-color: indigo' type="submit" id="submit" value="Comment!" name="submit" ng-show="!toggleComment" ng-click="toggleComment()">
+    </div>
+  </form>
 
-          </div>
-        </div>
+</div>
+</div>
 
-        </div>
-        </div>
+</div>
+</div>
