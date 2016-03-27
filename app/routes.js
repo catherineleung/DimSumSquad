@@ -45,68 +45,7 @@ var Router = (function () {
                 });
             });
 
-            app.post('/upload_grid', function(req, res, file){
-
-                process.nextTick(function(){
-                    upload(req, res, function(err) {
-                        if (err)
-                            return res.end("Error uploading file.");
-                        
-                        var writestream = gfs.createWriteStream({
-                            filename: imageFileName
-                        });
-
-                        var path = './public/uploads/' + imageFileName; 
-                        fs.createReadStream(path).pipe(writestream);
-
-                        var usersComicList = req.user.local.comics;
-                        var arrayLength = usersComicList.length;
-                        var mostRecentlyCreatedComic = usersComicList[arrayLength - 1];
-                        
-                        // add image path to the creator's list of uploaded images
-                        User.findByIdAndUpdate(req.user._id, { $push: { 'local.images': imageFileName } }, { safe: true, upsert: true, new: true }, function (err, model) {
-                            console.log(err);
-                        });
-
-                        // add image path to the comic's list of images
-                        Comic.findOne({title : mostRecentlyCreatedComic}, function(err, obj) {
-                            Comic.findByIdAndUpdate(obj._id, { $push: { 'images' : imageFileName } }, { safe: true, upsert: true, new: true }, function (err, model) {
-                                console.log(err);
-                            });
-                            var imageFilePath = new Image({ path: imageFileName, uploaderID: req.user.local.username, imageBelongsTo: obj._id, chapter: 1 });
-
-                            // save image path data to db
-                            imageFilePath.save(function (err, imageFilePath) {
-                                if (err)
-                                    return console.error(err);
-                                console.log('photo upload successful!');
-                            });
-                        });
-                    });
-
-                    res.redirect('/');
-
-                });
-            });
-
-            // RETRIEVE IMAGE FROM MONGODB
-            app.get('/gridfile/:id', function(req, res, next) {
-                var pic_id = req.params.id;
-
-                var readstream = gfs.createReadStream({
-                    filename: pic_id
-                });
-
-                req.on('error', function(err) {
-                    res.send(500, err);
-                });
-
-                readstream.on('error', function (err) {
-                    res.send(500, err);
-                });
-
-                readstream.pipe(res);
-            });
+            
 
             // test route for gridfs file deletion
             app.get('/deletefile/:filename', function(req, res) {
@@ -195,6 +134,8 @@ var Router = (function () {
                     });
                 });
             });
+
+
 
             // BROWSE VIEW =========================
             app.get('/comics', function (req, res) {
@@ -689,39 +630,9 @@ res.redirect('/profile');
 
             var upload = multer({ storage: storage }).single('userPhoto');
 
-            // POST/UPLOAD PICTURE ======================================== (after creating a comic)
-            app.post('/api/photo', function (req, res) {
-                process.nextTick(function () {
-                    upload(req, res, function (err) {
-                        if (err) {
-                            return res.end("Error uploading file.");
-                        }
-
-                        // add image ID to the creator's list of uploaded images
-                        User.findByIdAndUpdate(req.user._id, { $push: { 'local.images': imageFileName } }, { safe: true, upsert: true, new: true }, function (err, model) {
-                            console.log(err);
-                        });
-
-                        // add image ID to the comic's list of images
-                        Comic.findOne({title : mostRecentlyCreatedComic}, function(err, obj) {
-                            Comic.findByIdAndUpdate(obj._id, { $push: { 'images' : imageFileName } }, { safe: true, upsert: true, new: true }, function (err, model) {
-                                console.log(err);
-                            });
-                            var imageFilePath = new Image({ path: imageFileName, uploaderID: req.user.local.username, imageBelongsTo: obj._id, chapter: 1 });
-
-                            // save image path data to db
-                            imageFilePath.save(function (err, imageFilePath) {
-                                if (err)
-                                    return console.error(err);
-                                console.log('photo upload successful!');
-                                res.redirect('/');
-                            });
-                        });
-                    });
-                });
-            });
-
-
+            // ADD PANEL
+            // uploads a new image to MongoDB using GridFS and adds required associations
+            //
             app.post('/comics/:id/addpanel', function (req, res) {
                 process.nextTick(function () {
                     upload(req, res, function (err) {
@@ -757,7 +668,6 @@ res.redirect('/profile');
                             });
                         });
 
-
                         // save image path data to db
                         imageFilePath.save(function (err, imageFilePath) {
                             if (err)
@@ -765,7 +675,12 @@ res.redirect('/profile');
                             console.log('photo upload successful!');
                         });
 
+                        // waits for stream to complete before refreshing the page
                         writestream.on('finish', function() {
+                            fs.unlink(path, function(err) {
+                                if (err)
+                                    console.log(err);
+                            });
                             res.redirect('/comics/' + req.params.id);
                         });
                     });
@@ -774,8 +689,31 @@ res.redirect('/profile');
 
             });
 
+            // DISPLAY IMAGE
+            // streams an image using GridFS with an associated ID
+            //
+            app.get('/gridfile/:id', function(req, res, next) {
+                var pic_id = req.params.id;
 
-            // CREATES A NEW COMIC ======================================
+                var readstream = gfs.createReadStream({
+                    filename: pic_id
+                });
+
+                req.on('error', function(err) {
+                    res.send(500, err);
+                });
+
+                readstream.on('error', function (err) {
+                    res.send(500, err);
+                });
+
+                readstream.pipe(res);
+            });
+
+
+            // NEW COMIC
+            // creates a new comic and saves the information to the database
+            //
             app.post('/api/upload', function (req, res, next) {
                 var newComic = new Comic({
                     title: req.body.title,
@@ -801,12 +739,12 @@ res.redirect('/profile');
                 });
             });
 
-// I HAVE NO IDEA WHAT MOST OF THE THINGS UNDER ARE FOR =========================
-// LMAO K
+            // I HAVE NO IDEA WHAT MOST OF THE THINGS UNDER ARE FOR =========================
+            // LMAO K
 
-// =============================================================================
-// AUTHENTICATE (FIRST LOGIN) ==================================================
-// =============================================================================
+            // =============================================================================
+            // AUTHENTICATE (FIRST LOGIN) ==================================================
+            // =============================================================================
             // locally --------------------------------
             // LOGIN ===============================
             // show the login form
