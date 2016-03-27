@@ -9,6 +9,7 @@ var ImageFile = (function () {
     };
     return ImageFile;
 }());
+
 var Router = (function () {
     function Router() {
         var Image = require('../app/models/image');
@@ -24,27 +25,14 @@ var Router = (function () {
                 }
                 res.json(users);
             });
-        }
-        ;
+        };
         module.exports = function (app, passport) {
 
-            // normal routes ===============================================================
-            // show the home page (will also have our login links)
-            app.get('/', function (req, res) {
-                Comic.find({}).sort({likes: 'desc'}).exec(function(err, docs) {
-                    res.render('index.ejs', {
-                        user: req.user,
-                        topcomics: docs
-                    });
-                });
-            });
+// =============================================================================
+// TESTING ROUTES/FUNCTIONS ====================================================
+// =============================================================================
 
-            app.get('/angular', function (req, res) {
-                res.render('angular.ejs', {
-                    user: req.user
-                });
-            });
-            // show the userlist page
+            // USERLIST VIEW ==============================
             app.get('/userlist', function (req, res) {
                 User.find(function (err, users) {
                     if (err)
@@ -57,7 +45,64 @@ var Router = (function () {
                 });
             });
 
-            // SEARCH BAR ==============================
+            // TEST PAGE FOR UPLOAD TO AWS ===============
+            app.get('/upload_s3', isLoggedIn, function (req, res) {
+                if (req.user.local.contributor) {
+                    Comic.find({}, function (err, docs) {
+                        res.render('upload_s3.ejs', {
+                           user: req.user,
+                           comics: docs,
+                           id: req.params.id
+                       });    
+                    });
+                }
+                else {
+                    res.redirect('/');
+                }
+            });
+
+            // Generates and returns image upload signature
+            app.get('/sign_s3', function(req, res){
+                aws.config.update({accessKeyId: AWS_ACCESS_KEY, secretAccessKey: AWS_SECRET_KEY});
+                var s3 = new aws.S3();
+                var s3_params = {
+                    Bucket: S3_BUCKET,
+                    Key: req.query.file_name,
+                    Expires: 60,
+                    ContentType: req.query.file_type,
+                    ACL: 'public-read'
+                };
+                s3.getSignedUrl('putObject', s3_params, function(err, data){
+                    if(err){
+                        console.log(err);
+                    }
+                    else{
+                        var return_data = {
+                            signed_request: data,
+                            url: 'https://'+S3_BUCKET+'.s3.amazonaws.com/'+req.query.file_name
+                        };
+                        res.write(JSON.stringify(return_data));
+                        res.end();
+                    }
+                });
+            });
+
+
+// =============================================================================
+// PAGE VIEW ROUTES ============================================================
+// =============================================================================
+
+            // HOME VIEW ==============================
+            app.get('/', function (req, res) {
+                Comic.find({}).sort({likes: 'desc'}).exec(function(err, docs) {
+                    res.render('index.ejs', {
+                        user: req.user,
+                        topcomics: docs
+                    });
+                });
+            });
+
+            // SEARCH VIEW ==============================
             app.get('/search', function(req, res){
                 Comic.find({}, function (err, docs) {
                     res.render('search.ejs', {
@@ -68,7 +113,79 @@ var Router = (function () {
                 });         
             });
 
-            // PANEL PAGE ==============================
+            // ACCESS VIEW ==============================
+            app.get('/deniedAccess', function (req, res) {
+                res.render('deniedAccess.ejs');
+            });
+
+            // PROFILE VIEW =========================
+            app.get('/profile', isLoggedIn, function (req, res) {
+                Comic.find({}, function (err, docs) {
+                    res.render('profile.ejs', {
+                        user: req.user,
+                        comics: docs
+                    });
+                });
+            });
+
+            //uPLOAD VIEW ==============================
+            app.get('/upload', isLoggedIn, function (req, res) {
+                // can only access page if user has contributor status
+                // the button is removed for non-contributors, but this is so that 
+                //     typing /upload in the browser will do nothing
+                if (req.user.local.contributor) {
+                    Comic.find({}, function (err, docs) {
+                        res.render('upload.ejs', {
+                           user: req.user,
+                           comics: docs,
+                           id: req.params.id
+                       });    
+                    });
+
+                }
+                else {
+                    res.redirect('/');
+                }
+            });
+
+            // COMIC COVER VIEW =========================
+            app.get('/comics/:id', function (req, res) {
+                // var hidden_value = req.getElementbyId("comic_get").innerHTML = req.getElementById("comic_get").value;
+                // console.log("This should be the title of the comic");
+                // console.log(hidden_value);
+                Comic.find({}, function (err, comics) {
+                    User.find({}, function (err, users) {
+                        res.render('comic.ejs', {
+                            user: req.user,
+                            comics: comics,
+                            id: req.params.id,
+                            users: users
+                        });
+                    });
+                });
+            });
+
+            // BROWSE VIEW =========================
+            app.get('/comics', function (req, res) {
+                Comic.find({}, function (err, docs) {
+                    res.render('comics.ejs', {
+                        user: req.user,
+                        comics: docs
+                    });
+                });
+            });
+
+            // TOPCOMICS VIEW ======================
+            app.get('/topcomics', function (req, res) {
+                Comic.find({}).sort({likes: 'desc'}).exec(function(err, docs) {
+                    res.render('topcomics.ejs', {
+                        user: req.user,
+                        topcomics: docs
+                    });
+                });
+            });
+
+            // PANEL VIEW ==============================
             app.get('/panel', function(req, res){
                 Comic.find({}, function (err, docs) {
                     res.render('panel.ejs', {
@@ -79,44 +196,54 @@ var Router = (function () {
                 });         
             });
 
-            // PROFILE SECTION =========================
-            app.get('/profile', isLoggedIn, function (req, res) {
-                Comic.find({}, function (err, docs) {
-                    res.render('profile.ejs', {
-                        user: req.user,
-                        comics: docs
+            // ADD COMIC PANEL VIEW ==============================
+            app.get('/comics/:id/addpanel', isLoggedIn, function (req, res) {
+                // can only access page if user has contributor status
+                // the button is removed for non-contributors, but this is so that 
+                //     typing /upload in the browser will do nothing
+                if (req.user.local.contributor) {
+                    Comic.find({}, function (err, docs) {
+                        res.render('addpanel.ejs', {
+                           user: req.user,
+                           comics: docs,
+                           id: req.params.id
+                       });    
                     });
-                });
+
+                }
+                else {
+                    res.redirect('/');
+                }
             });
 
-            app.get('/removeprofilepic', function (req, res) {
-                User.find({}, function (err, docs) {
-                    //console.log(req.user._id);
-                    //console.log(req.user.local.picture);
-
-                    // removes old profile picture from database
-                    Image.find({}, function (err, docs) {
-                        for (i = 0; i < docs.length; i++) {
-                            if (docs[i].path == req.user.local.picture ) {
-                                Image.remove({
-                                    path: docs[i].path
-                                }, function( err, docs ) {
-                                    if (err)
-                                        res.send(err);
-                                });
-                            }
-                        }
-                    });
 
 
-                    // removes profile picture from user
-                    User.findByIdAndUpdate(req.user._id, { $unset: { 'local.picture': req.user.local.picture } }, { safe: true, upsert: true, new: true }, function (err, model) {
-                         console.log(err);
-                    });
-                });
-                res.redirect('/profile');
+// =============================================================================
+// BASIC REQUESTS  =============================================================
+// =============================================================================
+
+// GENERAL REQUESTS ============================================================
+
+            // LOGOUT ==============================
+            app.get('/logout', function (req, res) {
+                req.logout();
+                res.redirect('/');
             });
 
+// PROFILE CHANGES  ============================================================
+
+            // BECOMING A CONTRIBUTOR ==============
+            app.get('/contribute', function (req, res) {
+                var query = { 'local.username': req.user.local.username };
+                var newData = { $set: { 'local.contributor': true } };
+                User.findOneAndUpdate(query, newData, { upsert: false }, function (err, doc) {
+                    if (err)
+                        return res.send(500, { error: err });
+                    res.redirect('/profile');
+                });
+            });
+           
+            // PROFILE EDITTING/UPDATING ====================
             app.post('/profile', function (req, res) {
                 var query = { 'local.username': req.user.local.username };
                 if(req.body.email){
@@ -145,6 +272,22 @@ var Router = (function () {
                 res.redirect('/profile');
             });
 
+
+             app.get('/profile/:id', function (req, res) {
+                Comic.find({}, function (err, comics) {
+                    User.findOne({'local.username' : req.params.id}, function (err, searchUser) {
+                        console.log(req.params.id);
+                        console.log(searchUser.local.username);
+                        res.render('public-profile.ejs', {
+                            user: req.user,
+                            comics: comics,
+                            displayUser: searchUser
+                        });
+                    });
+                });
+            });
+
+            // PROFILE PICTURE UPLOAD ====================
             app.post('/uploadprofilepic', function(req, res) {
                 var query = { 'local.username': req.user.local.username };
                 process.nextTick(function () {
@@ -172,292 +315,37 @@ var Router = (function () {
                 res.redirect('/profile');
             });
 
-             app.get('/profile/:id', function (req, res) {
-                Comic.find({}, function (err, comics) {
-                    User.findOne({'local.username' : req.params.id}, function (err, searchUser) {
-                        console.log(req.params.id);
-                        console.log(searchUser.local.username);
-                        res.render('public-profile.ejs', {
-                            user: req.user,
-                            comics: comics,
-                            displayUser: searchUser
-                        });
+            // REMOVE PROFILE PICTURE  ===================
+            app.get('/removeprofilepic', function (req, res) {
+                User.find({}, function (err, docs) {
+                    //console.log(req.user._id);
+                    //console.log(req.user.local.picture);
+
+                    // removes old profile picture from database
+                    Image.find({}, function (err, docs) {
+                        for (i = 0; i < docs.length; i++) {
+                            if (docs[i].path == req.user.local.picture ) {
+                                Image.remove({
+                                    path: docs[i].path
+                                }, function( err, docs ) {
+                                    if (err)
+                                        res.send(err);
+                                });
+                            }
+                        }
+                    });
+
+
+                    // removes profile picture from user
+                    User.findByIdAndUpdate(req.user._id, { $unset: { 'local.picture': req.user.local.picture } }, { safe: true, upsert: true, new: true }, function (err, model) {
+                         console.log(err);
                     });
                 });
-            });
-
-            app.post('/follow', function(req, res){
-
-                // check first to see if you've liked the comic already
-                // NEED TO WORK ON THIS
-
-                var current_followers = req.body.followers;
-
-                // called parseFloat to work with integers
-                var new_followers = parseFloat(current_followers) + 1;
-
-                // increase the number of followers on displayUser
-                User.update({_id: req.body.follow_id}, {
-                    follows: new_followers
-                }, function (err, affected) {
-                    console.log(err);
-                });
-
-
-                console.log("check");
-                console.log(req.user._id);
-
-
-                User.findByIdAndUpdate(req.user._id, { $push: { 'local.following': req.body.follow_id } }, { safe: true, upsert: true, new: true }, function (err, model) {
-                            console.log(err);
-                        });
-
-                // NEED TO FIX THIS
-                res.redirect('/');
-            }); 
-
-            // UPLOAD SECTION =========================
-            app.get('/upload', isLoggedIn, function (req, res) {
-                // can only access page if user has contributor status
-                // the button is removed for non-contributors, but this is so that 
-                //     typing /upload in the browser will do nothing
-                if (req.user.local.contributor) {
-                    Comic.find({}, function (err, docs) {
-                        res.render('upload.ejs', {
-                           user: req.user,
-                           comics: docs,
-                           id: req.params.id
-                       });    
-                    });
-
-                }
-                else {
-                    res.redirect('/');
-                }
-            });
-
-            // TEST PAGE FOR UPLOAD TO AWS
-            app.get('/upload_s3', isLoggedIn, function (req, res) {
-                if (req.user.local.contributor) {
-                    Comic.find({}, function (err, docs) {
-                        res.render('upload_s3.ejs', {
-                           user: req.user,
-                           comics: docs,
-                           id: req.params.id
-                       });    
-                    });
-                }
-                else {
-                    res.redirect('/');
-                }
-            });
-
-            app.get('/comics/:id/addpanel', isLoggedIn, function (req, res) {
-                // can only access page if user has contributor status
-                // the button is removed for non-contributors, but this is so that 
-                //     typing /upload in the browser will do nothing
-                if (req.user.local.contributor) {
-                    Comic.find({}, function (err, docs) {
-                        res.render('addpanel.ejs', {
-                           user: req.user,
-                           comics: docs,
-                           id: req.params.id
-                       });    
-                    });
-
-                }
-                else {
-                    res.redirect('/');
-                }
+                res.redirect('/profile');
             });
 
 
-
-            // LOGOUT ==============================
-            app.get('/logout', function (req, res) {
-                req.logout();
-                res.redirect('/');
-            });
-            // COMIC PAGE =========================
-            app.get('/comics/:id', function (req, res) {
-                // var hidden_value = req.getElementbyId("comic_get").innerHTML = req.getElementById("comic_get").value;
-                // console.log("This should be the title of the comic");
-                // console.log(hidden_value);
-                Comic.find({}, function (err, comics) {
-                    User.find({}, function (err, users) {
-                        res.render('comic.ejs', {
-                            user: req.user,
-                            comics: comics,
-                            id: req.params.id,
-                            users: users
-                        });
-                    });
-                });
-            });
-
-
-            app.post('/comics/:id', isLoggedIn, function (req, res) {
-                    
-
-                    if (isLoggedIn) {
-
-
-                    // query using id of current comic
-                    var comicID = { '_id': req.params.id };
-
-                    var newTitle = { $set: {'title': req.body.title}};  
-                    var newDescription = { $set: {'description': req.body.description}};
-                    var newTags = { $set: { 'tags': req.body.tags}};
-
-                    Comic.findOneAndUpdate(comicID, newTitle, { upsert: true }, function (err, doc) {
-                        if (err)
-                            return res.send(500, { error: err });
-                    });
-
-                    Comic.findOneAndUpdate(comicID, newDescription, { upsert: true }, function (err, doc) {
-                        if (err)
-                            return res.send(500, { error: err });
-                    });
-
-                    Comic.findOneAndUpdate(comicID, newTags, { upsert: true }, function (err, doc) {
-                        if (err)
-                            return res.send(500, { error: err });
-                    });
-
-
-                    
-                    Comic.find({}, function (err, docs) {
-                    res.render('comic.ejs', {
-                        user: req.user,
-                        comics: docs,
-                        id: req.params.id
-                    });
-
-                });
-
-                } else {
-                    res.redirect('/deniedAccess');
-                }
-
-                });
-
-            app.get('/deniedAccess', function (req, res) {
-                res.render('deniedAccess.ejs');
-            });
-
-
-            app.get('/comics', function (req, res) {
-                Comic.find({}, function (err, docs) {
-                    res.render('comics.ejs', {
-                        user: req.user,
-                        comics: docs
-                    });
-                });
-            });
-
-            // gets the topcomics
-            app.get('/topcomics', function (req, res) {
-                Comic.find({}).sort({likes: 'desc'}).exec(function(err, docs) {
-                    res.render('topcomics.ejs', {
-                        user: req.user,
-                        topcomics: docs
-                    });
-            });
-            });
-
-            app.post('/like', function(req, res){
-
-                // check first to see if you've liked the comic already
-                // NEED TO WORK ON THIS
-
-                var current_likes = req.body.comic_likes;
-                // called parseFloat to work with integers
-                var new_likes = parseFloat(current_likes) + 1;
-
-
-                Comic.update({_id: req.body.comic_id}, {
-                    likes: new_likes
-                }, function (err, affected) {
-                    console.log(err);
-                });
-
-                // working on 2 way dependency ... not sure if this is a good idea 
-                // Comic.findByIdAndUpdate(req.comic_id, { $push: { 'likers': req.user._id } }, { safe: true, upsert: true, new: true }, function (err, model) {
-                //             console.log(err);
-                //         });
-
-                console.log("check");
-                console.log(req.user._id);
-
-                User.findByIdAndUpdate(req.user._id, { $push: { 'local.likes': req.body.comic_id } }, { safe: true, upsert: true, new: true }, function (err, model) {
-                            console.log(err);
-                        });
-
-                // reloads the comic page
-                res.redirect('/comics/' + req.body.comic_id);
-            });
-
-            app.post('/favourite', function(req, res){
-
-                // check first to see if you've liked the comic already
-                // NEED TO WORK ON THIS
-
-                var current_favourites = req.body.comic_favourites;
-                // called parseFloat to work with integers
-                var new_favourites = parseFloat(current_favourites) + 1;
-
-
-                Comic.update({_id: req.body.comic_id}, {
-                    favourites: new_favourites
-                }, function (err, affected) {
-                    console.log(err);
-                });
-
-                // working on 2 way dependency ... not sure if this is a good idea 
-                // Comic.findByIdAndUpdate(req.comic_id, { $push: { 'likers': req.user._id } }, { safe: true, upsert: true, new: true }, function (err, model) {
-                //             console.log(err);
-                //         });
-
-                console.log("check");
-                console.log(req.user._id);
-
-                User.findByIdAndUpdate(req.user._id, { $push: { 'local.favourites': req.body.comic_id } }, { safe: true, upsert: true, new: true }, function (err, model) {
-                            console.log(err);
-                        });
-
-                // reloads the comic page
-                res.redirect('/comics/' + req.body.comic_id);
-            });
-
-             app.post('/comment', function (req, res) {
-
-                    // console.log("commenting!!");
-
-                    var newComment = new Comment({
-                        user: req.user.local.username,
-                        comment: req.body.comment
-                    });
-
-                    // console.log(newComment.user);
-                    // console.log(newComment.comment);
-
-                    // query using id of current comic
-                    var comicID = req.body.comic_id;
-
-                    // console.log(comicID);
-
-                   Comic.findByIdAndUpdate(comicID, { $push: { 'comments': newComment } }, { safe: true, upsert: true, new: true }, function (err, model) {
-                   console.log(err);
-
-                    Comic.find({}, function (err, docs) {
-                    res.render('comic.ejs', {
-                        user: req.user,
-                        comics: docs,
-                        id: comicID
-                    });
-                });
-                });
-            });
+// COMIC CHANGES/REQUESTS ============================================================
 
 
             // CREATE A COMIC PAGE ================
@@ -513,12 +401,6 @@ var Router = (function () {
                     } 
                 });
 
-                
-     
-                
-
-
-
                 // removes images associated with the comic from user's image list
                 var listOfImages = [];
 
@@ -562,14 +444,8 @@ var Router = (function () {
                                 }
                             });
 
-                        }
-
-
-
-                       
-                    }
-
-                    
+                        }        
+                    }     
                 });
 
                 // removes comic from database
@@ -583,20 +459,177 @@ var Router = (function () {
                 });
             });
 
+            // COMIC COVER PAGE EDITTING ==============
+            app.post('/comics/:id', isLoggedIn, function (req, res) {
+                    
+                    if (isLoggedIn) {
 
-            // BECOMING A CONTRIBUTOR ==============
-            app.get('/contribute', function (req, res) {
-                var query = { 'local.username': req.user.local.username };
-                var newData = { $set: { 'local.contributor': true } };
-                User.findOneAndUpdate(query, newData, { upsert: false }, function (err, doc) {
-                    if (err)
-                        return res.send(500, { error: err });
-                    res.redirect('/profile');
+                    // query using id of current comic
+                    var comicID = { '_id': req.params.id };
+
+                    var newTitle = { $set: {'title': req.body.title}};  
+                    var newDescription = { $set: {'description': req.body.description}};
+                    var newTags = { $set: { 'tags': req.body.tags}};
+
+                    Comic.findOneAndUpdate(comicID, newTitle, { upsert: true }, function (err, doc) {
+                        if (err)
+                            return res.send(500, { error: err });
+                    });
+
+                    Comic.findOneAndUpdate(comicID, newDescription, { upsert: true }, function (err, doc) {
+                        if (err)
+                            return res.send(500, { error: err });
+                    });
+
+                    Comic.findOneAndUpdate(comicID, newTags, { upsert: true }, function (err, doc) {
+                        if (err)
+                            return res.send(500, { error: err });
+                    });
+                    
+                    Comic.find({}, function (err, docs) {
+                    res.render('comic.ejs', {
+                        user: req.user,
+                        comics: docs,
+                        id: req.params.id
+                    });
+
+                });
+
+                } else {
+                    res.redirect('/deniedAccess');
+                }
+            });
+
+            // LIKE BUTTON ====================
+            app.post('/like', function(req, res){
+
+                // check first to see if you've liked the comic already
+                // NEED TO WORK ON THIS
+
+                var current_likes = req.body.comic_likes;
+                // called parseFloat to work with integers
+                var new_likes = parseFloat(current_likes) + 1;
+
+
+                Comic.update({_id: req.body.comic_id}, {
+                    likes: new_likes
+                }, function (err, affected) {
+                    console.log(err);
+                });
+
+                // working on 2 way dependency ... not sure if this is a good idea 
+                // Comic.findByIdAndUpdate(req.comic_id, { $push: { 'likers': req.user._id } }, { safe: true, upsert: true, new: true }, function (err, model) {
+                //             console.log(err);
+                //         });
+
+                console.log("check");
+                console.log(req.user._id);
+
+                User.findByIdAndUpdate(req.user._id, { $push: { 'local.likes': req.body.comic_id } }, { safe: true, upsert: true, new: true }, function (err, model) {
+                            console.log(err);
+                        });
+
+                // reloads the comic page
+                res.redirect('/comics/' + req.body.comic_id);
+            });
+            
+            // FOLLOWING ====================
+            app.post('/follow', function(req, res){
+
+                // check first to see if you've liked the comic already
+                // NEED TO WORK ON THIS
+
+                var current_followers = req.body.followers;
+
+                // called parseFloat to work with integers
+                var new_followers = parseFloat(current_followers) + 1;
+
+                // increase the number of followers on displayUser
+                User.update({_id: req.body.follow_id}, {
+                    follows: new_followers
+                }, function (err, affected) {
+                    console.log(err);
+                });
+
+
+                console.log("check");
+                console.log(req.user._id);
+
+
+                User.findByIdAndUpdate(req.user._id, { $push: { 'local.following': req.body.follow_id } }, { safe: true, upsert: true, new: true }, function (err, model) {
+                            console.log(err);
+                        });
+
+                // NEED TO FIX THIS
+                res.redirect('/');
+            }); 
+
+            // FAVOURITING =========================
+            app.post('/favourite', function(req, res){
+
+                // check first to see if you've liked the comic already
+                // NEED TO WORK ON THIS
+
+                var current_favourites = req.body.comic_favourites;
+                // called parseFloat to work with integers
+                var new_favourites = parseFloat(current_favourites) + 1;
+
+                Comic.update({_id: req.body.comic_id}, {
+                    favourites: new_favourites
+                }, function (err, affected) {
+                    console.log(err);
+                });
+
+                // working on 2 way dependency ... not sure if this is a good idea 
+                // Comic.findByIdAndUpdate(req.comic_id, { $push: { 'likers': req.user._id } }, { safe: true, upsert: true, new: true }, function (err, model) {
+                //             console.log(err);
+                //         });
+
+                console.log("check");
+                console.log(req.user._id);
+
+                User.findByIdAndUpdate(req.user._id, { $push: { 'local.favourites': req.body.comic_id } }, { safe: true, upsert: true, new: true }, function (err, model) {
+                            console.log(err);
+                        });
+
+                // reloads the comic page
+                res.redirect('/comics/' + req.body.comic_id);
+            });
+
+            // COMMENT SECTION =======================
+             app.post('/comment', function (req, res) {
+
+                    // console.log("commenting!!");
+
+                    var newComment = new Comment({
+                        user: req.user.local.username,
+                        comment: req.body.comment
+                    });
+
+                    // console.log(newComment.user);
+                    // console.log(newComment.comment);
+
+                    // query using id of current comic
+                    var comicID = req.body.comic_id;
+
+                    // console.log(comicID);
+
+                   Comic.findByIdAndUpdate(comicID, { $push: { 'comments': newComment } }, { safe: true, upsert: true, new: true }, function (err, model) {
+                   console.log(err);
+
+                    Comic.find({}, function (err, docs) {
+                    res.render('comic.ejs', {
+                        user: req.user,
+                        comics: docs,
+                        id: comicID
+                    });
+                });
                 });
             });
-            // =============================================================================
-            // IMAGE UPLOADING =============================================================
-            // =============================================================================
+
+
+// IMAGE UPLOADING =============================================================
+
             // tracks # of posts
             var i = 0;
             var image_file_list = new Array;
@@ -669,16 +702,9 @@ var Router = (function () {
                                 console.log('photo upload successful!');
                                 res.redirect('/');
                             });
-
-
                         });
-
-
-
-                        
-                        
                     });
-            });
+                });
             });
 
 
@@ -719,32 +745,6 @@ var Router = (function () {
                         });
                     });
                  });
-            });
-            
-            // Generates and returns image upload signature
-            app.get('/sign_s3', function(req, res){
-                aws.config.update({accessKeyId: AWS_ACCESS_KEY, secretAccessKey: AWS_SECRET_KEY});
-                var s3 = new aws.S3();
-                var s3_params = {
-                    Bucket: S3_BUCKET,
-                    Key: req.query.file_name,
-                    Expires: 60,
-                    ContentType: req.query.file_type,
-                    ACL: 'public-read'
-                };
-                s3.getSignedUrl('putObject', s3_params, function(err, data){
-                    if(err){
-                        console.log(err);
-                    }
-                    else{
-                        var return_data = {
-                            signed_request: data,
-                            url: 'https://'+S3_BUCKET+'.s3.amazonaws.com/'+req.query.file_name
-                        };
-                        res.write(JSON.stringify(return_data));
-                        res.end();
-                    }
-                });
             });
 
             app.post('/testupload', function(req, res) {
@@ -798,9 +798,12 @@ var Router = (function () {
                     res.redirect('/upload');
                 });
             });
-            // =============================================================================
-            // AUTHENTICATE (FIRST LOGIN) ==================================================
-            // =============================================================================
+
+// I HAVE NO IDEA WHAT MOST OF THE THINGS UNDER ARE FOR =========================
+
+// =============================================================================
+// AUTHENTICATE (FIRST LOGIN) ==================================================
+// =============================================================================
             // locally --------------------------------
             // LOGIN ===============================
             // show the login form
@@ -923,9 +926,11 @@ var Router = (function () {
                     res.redirect('/profile');
                 });
             });
-            // =============================================================================
-            // ANGULARJS ROUTES ============================================================
-            // =============================================================================
+
+// =============================================================================
+// ANGULARJS ROUTES ============================================================
+// =============================================================================
+
             app.get('/api/users', function (req, res) {
                 getUsers(res);
             });
