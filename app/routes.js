@@ -124,6 +124,17 @@ var Router = (function () {
                 readstream.pipe(res);
             });
 
+            // test route for gridfs file deletion
+            app.get('/deletefile/:id', function(req, res) {
+                gfs.remove({
+                    _id: req.params.id
+                }, function(err) {
+                    if (err)
+                        console.error(err);
+                });
+                res.redirect('/');
+            });
+
 
             // TEST PAGE FOR UPLOAD TO AWS ===============
             app.get('/upload_s3', isLoggedIn, function (req, res) {
