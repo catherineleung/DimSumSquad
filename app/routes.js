@@ -74,6 +74,30 @@ var Router = (function () {
 
                         var path = './public/uploads/' + imageFileName; 
                         fs.createReadStream(path).pipe(writestream);
+
+                        var usersComicList = req.user.local.comics;
+                        var arrayLength = usersComicList.length;
+                        var mostRecentlyCreatedComic = usersComicList[arrayLength - 1];
+                        
+                        // add image ID to the creator's list of uploaded images
+                        User.findByIdAndUpdate(req.user._id, { $push: { 'local.images': imageFileName } }, { safe: true, upsert: true, new: true }, function (err, model) {
+                            console.log(err);
+                        });
+
+                        // add image ID to the comic's list of images
+                        Comic.findOne({title : mostRecentlyCreatedComic}, function(err, obj) {
+                            Comic.findByIdAndUpdate(obj._id, { $push: { 'images' : imageFileName } }, { safe: true, upsert: true, new: true }, function (err, model) {
+                                console.log(err);
+                            });
+                            var imageFilePath = new Image({ path: imageFileName, uploaderID: req.user.local.username, imageBelongsTo: obj._id, chapter: 1 });
+
+                            // save image path data to db
+                            imageFilePath.save(function (err, imageFilePath) {
+                                if (err)
+                                    return console.error(err);
+                                console.log('photo upload successful!');
+                            });
+                        });
                     });
 
                     res.redirect('/');
