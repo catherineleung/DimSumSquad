@@ -245,19 +245,19 @@ var Router = (function () {
             });
 
 
-app.get('/profile/:id', function (req, res) {
-    Comic.find({}, function (err, comics) {
-        User.findOne({'local.username' : req.params.id}, function (err, searchUser) {
-            console.log(req.params.id);
-            console.log(searchUser.local.username);
-            res.render('public-profile.ejs', {
-                user: req.user,
-                comics: comics,
-                displayUser: searchUser
+            app.get('/profile/:id', function (req, res) {
+                Comic.find({}, function (err, comics) {
+                    User.findOne({'local.username' : req.params.id}, function (err, searchUser) {
+                        console.log(req.params.id);
+                        console.log(searchUser.local.username);
+                        res.render('public-profile.ejs', {
+                            user: req.user,
+                            comics: comics,
+                            displayUser: searchUser
+                        });
+                    });
+                });
             });
-        });
-    });
-});
 
             // PROFILE PICTURE UPLOAD ====================
             app.post('/uploadprofilepic', function(req, res) {
@@ -267,6 +267,14 @@ app.get('/profile/:id', function (req, res) {
                         if (err) {
                             return res.end("Error uploading file.");
                         }
+                                    
+                        var writestream = gfs.createWriteStream({
+                            filename: imageFileName
+                        });
+
+                        var path = './public/uploads/' + imageFileName; 
+                        fs.createReadStream(path).pipe(writestream);
+
                         var imageFilePath = new Image({ path: imageFileName, uploaderID: req.user.local.username, chapter: -1 });
 
                         imageFilePath.save(function (err, imageFilePath) {
@@ -282,10 +290,22 @@ app.get('/profile/:id', function (req, res) {
                             if (err)
                                 return console.error(err);
                         });
+
+                        // waits for stream to complete
+                        writestream.on('finish', function() {
+
+                            // delete file from local storage
+                            fs.unlink(path, function(err) {
+                                if (err)
+                                    console.log(err);
+                            });
+
+                            // refresh page
+                            res.redirect('/profile');
+                        });
                     });
                 });
-res.redirect('/profile');
-});
+            });
 
             // REMOVE PROFILE PICTURE  ===================
             app.get('/removeprofilepic', function (req, res) {
@@ -307,14 +327,15 @@ res.redirect('/profile');
                         }
                     });
 
-
                     // removes profile picture from user
                     User.findByIdAndUpdate(req.user._id, { $unset: { 'local.picture': req.user.local.picture } }, { safe: true, upsert: true, new: true }, function (err, model) {
-                       console.log(err);
+                        if (err)
+                            console.log(err);
+
+                        res.redirect('/profile'); // <-- moved redirect to the proper callback function
                    });
                 });
-res.redirect('/profile');
-});
+            });
 
 
 // COMIC CHANGES/REQUESTS ============================================================
@@ -633,10 +654,6 @@ res.redirect('/profile');
 
                         var path = './public/uploads/' + imageFileName; 
                         fs.createReadStream(path).pipe(writestream);
-
-                        // TESTING THIS =============================
-                        var comicID = { '_id': req.params.id };
-
 
                         // creates a new image
                         // TODO: UPDATE IT SO THAT IT CHECKS WHAT CHAPTER THE COMIC IS CURRENTLY ON
