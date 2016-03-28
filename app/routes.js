@@ -65,7 +65,7 @@ var Router = (function () {
 
             // HOME VIEW ==============================
             app.get('/', function (req, res) {
-                Comic.find({}).sort({likes: 'desc'}).exec(function(err, docs) {
+                Comic.find({}).sort({favourites: 'desc'}).exec(function(err, docs) {
                     res.render('index.ejs', {
                         user: req.user,
                         topcomics: docs
@@ -123,13 +123,12 @@ var Router = (function () {
                 // var hidden_value = req.getElementbyId("comic_get").innerHTML = req.getElementById("comic_get").value;
                 // console.log("This should be the title of the comic");
                 // console.log(hidden_value);
-                Comic.find({}, function (err, comics) {
+                Comic.findOne({_id: req.params.id}, function (err, comic) {
                     User.find({}, function (err, users) {
                         res.render('comic.ejs', {
                             user: req.user,
-                            comics: comics,
-                            id: req.params.id,
-                            users: users
+                            comic: comic,
+                            users: users // list of all users - for commenting
                         });
                     });
                 });
@@ -741,7 +740,8 @@ var Router = (function () {
                     tags: req.body.tags,
                     creatorID: req.user.local.username,
                     chapters: 1,
-                    favourites: 0
+                    favourites: 0,
+                    dateCreated: Date.now()
                 });
 
                 newComic.save(function (err, comic) {

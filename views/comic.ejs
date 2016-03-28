@@ -100,21 +100,11 @@
     <div class="container">
       <div class="well">
 
-        <% 
-        var index;
-        for (i = 0; i < comics.length; i++) {
-          if (String(id) == String(comics[i]._id)) {
-            index = i;
-          }
-        }
-        %>
-
-
         <%
-        if (comics[index].coverphoto) {
+        if (comic.coverphoto) {
         %>
           <a href data-toggle="modal" data-target="#changecover">
-            <img src="<%= '/gridfile/' + comics[index].coverphoto %>" alt="" style="width:200px;height:200px">
+            <img src="<%= '/gridfile/' + comic.coverphoto %>" alt="" style="width:200px;height:200px">
           </a>
         <%
         } else {
@@ -129,29 +119,29 @@
         <br><br>
 
         <div ng-hide="editToggle">
-          <strong>Title:</strong><br> <%= comics[index].title %><br><br>
-          <strong>Description:</strong> <br><%= comics[index].description %> <br><br>
-          <strong>Tags:</strong> <br> <%= comics[index].tags %> <br><br>
-          <strong>Creator:</strong><br><a href="/profile/<%= comics[index].creatorID %>"><%= comics[index].creatorID %></a> <br><br>
+          <strong>Title:</strong><br> <%= comic.title %><br><br>
+          <strong>Description:</strong> <br><%= comic.description %> <br><br>
+          <strong>Tags:</strong> <br> <%= comic.tags %> <br><br>
+          <strong>Creator:</strong><br><a href="/profile/<%= comic.creatorID %>"><%= comic.creatorID %></a> <br><br>
 
-          <% if ((user) && (user.local.username == comics[index].creatorID)) { %>
+          <% if ((user) && (user.local.username == comic.creatorID)) { %>
           <button class="btn btn-primary" ng-click="toggleEdit()">Edit Comic</button>
           <% } %>
         </div>
-        <form ng-show="editToggle" method="post" action="/comics/<%=comics[index]._id%>">
+        <form ng-show="editToggle" method="post" action="/comics/<%=comic._id%>">
           <strong>Title:</strong>
-          <input type="text" class="form-control" id="editTitle" value="<%= comics[index].title %>" name="title">
+          <input type="text" class="form-control" id="editTitle" value="<%= comic.title %>" name="title">
           <strong>Description:</strong>
-          <input type="text" class="form-control" id="editDescription" value="<%= comics[index].description %>" name="description">
+          <input type="text" class="form-control" id="editDescription" value="<%= comic.description %>" name="description">
           <strong>Tags:</strong>
-          <input type="text" class="form-control" id="editTags" value="<%= comics[index].tags %>" name="tags"><br>
+          <input type="text" class="form-control" id="editTags" value="<%= comic.tags %>" name="tags"><br>
           <input ng-show="editToggle" class="btn btn-primary" type="submit" ng-click="toggleEdit()" value="Save Changes">  
           <!-- <button class="btn btn-primary" ng-show="editToggle" ng-click="toggleEdit()">Cancel</button>--> 
         </form>
         <br> 
 
         <!-- DELETE COMIC BUTTON only shows up if you are creator of that comic -->
-        <% if ((user) && (user.local.username == comics[index].creatorID)) { %>
+        <% if ((user) && (user.local.username == comic.creatorID)) { %>
         <!-- comic from user's comics list-->
         <form method="post" action="<%= '/deletecomic/' + id %>">
           <button class="btn btn-primary" type="submit">Delete Comic</button>
@@ -164,7 +154,7 @@
         if (user) {
           var favourited = false; 
           for (i = 0; i < user.local.favourites.length; i++) {
-            if (user.local.favourites[i] == comics[index]._id){
+            if (user.local.favourites[i] == comic._id){
               favourited = true;
             }
           } 
@@ -175,18 +165,18 @@
         if (user) {
           if (favourited == false) { 
         %>
-            <form action="<%= '/addfavourite/' + comics[index]._id %>" method="post" enctype="application/x-www-form-urlencoded" id="fav">
-              <input type="hidden" name="comic_id" id="comic_id" value= <%= comics[index]._id %> >
-              <input type="hidden" name="comic_favourites" id="comic_favourites" value= <%= comics[index].favourites %>>
+            <form action="<%= '/addfavourite/' + comic._id %>" method="post" enctype="application/x-www-form-urlencoded" id="fav">
+              <input type="hidden" name="comic_id" id="comic_id" value= <%= comic._id %> >
+              <input type="hidden" name="comic_favourites" id="comic_favourites" value= <%= comic.favourites %>>
               <input type="hidden" name="temp_user" id="temp_user" value= <%= user._id %>>
               <button class="btn btn-default" type="submit"><span class="glyphicon glyphicon-heart-empty"></span></button>
             </form>
         <% 
           } else { 
         %>
-            <form action="<%= '/removefavourite/' + comics[index]._id %>" method="post" enctype="application/x-www-form-urlencoded" id="fav">
-              <input type="hidden" name="comic_id" id="comic_id" value= <%= comics[index]._id %> >
-              <input type="hidden" name="comic_favourites" id="comic_favourites" value= <%= comics[index].favourites %>>
+            <form action="<%= '/removefavourite/' + comic._id %>" method="post" enctype="application/x-www-form-urlencoded" id="fav">
+              <input type="hidden" name="comic_id" id="comic_id" value= <%= comic._id %> >
+              <input type="hidden" name="comic_favourites" id="comic_favourites" value= <%= comic.favourites %>>
               <input type="hidden" name="temp_user" id="temp_user" value= <%= user._id %>>
               <button class="btn btn-default" type="submit"><span class="glyphicon glyphicon-heart" style="color:red"></span></button>
             </form>
@@ -197,7 +187,7 @@
 
         <br>
 
-        <small style="font-weight: bold"><span class="glyphicon glyphicon-heart"></span> <%= comics[index].favourites %> favourites</small>
+        <small style="font-weight: bold"><span class="glyphicon glyphicon-heart"></span> <%= comic.favourites %> favourites</small>
 
         <br>
         <br>
@@ -214,16 +204,16 @@
         <hr>
 
         <% 
-        for (i = 0; i < comics[index].images.length; i += 6) {  
+        for (i = 0; i < comic.images.length; i += 6) {  
         %> 
           <div class="row">
             <% 
             for (k = i; k < i + 6; k++) { 
-              if (k < comics[index].images.length) { 
+              if (k < comic.images.length) { 
             %>
                 <div class="col-md-2">
-                <a href="<%= '/gridfile/' + comics[index].images[k] %>" class="thumbnail">
-                  <img src="<%= '/gridfile/' + comics[index].images[k] %>" alt="" style="width:150px;height:150px">
+                <a href="<%= '/gridfile/' + comic.images[k] %>" class="thumbnail">
+                  <img src="<%= '/gridfile/' + comic.images[k] %>" alt="" style="width:150px;height:150px">
                 </a>
                 </div>
             <% 
@@ -245,11 +235,11 @@
       <strong>Comments: </strong>
       <br>
       <br>
-      <% for (i = 0; i < comics[index].comments.length; i++) {  %> 
+      <% for (i = 0; i < comic.comments.length; i++) {  %> 
       <div class="row" style='padding: 20px; border:1px solid #bbb; background:white; vertical-align:middle '>
         <% var currentuser;
         for (j = 0; j < users.length; j++) {
-          if (users[j].local.username == comics[index].comments[i].user) {
+          if (users[j].local.username == comic.comments[i].user) {
             currentuser = users[j];
           }
         } %>
@@ -261,11 +251,11 @@
           <% } %>
         </div>
         <div class="col-lg-4">
-          <strong> <%= comics[index].comments[i].user %></strong> <br><br>
+          <strong> <%= comic.comments[i].user %></strong> <br><br>
         </div>
       </div>
       <div class="row" style='padding: 20px; border:1px solid #bbb; background:white'>
-        <p><%= comics[index].comments[i].comment %></p>
+        <p><%= comic.comments[i].comment %></p>
       </div>
       <br>
       <% } %>
@@ -277,7 +267,7 @@
       method    =  "post">
       <label for="comment">Comment:</label>
       <textarea class="form-control" rows="3" id="comment" name="comment"></textarea>
-      <input type="hidden" name="comic_id" id="comic_id" value= <%= comics[index]._id %> >
+      <input type="hidden" name="comic_id" id="comic_id" value= <%= comic._id %> >
       <input class="btn btn-primary" style='background: indigo; border-color: indigo' type="submit" id="submit" value="Comment!" name="submit" ng-click="toggleComment()">
     </div>
   </form>
@@ -305,7 +295,7 @@
           <div class="form-group">
             <form id        =  "contribute"
             enctype   =  "multipart/form-data"
-            action    =  "/comics/<%=comics[index]._id%>/addpanel"
+            action    =  "/comics/<%=comic._id%>/addpanel"
             method    =  "post">
             ​
               <input type="file" name="userPhoto" id="userPhoto" class="inputfile"/>
@@ -339,7 +329,7 @@
           <div class="form-group">
             <form id        =  "uploadForm"
             enctype   =  "multipart/form-data"
-            action    =  "/comics/<%=comics[index]._id%>/changecover"
+            action    =  "/comics/<%=comic._id%>/changecover"
             method    =  "post"
             >
             <input type="file" name="userPhoto" id="changeCoverInput" class="inputfile"/>

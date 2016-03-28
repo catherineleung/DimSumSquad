@@ -11,6 +11,7 @@ var comicSchema = mongoose.Schema({
     chapters: Number,       // Number of chapters the comic has
     favourites: Number,
     comments: Array,        // list of comments
+    dateCreated: Date,
 
     // Mutable 
     images: Array,			// Array of images or chapters
