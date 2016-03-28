@@ -118,11 +118,24 @@
 
         <br><br>
 
+        <%
+        var monthNames = [
+          "Jan", "Feb", "Mar", 
+          "Apr", "May", "Jun", 
+          "Jul", "Aug", "Sep", 
+          "Oct", "Nov", "Dec"
+        ];
+        var day = comic.dateCreated.getDate();
+        var monthIndex = comic.dateCreated.getMonth();
+        var year = comic.dateCreated.getFullYear();
+        %>
+
         <div ng-hide="editToggle">
           <strong>Title:</strong><br> <%= comic.title %><br><br>
           <strong>Description:</strong> <br><%= comic.description %> <br><br>
           <strong>Tags:</strong> <br> <%= comic.tags %> <br><br>
           <strong>Creator:</strong><br><a href="/profile/<%= comic.creatorID %>"><%= comic.creatorID %></a> <br><br>
+          <strong>Date Created:</strong><br> <%= monthNames[monthIndex] + ' ' + day + ', ' + year %></a> <br><br>
 
           <% if ((user) && (user.local.username == comic.creatorID)) { %>
           <button class="btn btn-primary" ng-click="toggleEdit()">Edit Comic</button>
