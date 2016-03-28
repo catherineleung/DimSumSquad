@@ -90,12 +90,16 @@
       <div class="well">
         <h1> <%= displayUser.local.username %>'s Profile</h1>
         
-
-<form action="/follow" method="post" enctype="application/x-www-form-urlencoded">
-    <input type="hidden" name="follow_id" id="follow_id" value= <%= displayUser._id %> >
-    <button class="btn btn-primary btn-lg" style='background: midnightblue; border-color: midnightblue' type="submit">Follow <%= displayUser.local.username %> </button>
-  </form>
-
+        <% 
+        if (user) { 
+        %>
+          <form action="/follow" method="post" enctype="application/x-www-form-urlencoded">
+            <input type="hidden" name="follow_id" id="follow_id" value= <%= displayUser._id %> >
+            <button class="btn btn-primary btn-lg" style='background: midnightblue; border-color: midnightblue' type="submit">Follow <%= displayUser.local.username %> </button>
+          </form>
+        <% 
+        } 
+        %>
 
         <hr>
         <ul class="nav nav-tabs">
