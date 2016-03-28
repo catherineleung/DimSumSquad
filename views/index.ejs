@@ -111,9 +111,15 @@
             <% for (k = i; k < i + 6; k++) { 
                 if(k < topcomics.length) { %>
                   <div class="col-md-2" align="center">
-                    <a href="/gridfile/<%= topcomics[k]._id %>" class="thumbnail">
-                      <img src="<%= '/gridfile/' + topcomics[k].images[0] %>" alt="" style="width:150px;height:150px">
-                    </a>
+                    <% if (topcomics[k].images.length != 0) { %>
+                      <a href="/comics/<%= topcomics[k]._id %>" class="thumbnail">
+                        <img src="<%= '/gridfile/' + topcomics[k].images[0] %>" alt="" style="width:150px;height:150px">
+                      </a>
+                    <% } else { %>
+                      <a href="/comics/<%= topcomics[k]._id %>" class="thumbnail">
+                        <img src="app_images/generic_comic.png" alt="" style="width:150px;height:150px">
+                      </a>
+                    <% } %>
                     <strong><%= topcomics[k].title %></strong> <br>
                     By <strong><%= topcomics[k].creatorID %></strong>
                   </div>

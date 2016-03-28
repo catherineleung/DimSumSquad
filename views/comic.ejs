@@ -15,21 +15,6 @@
   <link href="/bootstrap/docs/assets/css/ie10-viewport-bug-workaround.css" rel="stylesheet">
   <script src="/bootstrap/docs/assets/js/ie-emulation-modes-warning.js"></script>
 
-  <script>
-    window.onload = function () {
-      //console.log("here");
-      // alert("here");
-      var user_id = <% user._id %>;
-        // alert(user_id);
-        var favourited = user.local.favourites.includes(comics[index]._id);
-        // alert(favourited);
-        // console.log("running script");
-        // console.log(favourited);
-          // alert(favourited);
-        };
-      
-  </script>
-
   <style>
 
     .inputfile {
@@ -156,39 +141,48 @@
         <% } %>
 
 
-      <% if (user) {
+        <%
+        if (user) {
           var favourited = false; 
-          for (i = 0; i < user.local.favourites.length; i++){
+          for (i = 0; i < user.local.favourites.length; i++) {
             if (user.local.favourites[i] == comics[index]._id){
               favourited = true;
-              }
-              }
-            %>
-          <!-- just for testing-->
-          <h1><%= favourited %></h1>
-         <% } %>
+            }
+          } 
+        }
+        %>
 
-        <strong>Favourites:</strong>
-        <%= comics[index].favourites %>
-        <% if (user && favourited == false) { %>
-        <form action="/favourite" method="post" enctype="application/x-www-form-urlencoded">
-          <input type="hidden" name="comic_id" id="comic_id" value= <%= comics[index]._id %> >
-          <input type="hidden" name="comic_favourites" id="comic_favourites" value= <%= comics[index].favourites %>>
-          <input type="hidden" name="temp_user" id="temp_user" value= <%= user._id %>>
-          <input class="btn btn-success btn-med" value="Favourite" type="submit">
-        </form>
-        <% } else { %>
-        <form action="/unfavourite" method="post" enctype="application/x-www-form-urlencoded">
-          <input type="hidden" name="comic_id" id="comic_id" value= <%= comics[index]._id %> >
-          <input type="hidden" name="comic_favourites" id="comic_favourites" value= <%= comics[index].favourites %>>
-          <input type="hidden" name="temp_user" id="temp_user" value= <%= user._id %>>
-          <input class="btn btn-success btn-med" value="Unfavourite" type="submit">
-        </form>
-        <% } %>
-
-          
+        <% 
+        if (user) {
+          if (favourited == false) { 
+        %>
+            <form action="<%= '/addfavourite/' + comics[index]._id %>" method="post" enctype="application/x-www-form-urlencoded" id="fav">
+              <input type="hidden" name="comic_id" id="comic_id" value= <%= comics[index]._id %> >
+              <input type="hidden" name="comic_favourites" id="comic_favourites" value= <%= comics[index].favourites %>>
+              <input type="hidden" name="temp_user" id="temp_user" value= <%= user._id %>>
+              <button class="btn btn-default" type="submit"><span class="glyphicon glyphicon-heart-empty"></span></button>
+            </form>
+        <% 
+          } else { 
+        %>
+            <form action="<%= '/removefavourite/' + comics[index]._id %>" method="post" enctype="application/x-www-form-urlencoded" id="fav">
+              <input type="hidden" name="comic_id" id="comic_id" value= <%= comics[index]._id %> >
+              <input type="hidden" name="comic_favourites" id="comic_favourites" value= <%= comics[index].favourites %>>
+              <input type="hidden" name="temp_user" id="temp_user" value= <%= user._id %>>
+              <button class="btn btn-default" type="submit"><span class="glyphicon glyphicon-heart" style="color:red"></span></button>
+            </form>
+        <% 
+          } 
+        } 
+        %>
 
         <br>
+
+        <small style="font-weight: bold"><span class="glyphicon glyphicon-heart"></span> <%= comics[index].favourites %> favourites</small>
+
+        <br>
+        <br>
+
         <!-- CANNOT CONTRIBUTE TO YOUR OWN COMIC ???? ask team-->
 
         <% if ((user) && (user.local.contributor == true)) { %>
@@ -313,15 +307,21 @@
 
 <script>
     function buttonSubmitClicked(event) {
-      if (!document.getElementById("userPhoto").value) {
-          event.preventDefault();
-          alert("Please choose a file!");
+      var uploadForm = document.getElementById("userPhoto").value;
+      console.log(uploadForm);
+      if (!uploadForm) {
+        event.preventDefault();
+        alert("Please choose a file!");
       }
     }
 
     document.getElementById("userPhoto").onchange = function () {
       document.getElementById("uploadlabel").innerHTML = '<span class="glyphicon glyphicon-ok"></span> ' + this.value.split( '\\' ).pop();
     }
+
+    // function submitForm() {
+    //   document.getElementById("fav").submit();
+    // }
 </script>
 
 </body>

@@ -558,36 +558,48 @@ var Router = (function () {
             }); 
 
             // FAVOURITING =========================
-            app.post('/favourite', function(req, res){
+            app.post('/addfavourite/:id', function(req, res) {
 
-                // check first to see if you've liked the comic already
-                // NEED TO WORK ON THIS
+                Comic.findOne({_id: req.params.id}, function(err, comic) {
+                    if (err)
+                        console.log(err);
+                    var newFavourites = comic.favourites + 1;
 
-                var current_favourites = req.body.comic_favourites;
-                // called parseFloat to work with integers
-                var new_favourites = parseFloat(current_favourites) + 1;
-
-                Comic.update({_id: req.body.comic_id}, {
-                    favourites: new_favourites
-                }, function (err, affected) {
-                    console.log(err);
+                    Comic.findByIdAndUpdate(req.params.id, { $set: { favourites: newFavourites } }, function (err) {
+                        if (err)
+                            console.log(err);
+                    });
                 });
 
-                // working on 2 way dependency ... not sure if this is a good idea 
-                // Comic.findByIdAndUpdate(req.comic_id, { $push: { 'likers': req.user._id } }, { safe: true, upsert: true, new: true }, function (err, model) {
-                //             console.log(err);
-                //         });
-
-            console.log("check");
-            console.log(req.user._id);
-
-            User.findByIdAndUpdate(req.user._id, { $push: { 'local.favourites': req.body.comic_id } }, { safe: true, upsert: true, new: true }, function (err, model) {
-                console.log(err);
+                User.findByIdAndUpdate(req.user._id, { $push: { 'local.favourites': req.params.id } }, { safe: true, upsert: true, new: true }, function (err, model) {
+                    if (err)
+                        console.log(err);
+                    res.redirect('/comics/' + req.params.id);
+                });
+                
             });
 
-                // reloads the comic page
-                res.redirect('/comics/' + req.body.comic_id);
+            app.post('/removefavourite/:id', function(req, res) {
+
+                Comic.findOne({_id: req.params.id}, function(err, comic) {
+                    if (err)
+                        console.log(err);
+                    var newFavourites = comic.favourites - 1;
+
+                    Comic.findByIdAndUpdate(req.params.id, { $set: { favourites: newFavourites } }, function (err) {
+                        if (err)
+                            console.log(err);
+                    });
+                });
+
+                User.findByIdAndUpdate(req.user._id, { $pull: { 'local.favourites': req.params.id } }, function (err, data) {
+                    if (err)
+                        console.log(err);
+                    res.redirect('/comics/' + req.params.id);
+                });
             });
+
+
 
             // COMMENT SECTION =======================
             app.post('/comment', function (req, res) {
