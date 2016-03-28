@@ -118,7 +118,7 @@ var Router = (function () {
                 }
             });
 
-            // COMIC COVER VIEW =========================
+            // COMIC VIEW =========================
             app.get('/comics/:id', function (req, res) {
                 // var hidden_value = req.getElementbyId("comic_get").innerHTML = req.getElementById("comic_get").value;
                 // console.log("This should be the title of the comic");
@@ -133,7 +133,6 @@ var Router = (function () {
                     });
                 });
             });
-
 
 
             // BROWSE VIEW =========================
@@ -274,21 +273,10 @@ var Router = (function () {
                         var path = './public/uploads/' + imageFileName; 
                         fs.createReadStream(path).pipe(writestream);
 
-                        var imageFilePath = new Image({ path: imageFileName, uploaderID: req.user.local.username, chapter: -1 });
-
-                        imageFilePath.save(function (err, imageFilePath) {
+                        User.findByIdAndUpdate(req.user._id, { $set: { 'local.picture': imageFileName }}, function(err) {
                             if (err)
-                                return console.error(err);
-                            console.log("photo upload successful");
-                        });
-
-                        console.log(imageFileName + "THIS IS THE PROFILE PIC PATH");
-
-                        var newPicture = { $set: { 'local.picture': imageFileName }};
-                        User.findOneAndUpdate(query, newPicture, { upsert: true}, function(err, doc) {
-                            if (err)
-                                return console.error(err);
-                        });
+                                console.log(err);
+                        })
 
                         // waits for stream to complete
                         writestream.on('finish', function() {
@@ -308,31 +296,22 @@ var Router = (function () {
 
             // REMOVE PROFILE PICTURE  ===================
             app.get('/removeprofilepic', function (req, res) {
-                User.find({}, function (err, docs) {
-                    //console.log(req.user._id);
-                    //console.log(req.user.local.picture);
 
-                    // removes old profile picture from database
-                    Image.find({}, function (err, docs) {
-                        for (i = 0; i < docs.length; i++) {
-                            if (docs[i].path == req.user.local.picture ) {
-                                Image.remove({
-                                    path: docs[i].path
-                                }, function( err, docs ) {
-                                    if (err)
-                                        res.send(err);
-                                });
-                            }
-                        }
-                    });
+                // remove photo from file system
+                gfs.remove({
+                    filename: req.user.local.picture
+                }, function(err) {
+                    if (err)
+                        console.error(err);
 
-                    // removes profile picture from user
-                    User.findByIdAndUpdate(req.user._id, { $unset: { 'local.picture': req.user.local.picture } }, { safe: true, upsert: true, new: true }, function (err, model) {
+                    // update the user's picture field
+                    User.findByIdAndUpdate(req.user._id, { $unset: { 'local.picture': req.user.local.picture } }, function (err, model) {
                         if (err)
                             console.log(err);
-
-                        res.redirect('/profile'); // <-- moved redirect to the proper callback function
-                   });
+                        
+                        // refresh the profile page
+                        res.redirect('/profile');
+                    });
                 });
             });
 
