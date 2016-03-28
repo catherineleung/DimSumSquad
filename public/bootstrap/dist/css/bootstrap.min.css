@@ -2024,8 +2024,14 @@ pre code {
 }
 
 .row {
-    margin-left: -15px;
-    margin-right: -15px
+    margin-left: 0px;
+    margin-right: -15px;
+}
+
+.block {
+  width: 70px;
+  float: left;
+  display: inline-block;
 }
 
 .col-xs-1,
