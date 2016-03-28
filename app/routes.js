@@ -493,39 +493,6 @@ var Router = (function () {
                 }
             });
 
-            // LIKE BUTTON ====================
-            app.post('/like', function(req, res){
-
-                // check first to see if you've liked the comic already
-                // NEED TO WORK ON THIS
-
-                var current_likes = req.body.comic_likes;
-                // called parseFloat to work with integers
-                var new_likes = parseFloat(current_likes) + 1;
-
-
-                Comic.update({_id: req.body.comic_id}, {
-                    likes: new_likes
-                }, function (err, affected) {
-                    console.log(err);
-                });
-
-                // working on 2 way dependency ... not sure if this is a good idea 
-                // Comic.findByIdAndUpdate(req.comic_id, { $push: { 'likers': req.user._id } }, { safe: true, upsert: true, new: true }, function (err, model) {
-                //             console.log(err);
-                //         });
-
-            console.log("check");
-            console.log(req.user._id);
-
-            User.findByIdAndUpdate(req.user._id, { $push: { 'local.likes': req.body.comic_id } }, { safe: true, upsert: true, new: true }, function (err, model) {
-                console.log(err);
-            });
-
-                // reloads the comic page
-                res.redirect('/comics/' + req.body.comic_id);
-            });
-
             // FOLLOWING ====================
             app.post('/follow', function(req, res){
 
@@ -704,7 +671,47 @@ var Router = (function () {
                             res.redirect('/comics/' + req.params.id);
                         });
                     });
-                    
+                });
+            });
+
+            // CHANGE COVER PHOTO
+            // uploads a new cover photo for a comic using GridFS
+            //
+            app.post('/comics/:id/changecover', function (req, res) {
+
+                process.nextTick(function () {
+                    upload(req, res, function (err) {
+                        if (err) {
+                            return res.end("Error uploading file.");
+                        }
+                                    
+                        var writestream = gfs.createWriteStream({
+                            filename: imageFileName
+                        });
+
+                        var path = './public/uploads/' + imageFileName; 
+                        fs.createReadStream(path).pipe(writestream);
+
+                        // TODO: Delete old cover photo
+
+                        Comic.findByIdAndUpdate(req.params.id, { $set: { coverphoto: imageFileName } }, function (err) {
+                            if (err)
+                                console.log(err);
+                        });
+
+                        // waits for stream to complete
+                        writestream.on('finish', function() {
+
+                            // delete file from local storage
+                            fs.unlink(path, function(err) {
+                                if (err)
+                                    console.log(err);
+                            });
+
+                            // refresh page
+                            res.redirect('/comics/' + req.params.id);
+                        });
+                    });
                 });
             });
 
@@ -740,26 +747,23 @@ var Router = (function () {
                     tags: req.body.tags,
                     creatorID: req.user.local.username,
                     chapters: 1,
-                    likes: 0,
                     favourites: 0
-                });
-
-                // add comic title to the creator's list of created comics
-                User.findByIdAndUpdate(req.user._id, { $push: { 'local.comics': req.body.title } }, { safe: true, upsert: true, new: true }, function (err, model) {
-                    if (err)
-                        console.log(err);
                 });
 
                 newComic.save(function (err, comic) {
                     if (err)
-                        return next(err);
+                        console.log(err);
 
-                    res.redirect('/comics/' + comic._id);
+                    User.findByIdAndUpdate(req.user._id, { $push: { 'local.comics': String(comic._id) } }, { safe: true, upsert: true, new: true }, function (err, model) {
+                        if (err)
+                            console.log(err);
+
+                        res.redirect('/comics/' + comic._id);
+                    });
                 });
             });
 
             // I HAVE NO IDEA WHAT MOST OF THE THINGS UNDER ARE FOR =========================
-            // LMAO K
 
             // =============================================================================
             // AUTHENTICATE (FIRST LOGIN) ==================================================

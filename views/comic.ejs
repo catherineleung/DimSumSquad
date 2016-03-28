@@ -109,6 +109,21 @@
         }
         %>
 
+
+        <%
+        if (comics[index].coverphoto) {
+        %>
+          <img src="<%= '/gridfile/' + comics[index].coverphoto %>" alt="" style="width:200px;height:200px">
+        <%
+        } else {
+        %>
+          <img src="/app_images/generic_comic.png" alt="" style="width:200px;height:200px">
+        <%
+        }
+        %>
+
+        <br><br>
+
         <div ng-hide="editToggle">
           <strong>Title:</strong><br> <%= comics[index].title %><br><br>
           <strong>Description:</strong> <br><%= comics[index].description %> <br><br>
@@ -205,19 +220,6 @@
           </div>
           <% } %>
 
-
-          <!-- LIKE <3 BUTTON -->
-
-<!--    <div class="like button" type="submit">
-        <body ng-app="userController" ng-controller="comicController">
-        <a href="#" class="btn btn-success btn-med">
-        <span class="glyphicon glyphicon-heart"></span>
-            <a ng-click="like()" ng-init= "numberOfLikes=0">
-            <p> Likes: {{ numberOfLikes }} </p>
-            </a>
-        </body>
-        </a>
-      </div> -->
     </div>
   </div>
 
@@ -291,19 +293,22 @@
             action    =  "/comics/<%=comics[index]._id%>/addpanel"
             method    =  "post">
             ​
-            <input type="file" name="userPhoto" id="userPhoto" class="inputfile"/>
-            <label id="uploadlabel" for="userPhoto" class="btn btn-lg btn-primary"><span class="glyphicon glyphicon-file"></span> Choose a file</label>
-            <br></br>
-            <input class="btn btn-default" type="submit" id="submit" value="Upload" name="submit" onclick="buttonSubmitClicked(event)">
+              <input type="file" name="userPhoto" id="userPhoto" class="inputfile"/>
+              <label id="uploadlabel" for="userPhoto" class="btn btn-lg btn-primary"><span class="glyphicon glyphicon-file"></span> Choose a file</label>
+              <br></br>
+              <input class="btn btn-default" type="submit" id="submit" value="Upload" name="submit" onclick="buttonSubmitClicked(event)">
 
             </form>
           </div>
+
         </fieldset>
       </div>
 
     </div>
   </div>
 </div>
+
+
 
 <script>
     function buttonSubmitClicked(event) {
@@ -319,9 +324,7 @@
       document.getElementById("uploadlabel").innerHTML = '<span class="glyphicon glyphicon-ok"></span> ' + this.value.split( '\\' ).pop();
     }
 
-    // function submitForm() {
-    //   document.getElementById("fav").submit();
-    // }
+
 </script>
 
 </body>

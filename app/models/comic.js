@@ -10,11 +10,11 @@ var comicSchema = mongoose.Schema({
     contributors: {},
     chapters: Number,       // Number of chapters the comic has
     favourites: Number,
-    likes: Number,
     comments: Array,        // list of comments
 
     // Mutable 
-    images: Array			// Array of images or chapters
+    images: Array,			// Array of images or chapters
+    coverphoto: String      // file path of cover photo
 });
 
 // create the model
