@@ -153,7 +153,7 @@
         <!-- DELETE COMIC BUTTON only shows up if you are creator of that comic -->
         <% if ((user) && (user.local.username == comics[index].creatorID)) { %>
         <!-- comic from user's comics list-->
-        <form method="post" action="<%= '/deletecomic/' + comics[index]._id %>">
+        <form method="post" action="<%= '/deletecomic/' + id %>">
           <button class="btn btn-primary" type="submit">Delete Comic</button>
         </form>
         <br>
