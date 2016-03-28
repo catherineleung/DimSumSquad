@@ -35,6 +35,7 @@ angular.module('userController', [])
 
 			// clear errors
 			$scope.emailFlash = false;
+			$scope.emailInvalid = false;
 			$scope.passwordFlash = false;
 			$scope.usernameFlash = false;
 			$scope.termsFlash = false;
@@ -49,6 +50,14 @@ angular.module('userController', [])
 					$scope.emailFlash = true;
 					$scope.emailError = "has-error";
 				}
+			}
+
+			// check if given email address is legit
+			var pattern = /^[a-z]+[a-z0-9._]+@[a-z]+\.[a-z.]{2,5}$/;
+			if (!(pattern.test($scope.formData.email))) {
+				$scope.loading = false;
+				$scope.emailInvalid = true;
+				$scope.emailError = "has-error";
 			}
 
 			// check for matching passwords
@@ -74,7 +83,7 @@ angular.module('userController', [])
 			}
 
 			// if no errors, then proceed with user creation
-			if(!$scope.emailFlash && !$scope.passwordFlash && !$scope.usernameFlash && !$scope.termsFlash) {
+			if(!$scope.emailFlash && !$scope.passwordFlash && !$scope.usernameFlash && !$scope.termsFlash && !$scope.emailInvalid) {
 				// call the create function from our service (returns a promise object)
 				Users.create($scope.formData)
 
