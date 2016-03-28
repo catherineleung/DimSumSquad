@@ -82,9 +82,9 @@
             <% for (k = i; k < i + 6; k++) { 
                 if(k < comics.length) { %>
                   <div class="col-md-2" align="center">
-                    <% if (comics[k].images.length != 0) { %>
+                    <% if (comics[k].coverphoto) { %>
                       <a href="/comics/<%= comics[k]._id %>" class="thumbnail">
-                        <img src="<%= '/gridfile/' + comics[k].images[0] %>" alt="" style="width:150px;height:150px">
+                        <img src="<%= '/gridfile/' + comics[k].coverphoto %>" alt="" style="width:150px;height:150px">
                       </a>
                     <% } else { %>
                       <a href="/comics/<%= comics[k]._id %>" class="thumbnail">

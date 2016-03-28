@@ -204,25 +204,36 @@
 
         <!-- CANNOT CONTRIBUTE TO YOUR OWN COMIC ???? ask team-->
 
-        <% if ((user) && (user.local.contributor == true)) { %>
+        <% 
+        if ((user) && (user.local.contributor == true)) { 
+        %>
           <a class="btn btn-danger" data-toggle="modal" data-target="#addpanel">Add a panel</a>
-        <% } %>
+        <% 
+        } 
+        %>
         <hr>
 
-        <% for (i = 0; i < comics[index].images.length; i += 6) {  %> 
-        <div class="row">
-          <% for (k = i; k < i + 6; k++) { 
-            if (k < comics[index].images.length) { %>
-            <div class="col-md-2">
-              <a href="<%= '/gridfile/' + comics[index].images[k] %>" class="thumbnail">
-                <img src="<%= '/gridfile/' + comics[index].images[k] %>" alt="" style="width:150px;height:150px">
-              </a>
-              <!-- WANT TO GET THE CURRENT IMAGE AND GET THE CREATOR OF THAT IMAGE -->
-            </div>
-            <% } %>
-            <% } %>
+        <% 
+        for (i = 0; i < comics[index].images.length; i += 6) {  
+        %> 
+          <div class="row">
+            <% 
+            for (k = i; k < i + 6; k++) { 
+              if (k < comics[index].images.length) { 
+            %>
+                <div class="col-md-2">
+                <a href="<%= '/gridfile/' + comics[index].images[k] %>" class="thumbnail">
+                  <img src="<%= '/gridfile/' + comics[index].images[k] %>" alt="" style="width:150px;height:150px">
+                </a>
+                </div>
+            <% 
+              }
+            }
+            %>
           </div>
-          <% } %>
+        <% 
+        } 
+        %>
 
     </div>
   </div>
