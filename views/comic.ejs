@@ -30,6 +30,19 @@
       
   </script>
 
+  <style>
+
+    .inputfile {
+      width: 0.1px;
+      height: 0.1px;
+      opacity: 0;
+      overflow: hidden;
+      position: absolute;
+      z-index: -1;
+    }
+
+  </style>
+
 </head>
 
 <!-- Bootstrap core JavaScript and IE10 viewport hack-->
@@ -268,15 +281,15 @@
 </div>
 
 <div id="addpanel" class="modal fade" role="dialog">
-  <div class="modal-dialog">
+  <div class="modal-dialog modal-sm">
 
     <!-- Modal content-->
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title">Add Comic Panel</h4>
+        <h4 class="modal-title">Add Panel</h4>
       </div>
-      <div class="modal-body">
+      <div class="modal-body" style="text-align:center">
             <fieldset>
               <div class="form-group">
                 <form id        =  "contribute"
@@ -284,15 +297,15 @@
                 action    =  "/comics/<%=comics[index]._id%>/addpanel"
                 method    =  "post">
 ​
-                <input type="file" name="userPhoto" id="userPhoto"/> 
+                <input type="file" name="userPhoto" id="userPhoto" class="inputfile"/> 
+                <label id="uploadlabel" for="userPhoto" class="btn btn-lg btn-primary"><span class="glyphicon glyphicon-file"></span> Choose a file</label>
                 <br></br>
-                <input class="btn btn-primary" type="submit" id="submit" value="Upload" name="submit" onclick="buttonSubmitClicked(event)">
+                <input class="btn btn-default" type="submit" id="submit" value="Upload" name="submit" onclick="buttonSubmitClicked(event)">
+
+
                 </form>
               </div>
           </fieldset>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
       </div>
     </div>
 
@@ -307,6 +320,10 @@
             alert("Please choose a file!");
         }
     }
+
+    document.getElementById("userPhoto").onchange = function () {
+       document.getElementById("uploadlabel").innerHTML = '<span class="glyphicon glyphicon-ok"></span> ' + this.value.split( '\\' ).pop();
+    };
 </script>
 
 </body>
