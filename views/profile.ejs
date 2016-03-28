@@ -170,18 +170,35 @@
               <div class="panel-body">
                 <% for (i = 0; i < user.local.favourites.length; i += 6) { %>
                 <div class="row">
-                  <%  for (j = i; j < (user.local.favourites.length - (i * 6)); j++) { %>
-                  <div class="col-md-2">
-                    <a href="/comics/<%=user.local.favourites[(i * 6) + j]%>" class="thumbnail">
-                    Favourite # <%= j + 1 %>!
-<!--                       <img src="/uploads/<%=user.local.images[(i * 6) + j]%>" alt="" style="width:150px;height:150px">
- --> 
-                    </a>
-                  </div>
-                  <%  } %>
-                </div>
-                <%  } %>
+                  <%  
+                  for (j = i; j < i + 6; j++) { 
+                    if (j < user.local.favourites.length) {
+                      var comic_id;
+                      var comic_path;
+                      var comic_title;
+                      for (k = 0; k < comics.length; k++) {
+                        if (String(user.local.favourites[j]) == String(comics[k]._id)) {
+                          comic_id = comics[k]._id;
+                          comic_path = comics[k].images[0];
+                          comic_title = comics[k].title;
+                        }
+                      } %>
 
+                  %>
+                      <div class="col-md-2" align="center">
+                        <a href="/comics/<%= comic_id %>" class="thumbnail">
+                          <img src="/gridfile/<%= comic_path %>" alt="" style="width:150px;height:150px">
+                        </a>
+                        <strong><%= comic_title %></strong>
+                      </div>
+                  <%  
+                    }
+                  }
+                  %>
+                </div>
+                <%
+                } 
+                %>
               </div>
             </div>
           </div>
@@ -212,7 +229,7 @@
                       } %>
                       <div class="col-md-2" align="center">
                         <a href="/comics/<%= comic_id %>" class="thumbnail">
-                          <img src="/uploads/<%= comic_path %>" alt="" style="width:150px;height:150px">
+                          <img src="/gridfile/<%= comic_path %>" alt="" style="width:150px;height:150px">
                         </a>
                         <strong><%= comic_title %></strong>
                       </div>
