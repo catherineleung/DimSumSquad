@@ -365,107 +365,72 @@ var Router = (function () {
             // DELETE A COMIC ====================
             app.post('/deletecomic/:id', function (req, res) {
 
-                // TODO: rewrite this using Comic.findOne()
-                Comic.findOne({_id: req.params.id}, function(err, comic) {
+                // find the comic to delete
+                Comic.findOne({_id: req.params.id}, function (err, comic) {
                     if (err)
                         console.log(err);
-                    User.findOne({'local.username': comic.creatorID}, function(err, user) {
+
+                    // find the user to update
+                    User.findOne({'local.username': comic.creatorID}, function (err, user) {
                         if (err)
                             console.log(err);
-                        User.findByIdAndUpdate(user._id, { $pull: { 'local.comics': String(comic._id)}}, function(err, data) {
+
+                        // removes comic from user's comic list
+                        User.findByIdAndUpdate(user._id, { $pull: { 'local.comics': String(comic._id)}}, function (err, data) {
                             if (err)
                                 console.log(err);
-                            res.redirect('/');
                         });
+
+                        // iterate through the comic's images
+                        for (i = 0; i < comic.images.length; i++) {
+
+                            // removes image from user's image list
+                            User.findByIdAndUpdate(user._id, { $pull: { 'local.images': comic.images[i]}}, function (err, data) {
+                                if (err)
+                                    console.log(err);
+                            });
+
+                            // removes image from the database
+                            Image.remove({path: comic.images[i]}, function (err, user) {
+                                if (err) 
+                                    console.log(err);
+                            });
+
+                            // removes image from the file system
+                            gfs.remove({filename: comic.images[i]}, function(err) {
+                                if (err)
+                                    console.error(err);
+                            });
+                        }
+                    });
+
+                    // removes comic from the favourites list of any user who favourited it
+                    User.find({}, function (err, users) {
+                        for (i = 0; i < users.length; i++) {
+                            User.findByIdAndUpdate(users[i]._id, { $pull: { 'local.favourites': String(comic._id)}}, function (err, data) {
+                                if (err)
+                                    console.log(err);
+                            });
+                        }
+                    });
+
+                    // delete cover photo from file system, if it exists
+                    if (comic.coverphoto) {
+                        gfs.remove({filename: comic.coverphoto}, function(err) {
+                            if (err)
+                                console.error(err);
+                        });
+                    }
+
+                    // removes comic from database
+                    Comic.remove({_id: req.params.id}, function (err, user) {
+                        if (err)
+                            console.log(err);
+
+                        // redirect to comics page
+                        res.redirect('/comics');
                     });
                 });
-
-
-                // removes comic from user's comic list on the database
-                // Comic.find({}, function(err, comics) {
-                //     var comicCreatorID;
-                //     var comicTitle;
-
-                //     for (j = 0; j < comics.length; j++) {
-                //         if (String(comics[j]._id) == String(req.params.id)) {
-                //             comicCreatorID = comics[j].creatorID;
-                //             comicTitle = comics[j].title;
-                //             User.find({}, function(err, users) {
-                //                 for (i = 0; i < users.length; i++) {
-                //                     if (String(users[i].local.username) == String(comicCreatorID)) {
-                //                         console.log(comicCreatorID);
-                //                         console.log(users[i].local.username);
-                //                         console.log(users[i]._id);
-                //                         console.log(comicTitle);
-                //                         User.findByIdAndUpdate(users[i]._id, 
-                //                             { $pull: { 'local.comics': comicTitle }
-                //                         }, function(err, data) {
-                //                             console.log(err, data);
-                //                         });
-                //                     }
-                //                 }
-                //             });
-                //         }
-                //     } 
-                // });
-
-                // removes images associated with the comic from user's image list
-                // var listOfImages = [];
-
-
-                // Image.find({}, function(err, docs) {
-                //     for (i = 0; i < docs.length; i++) {
-                //         if (String(docs[i].imageBelongsTo) == String(req.params.id)) {
-                //             // places image paths into a listOfImages array
-                //             listOfImages.push(docs[i].path);
-                //         }
-                //     } 
-
-                //     // prints out all image paths in listOfImages array (FOR TESTING)
-                //     for (j = 0; j < listOfImages.length; j++) {
-                //         // tests to see if list of images added to listOfImages
-                //         console.log(listOfImages[j] + " HEYYYYYYYY");
-                //     }
-
-
-                //      // removes images associated with the comic from user's image list
-                //      User.find({}, function(err, users) {
-                //         for (j = 0; j < users.length; j++) {
-                //             for (k = 0; k < listOfImages.length; k++) {
-                //                 var userID = users[j]._id;
-                //                 // go through array of paths and remove each from local.images of current user
-                //                 User.findByIdAndUpdate(users[j]._id,
-                //                     { $pull: { 'local.images' : listOfImages[k] }}, function (err, data) {
-                //                         console.log(err, data);
-                //                     });
-                //             }
-                //         }
-                //     });
-
-                //      for (i = 0; i < docs.length; i++) {
-                //         if (String(docs[i].imageBelongsTo) == String(req.params.id)) {
-                //             // removes images associated with that comic from the database
-                //             Image.remove({
-                //                 _id: docs[i]._id
-                //             }, function (err, user) {
-                //                 if (err) {
-                //                     res.send(err);
-                //                 }
-                //             });
-
-                //         }        
-                //     }     
-                // });
-
-                // // removes comic from database
-                // Comic.remove({
-                //     _id: req.params.id
-                // }, function (err, user) {
-                //     if (err) {
-                //         res.send(err);
-                //     }
-                //     res.redirect('/profile'); // testing
-                // });
             });
 
             // COMIC COVER PAGE EDITTING ==============
