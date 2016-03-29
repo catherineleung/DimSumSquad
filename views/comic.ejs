@@ -310,7 +310,7 @@
       action    =  "/comment"
       method    =  "post">
       <label for="comment">Comment:</label>
-      <textarea class="form-control" rows="3" id="comment" name="comment"></textarea>
+      <textarea class="form-control" rows="3" id="comment" name="comment" style="resize: none"></textarea>
       <input type="hidden" name="comic_id" id="comic_id" value= <%= comic._id %> >
       <input class="btn btn-primary" style='background: indigo; border-color: indigo' type="submit" id="submit" value="Comment!" name="submit" ng-click="toggleComment()">
     </div>
