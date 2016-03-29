@@ -118,6 +118,16 @@ var Router = (function () {
                 }
             });
 
+            // TOP CONTRIBUTORS =========================
+            app.get('/top-contributors', function (req, res) {
+                User.find({}, function (err, users) {
+                        res.render('top-contributors.ejs', {
+                            user: req.user,
+                            users: users 
+                        });
+                });
+            });
+
             // COMIC VIEW =========================
             app.get('/comics/:id', function (req, res) {
                 // var hidden_value = req.getElementbyId("comic_get").innerHTML = req.getElementById("comic_get").value;

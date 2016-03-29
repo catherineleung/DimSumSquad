@@ -106,57 +106,13 @@
     </div>
 
       <div class="well">
-        <h2>Top Comics</h2>
-        <hr>
-        <% for (i = 0; i < 12; i += 6) { %> 
-          <div class="row">
-            <% for (k = i; k < i + 6; k++) { 
-                if(k < comics.length) { %>
-                  <div class="col-md-2" align="center">
-                    <% if (comics[k].coverphoto) { %>
-                      <a href="/comics/<%= comics[k]._id %>" class="thumbnail">
-                        <img src="<%= '/gridfile/' + comics[k].coverphoto %>" alt="" style="width:150px;height:150px">
-                      </a>
-                    <% } else { %>
-                      <a href="/comics/<%= comics[k]._id %>" class="thumbnail">
-                        <img src="app_images/generic_comic.png" alt="" style="width:150px;height:150px">
-                      </a>
-                    <% } %>
-                    <strong><%= comics[k].title %></strong> <br>
-                    By <a href="/profile/<%= comics[k].creatorID %>"><strong><%= comics[k].creatorID %></strong></a>
-                  </div>
-                <% } %>
-              <% } %>
-          </div>
-          <hr>
-        <% } %>
+        <h2>Top Contributors</h2>
+        <% for (i = 0; i < users.length; i++) { 
+          console.log(users[i].local.username);
+        } %>
       </div>
 
 
-      <div class="well">
-        <h2>Most Recent Comics</h2>
-        <hr>
-          <div class="row">
-            <% for (k = 0; k < i + 6; k++) { 
-                if((k > comics.length - 7) && k < comics.length) { %>
-                  <div class="col-md-2" align="center">
-                    <% if (comics[k].coverphoto) { %>
-                      <a href="/comics/<%= comics[k]._id %>" class="thumbnail">
-                        <img src="<%= '/gridfile/' + comics[k].coverphoto %>" alt="" style="width:150px;height:150px">
-                      </a>
-                    <% } else { %>
-                      <a href="/comics/<%= comics[k]._id %>" class="thumbnail">
-                        <img src="app_images/generic_comic.png" alt="Generic" style="width:150px;height:150px">
-                      </a>
-                    <% } %>
-                    <strong><%= comics[k].title %></strong> <br>
-                    By <a href="/profile/<%= comics[k].creatorID %>"><strong><%= comics[k].creatorID %></strong></a>
-                  </div>
-                <% } %>
-              <% } %>
-          </div>
-          <hr>
-      </div>
 
 
 
