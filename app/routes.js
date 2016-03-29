@@ -127,7 +127,7 @@ var Router = (function () {
 
             // TOP CONTRIBUTORS =========================
             app.get('/top-contributors', function (req, res) {
-                User.find({}).sort({'local.comics': 'desc'}).exec(function(err, users) {
+                User.find({}).sort({'local.score': 'desc'}).exec(function(err, users) {
                     res.render('top-contributors.ejs', {
                         user: req.user,
                         users: users
@@ -616,6 +616,12 @@ var Router = (function () {
                         // get image name and add it to user's image array    GOOD2GO
                         User.findByIdAndUpdate(req.user._id, { $push: { 'local.images': imageFileName } }, { safe: true, upsert: true, new: true }, function (err, model) {
                             console.log(err);
+                        });
+
+                        // increment user's score by 2
+                        User.findByIdAndUpdate(req.user._id, { $inc: { 'local.score': 2 }}, function(err) {
+                            if (err)
+                                console.log(err);
                         });
 
                         //add image name to the comic's list of images

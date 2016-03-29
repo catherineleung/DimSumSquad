@@ -109,32 +109,27 @@
         <h2>Top Contributors</h2>
         
         <hr>
-        <% for (i = 0; i < 12; i += 6) { %> 
           <div class="row">
-            <% for (k = i; k < i + 6; k++) { 
-
-                if(k < users.length) { %>
-                <% if (users[k].local.contributor) { %>
+            <% for (k = 0; k < i + 6; k++) { 
+                if((k < users.length - 3) && k < users.length) { %>
+                <% if (users[k].local.contributor && (users[k].local.score > 0)) { %>
                   <div class="col-md-2" align="center">
-                    
-                      <% if (users[k].local.picture) { %>
-                       <a href="/profile/<%= users[k].local.username %>" class="thumbnail">
-                         <img src="<%= '/gridfile/' + users[k].local.picture %>" alt="" style="width:150px;height:150px">
-                        </a>
-                       <% } else { %>
-                          <a href="/profile/<%= users[k].local.username %>" class="thumbnail">
-                          <img src="app_images/generic_picture.png" alt="" style="width:150px;height:150px">
-                           </a>
-                       <% } %>
-                        <a href="/profile/<%= users[k].local.username %>"><strong><%= users[k].local.username %></strong></a><br>
-                        Comics created: <%= users[k].local.comics.length %>
-                   </div>
-                   <% } %>
-              
+                    <% if (users[k].local.picture) { %>
+                      <a href="/profile/<%= users[k].local.username %>" class="thumbnail">
+                        <img src="<%= '/gridfile/' + users[k].local.picture %>" alt="" style="width:150px;height:150px">
+                      </a>
+                    <% } else { %>
+                      <a href="/profile/<%= users[k].local.username %>" class="thumbnail">
+                        <img src="app_images/generic_picture.png" alt="Generic" style="width:150px;height:150px">
+                      </a>
+                    <% } %>
+                    <a href="/profile/<%= users[k].local.username %>"><strong><%= users[k].local.username %></strong></a><br>
+                        Score: <%= users[k].local.score %>
+                  </div>
+                <% } %>
               <% } %>
               <% } %>
           </div>
-          <% } %>
           <hr>
 
       </div>
