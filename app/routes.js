@@ -449,44 +449,15 @@ var Router = (function () {
             });
 
             // COMIC COVER PAGE EDITTING ==============
-            app.post('/comics/:id', isLoggedIn, function (req, res) {
+            app.post('/comics/:id', function (req, res) {
 
-                if (isLoggedIn) {
-
-                    // query using id of current comic
-                    var comicID = { '_id': req.params.id };
-
-                    var newTitle = { $set: {'title': req.body.title}};  
-                    var newDescription = { $set: {'description': req.body.description}};
-                    var newTags = { $set: { 'tags': req.body.tags}};
-
-                    Comic.findOneAndUpdate(comicID, newTitle, { upsert: true }, function (err, doc) {
-                        if (err)
-                            return res.send(500, { error: err });
-                    });
-
-                    Comic.findOneAndUpdate(comicID, newDescription, { upsert: true }, function (err, doc) {
-                        if (err)
-                            return res.send(500, { error: err });
-                    });
-
-                    Comic.findOneAndUpdate(comicID, newTags, { upsert: true }, function (err, doc) {
-                        if (err)
-                            return res.send(500, { error: err });
-                    });
-                    
-                    Comic.find({}, function (err, docs) {
-                        res.render('comic.ejs', {
-                            user: req.user,
-                            comics: docs,
-                            id: req.params.id
-                        });
-
-                    });
-
-                } else {
-                    res.redirect('/deniedAccess');
-                }
+                Comic.findByIdAndUpdate(req.params.id, { 
+                    $set: {title: req.body.title, description: req.body.description, tags: req.body.tags}
+                }, function (err) {
+                    if (err)
+                        console.log(err);
+                    res.redirect('/comics/' + req.params.id);
+                });
             });
 
             // FOLLOWING ====================
