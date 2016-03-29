@@ -107,10 +107,40 @@
 
       <div class="well">
         <h2>Top Contributors</h2>
+
+        <div class="row">
+          <% for (k = 0; k < users.length + 6; k++) { 
+             if(k < users.length) { %>
+                <% if (users[k].local.contributor && (users[k].local.score > 0)) { %>
+                    <div class="col-lg-2">
+                      <div class="thumbnail">
+                        <% if (users[k].local.picture) { %>
+                                <a href="/profile/<%= users[k].local.username %>" class="thumbnail">
+                                  <img src="<%= '/gridfile/' + users[k].local.picture %>" alt="" style="width:150px;height:150px">
+                                </a>
+                              <% } else { %>
+                                <a href="/profile/<%= users[k].local.username %>" class="thumbnail">
+                                  <img src="app_images/generic_picture.png" alt="Generic" style="width:150px;height:150px">
+                                </a>
+                              <% } %>
+                      
+                        <div class="caption" style="padding-top:0px">
+                          <h4> <%= users[k].local.username %> </h4>
+                          <p>...</p>
+                          <p>hey</p>
+                        </div>
+                      </div>
+                    </div>
+              <% } %>
+           <% } %>
+        <% } %>
+        </div>
+
+
         
         <hr>
           <div class="row">
-            <% for (k = 0; k < i + 6; k++) { 
+            <% for (k = 0; k < users.length + 6; k++) { 
                 if(k < users.length) { %>
                 <% if (users[k].local.contributor && (users[k].local.score > 0)) { %>
                   <div class="col-md-2" align="center">
