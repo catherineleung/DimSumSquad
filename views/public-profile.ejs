@@ -223,7 +223,7 @@
                       var comic_coverphoto;
                       title = displayUser.local.comics[j];
                       for (k = 0; k < comics.length; k++) {
-                        if (displayUser.local.comics[j] == comics[k].title) {
+                        if (displayUser.local.comics[j] == comics[k]._id) {
                           comic_id = comics[k]._id;
                           comic_path = comics[k].images[0];
                           comic_title = comics[k].title;
