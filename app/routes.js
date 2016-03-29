@@ -490,6 +490,7 @@ var Router = (function () {
             });
 
             // FOLLOWING ====================
+            // adds the user to the displayuser's follower list and the displayuser to the user's following list
             //
             app.post('/follow/:id', function(req, res){
                 User.findByIdAndUpdate(req.user._id, { $push: { 'local.following': req.params.id }}, { safe: true, upsert: true, new: true }, function(err) {
@@ -499,6 +500,8 @@ var Router = (function () {
                         if (err)
                             console.log(err);
                         User.findOne({_id: req.params.id}, function (err, user) {
+                            if (err)
+                                console.log(err);
                             res.redirect('/profile/' + user.local.username);
                         });
                     });
@@ -506,6 +509,7 @@ var Router = (function () {
             });
 
             // UNFOLLOWING ====================
+            // removes the user from the displayuser's follower list and the displayuser from the user's following list
             //
             app.post('/unfollow/:id', function(req, res) {
                 User.findByIdAndUpdate(req.user._id, { $pull: { 'local.following': req.params.id }}, function(err) {
@@ -515,6 +519,8 @@ var Router = (function () {
                         if (err)
                             console.log(err);
                         User.findOne({_id: req.params.id}, function (err, user) {
+                            if (err)
+                                console.log(err);
                             res.redirect('/profile/' + user.local.username);
                         });
                     });
