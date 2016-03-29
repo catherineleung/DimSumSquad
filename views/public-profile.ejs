@@ -158,21 +158,49 @@
                 <h1 class="panel-title"><span class="glyphicon glyphicon-star"></span> <%= displayUser.local.username %>'s Favourites</h1>
               </div>
               <div class="panel-body">
-                <% for (i = 0; i < displayUser.local.favourites.length; i += 6) { %>
+                <%  for (i = 0; i < displayUser.local.favourites.length; i += 6) { %>
                 <div class="row">
-                  <%  for (j = i; j < (displayUser.local.favourites.length - (i * 6)); j++) { %>
-                  <div class="col-md-2">
-                    <a href="/comics/<%=displayUser.local.favourites[(i * 6) + j]%>" class="thumbnail">
-                    Favourite # <%= j + 1 %>!
-<!--                       <img src="/uploads/<%=user.local.images[(i * 6) + j]%>" alt="" style="width:150px;height:150px">
- --> 
-                    </a>
-                  </div>
-                  <%  } %>
+                  <%  for (j = i; j < i + 6; j++) {
+                    if (j < displayUser.local.favourites.length) {
+                      var comic_id;
+                      var comic_path;
+                      var comic_title;
+                      var comic_coverphoto;
+                      title = displayUser.local.comics[j];
+                      for (k = 0; k < comics.length; k++) {
+                        if (displayUser.local.favourites[j] == comics[k]._id) {
+                          comic_id = comics[k]._id;
+                          comic_path = comics[k].images[0];
+                          comic_title = comics[k].title;
+                          comic_coverphoto = comics[k].coverphoto;
+                        }
+                      } %>
+                      <div class="col-md-2" align="center">
+                        <%
+                        if (comic_coverphoto) {
+                        %>
+                          <a href="/comics/<%= comic_id %>" class="thumbnail">
+                            <img src="/gridfile/<%= comic_coverphoto %>" alt="" style="width:150px;height:150px">
+                          </a>
+                        <%
+                        } else {
+                        %>
+                          <a href="/comics/<%= comic_id %>" class="thumbnail">
+                            <img src="/app_images/generic_comic.png" alt="" style="width:150px;height:150px">
+                          </a>
+                        <%
+                        }
+                        %>
+                        <strong><%= comic_title %></strong>
+                      </div>
+                      <% } %>
+                    <%  } %>
                 </div>
+                <hr>
                 <%  } %>
+<!--                 <a href="/create-comic"> Start something new?</a>
+ -->              </div>
 
-              </div>
             </div>
           </div>
 
