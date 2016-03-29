@@ -111,7 +111,7 @@
         <hr>
           <div class="row">
             <% for (k = 0; k < i + 6; k++) { 
-                if((k < users.length - 3) && k < users.length) { %>
+                if(k < users.length) { %>
                 <% if (users[k].local.contributor && (users[k].local.score > 0)) { %>
                   <div class="col-md-2" align="center">
                     <% if (users[k].local.picture) { %>
