@@ -91,7 +91,7 @@
         <h1> <%= displayUser.local.username %>'s Profile</h1>
         
         <% 
-        if (user) { 
+        if (user && (user.local.username != displayUser.local.username)) { 
         %>
           <form action="/follow" method="post" enctype="application/x-www-form-urlencoded">
             <input type="hidden" name="follow_id" id="follow_id" value= <%= displayUser._id %> >
@@ -223,7 +223,7 @@
                       var comic_coverphoto;
                       title = displayUser.local.comics[j];
                       for (k = 0; k < comics.length; k++) {
-                        if (displayUser.local.comics[j] == comics[k]._id) {
+                        if (String(displayUser.local.comics[j]) == comics[k]._id) {
                           comic_id = comics[k]._id;
                           comic_path = comics[k].images[0];
                           comic_title = comics[k].title;
