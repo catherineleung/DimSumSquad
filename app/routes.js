@@ -382,6 +382,23 @@ var Router = (function () {
                         // iterate through the comic's images
                         for (i = 0; i < comic.images.length; i++) {
 
+                            // find the image
+                            Image.findOne({path: comic.images[i]}, function(err, image) {
+                                if (err)
+                                    console.log(err);
+                                // go through user list and look for uploaderID's userID
+                                User.findOne({'local.username': image.uploaderID}, function(err, user) {
+                                    if (err)
+                                        console.log(err);
+                                    // decrement user's score by 2
+                                    User.findByIdAndUpdate(user._id, { $inc: { 'local.score': -2 }}, function(err) {
+                                        if (err)
+                                            console.log(err);
+                                    });
+                                });
+                            });
+                            
+
                             // removes image from user's image list
                             User.findByIdAndUpdate(user._id, { $pull: { 'local.images': comic.images[i]}}, function (err, data) {
                                 if (err)
