@@ -90,12 +90,12 @@
               if(match) { 
                 k = k + 1; %>
                 <div class="col-md-2" align="center">
-                 <% if (comics[k].coverphoto) { %>
-                      <a href="/comics/<%= comics[k]._id %>" class="thumbnail">
-                        <img src="<%= '/gridfile/' + comics[k].coverphoto %>" alt="" style="width:150px;height:150px">
+                 <% if (comics[i].coverphoto) { %>
+                      <a href="/comics/<%= comics[i]._id %>" class="thumbnail">
+                        <img src="<%= '/gridfile/' + comics[i].coverphoto %>" alt="" style="width:150px;height:150px">
                       </a>
                     <% } else { %>
-                      <a href="/comics/<%= comics[k]._id %>" class="thumbnail">
+                      <a href="/comics/<%= comics[i]._id %>" class="thumbnail">
                         <img src="app_images/generic_comic.png" alt="Generic" style="width:150px;height:150px">
                       </a>
                     <% } %>
