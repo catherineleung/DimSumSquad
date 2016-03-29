@@ -114,7 +114,7 @@
             <% for (k = i; k < i + 6; k++) { 
 
                 if(k < users.length) { %>
-                <% if (users[k].local.contributor) { %>
+                <% if (users[k].local.contributor && (users[k].local.score > 0)) { %>
                   <div class="col-md-2" align="center">
                     
                       <% if (users[k].local.picture) { %>
@@ -127,7 +127,7 @@
                            </a>
                        <% } %>
                         <a href="/profile/<%= users[k].local.username %>"><strong><%= users[k].local.username %></strong></a><br>
-                        Comics created: <%= users[k].local.comics.length %>
+                        Score: <%= users[k].local.score %>
                    </div>
                    <% } %>
               
