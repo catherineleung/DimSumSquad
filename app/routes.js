@@ -373,6 +373,12 @@ var Router = (function () {
                                 console.log(err);
                         });
 
+                        // decrements user's score by 5
+                        User.findByIdAndUpdate(user._id, { $inc: { 'local.score': -5 }}, function (err, data) {
+                            if (err)
+                                console.log(err);
+                        });
+
                         // iterate through the comic's images
                         for (i = 0; i < comic.images.length; i++) {
 
