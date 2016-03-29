@@ -65,10 +65,10 @@ var Router = (function () {
 
             // HOME VIEW ==============================
             app.get('/', function (req, res) {
-                Comic.find({}).sort({favourites: 'desc'}).exec(function(err, docs) {
+                Comic.find({}, function(err, docs) {
                     res.render('index.ejs', {
                         user: req.user,
-                        topcomics: docs
+                        comics: docs
                     });
                 });
             });
