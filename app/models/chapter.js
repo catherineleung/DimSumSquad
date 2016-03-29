@@ -11,6 +11,7 @@ var panelSchema = mongoose.Schema({
     images: Array,			// ids of canvas component images
 
     //Mutable
+    title: String	//Provide a title to the chapter
     note: String	//If the contributor wants to leave a side explanation or note to future contributors
 });
 
