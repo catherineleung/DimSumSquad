@@ -73,6 +73,13 @@ var Router = (function () {
                 });
             });
 
+            // ABOUT VIEW ==============================
+            app.get('/about', function (req, res) {
+                res.render('about.ejs', {
+                    user: req.user,
+                });
+            });
+
             // SEARCH VIEW ==============================
             app.get('/search', function(req, res){
                 Comic.find({}, function (err, docs) {
