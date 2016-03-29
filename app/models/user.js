@@ -26,7 +26,7 @@ var bcrypt = require('bcrypt-nodejs');
 
                 //Other
                 following: Array,
-                follows: Number,
+                followers: Array,
 
                 //Notifications
                 notifications: Array 
