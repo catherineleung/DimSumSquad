@@ -156,14 +156,15 @@ var Router = (function () {
             });
 
             // PANEL VIEW ==============================
-            app.get('/panel', function(req, res){
-                Comic.find({}, function (err, docs) {
-                    res.render('panel.ejs', {
-                        user: req.user,
-                        comics: docs,
-                        query : req.query.query
+            app.get('/comics/:id/panel', function(req, res){
+                Comic.findOne({_id: req.params.id}, function (err, comic) {
+                    User.find({}, function (err, users) {
+                        res.render('panel.ejs', {
+                            user: req.user,
+                            comic: comic
+                        });
                     });
-                });         
+                });      
             });
 
             // ADD COMIC PANEL VIEW ==============================
