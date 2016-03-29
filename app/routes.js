@@ -120,7 +120,7 @@ var Router = (function () {
 
             // TOP CONTRIBUTORS =========================
             app.get('/top-contributors', function (req, res) {
-                User.find({}).sort({favourites: 'desc'}).exec(function(err, users) {
+                User.find({}).sort({'local.comics': 'desc'}).exec(function(err, users) {
                     res.render('top-contributors.ejs', {
                         user: req.user,
                         users: users
@@ -735,6 +735,11 @@ var Router = (function () {
                 newComic.save(function (err, comic) {
                     if (err)
                         console.log(err);
+
+                    User.findByIdAndUpdate(req.user._id, { $inc: { 'local.score': 5 }}, function(err) {
+                            if (err)
+                                console.log(err);
+                        });
 
                     User.findByIdAndUpdate(req.user._id, { $push: { 'local.comics': String(comic._id) } }, { safe: true, upsert: true, new: true }, function (err, model) {
                         if (err)

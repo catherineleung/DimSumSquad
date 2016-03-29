@@ -11,6 +11,7 @@ var bcrypt = require('bcrypt-nodejs');
                 password: String,
                 username: String,
                 contributor: Boolean,
+                score: Number,     // +5 for creating comic, +2 for contributing to a comic
                 
                 //Editable content
                 picture: String,
