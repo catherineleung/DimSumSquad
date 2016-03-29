@@ -114,136 +114,139 @@
     <div class="container">
       <div class="well">
 
-        <%
-        if (comic.coverphoto) {
-          if ((user) && (user.local.username == comic.creatorID)) { 
-          %>
-            <a href data-toggle="modal" data-target="#changecover">
-          <%
-          }
-          %>
-              <img src="<%= '/gridfile/' + comic.coverphoto %>" alt="" style="width:200px;height:200px" 
-                <% if ((user) && (user.local.username == comic.creatorID)) { %> data-toggle="tooltip" title="Change Cover Photo" data-placement="right" <% } %>
-              >
-          <% 
-          if ((user) && (user.local.username == comic.creatorID)) { 
-          %>
-            </a>
-          <%
-          }
-          %>
-        <%
-        } else {
-        %>
-          <% 
-          if ((user) && (user.local.username == comic.creatorID)) { 
-          %>
-            <a href data-toggle="modal" data-target="#changecover">
-          <%
-          }
-          %>
-              <img src="/app_images/generic_comic.png" alt="" style="width:200px;height:200px"
-                <% if ((user) && (user.local.username == comic.creatorID)) { %> data-toggle="tooltip" title="Add Cover Photo" data-placement="right" <% } %>
-              >
-          <% 
-          if ((user) && (user.local.username == comic.creatorID)) { 
-          %>
-            </a>
-          <%
-          }
-        }
-        %>
-
-        <br><br>
-
-        <%
-        var monthNames = [
-          "Jan", "Feb", "Mar", 
-          "Apr", "May", "Jun", 
-          "Jul", "Aug", "Sep", 
-          "Oct", "Nov", "Dec"
-        ];
-        var day = comic.dateCreated.getDate();
-        var monthIndex = comic.dateCreated.getMonth();
-        var year = comic.dateCreated.getFullYear();
-        %>
-
-        <div>
-          <strong>Title:</strong><br> <%= comic.title %><br><br>
-          <strong>Description:</strong> <br><%- comic.description.replace(/\r\n/g, '<br>') %> <br><br>
-          <strong>Tags:</strong> <br>
-          <%
-          var tagsArray = comic.tags.split(',');
-          for (i = 0; i < tagsArray.length; i++) {
-          %>
-            <a href="/search/?query=<%=tagsArray[i]%>" style="text-decoration:none;">
-              <span class="label label-primary">
-                <%= tagsArray[i] %>
-              </span>
-            </a>
-            &nbsp;
-          <%
-          }
-          %> 
-          <br><br>
-          <strong>Creator:</strong><br><a href="/profile/<%= comic.creatorID %>"><%= comic.creatorID %></a> <br><br>
-          <strong>Date Created:</strong><br> <%= monthNames[monthIndex] + ' ' + day + ', ' + year %></a> <br><br>
-
-          <% if ((user) && (user.local.username == comic.creatorID)) { %>
-          <button class="btn btn-primary" data-toggle="modal" data-target="#editinfo">Edit</button>
-          <% } %>
+        <div class="row">
+          <div class="col-lg-3">
+            <h1> <%= comic.title %> </h1>
+          </div>
         </div>
-        <br> 
-
-        <!-- DELETE COMIC BUTTON only shows up if you are creator of that comic -->
-        <% if ((user) && (user.local.username == comic.creatorID)) { %>
-        <!-- comic from user's comics list-->
-        <form method="post" action="<%= '/deletecomic/' + comic._id %>">
-          <button class="btn btn-primary" type="submit">Delete Comic</button>
-        </form>
         <br>
-        <% } %>
-
-
-        <%
-        if (user) {
-          var favourited = false; 
-          for (i = 0; i < user.local.favourites.length; i++) {
-            if (user.local.favourites[i] == comic._id){
-              favourited = true;
+        <div class="row">
+          <div class="col-lg-3">
+            <!-- COVER PHOTO -->
+            <%
+            if (comic.coverphoto) {
+              if ((user) && (user.local.username == comic.creatorID)) { 
+              %>
+                <a href data-toggle="modal" data-target="#changecover">
+              <%
+              }
+              %>
+                  <img src="<%= '/gridfile/' + comic.coverphoto %>" alt="" style="width:250px;height:250px" 
+                    <% if ((user) && (user.local.username == comic.creatorID)) { %> data-toggle="tooltip" title="Change Cover Photo" data-placement="left" <% } %>
+                  >
+              <% 
+              if ((user) && (user.local.username == comic.creatorID)) { 
+              %>
+                </a>
+              <%
+              }
+              %>
+            <%
+            } else {
+            %>
+              <% 
+              if ((user) && (user.local.username == comic.creatorID)) { 
+              %>
+                <a href data-toggle="modal" data-target="#changecover">
+              <%
+              }
+              %>
+                  <img src="/app_images/generic_comic.png" alt="" style="width:250px;height:250px"
+                    <% if ((user) && (user.local.username == comic.creatorID)) { %> data-toggle="tooltip" title="Add Cover Photo" data-placement="left" <% } %>
+                  >
+              <% 
+              if ((user) && (user.local.username == comic.creatorID)) { 
+              %>
+                </a>
+              <%
+              }
             }
-          } 
-        }
-        %>
+            %>
+            <!-- END COVER PHOTO -->
+          </div>
+          <div class="col-lg-4">
+            <%
+            var monthNames = [
+              "Jan", "Feb", "Mar", 
+              "Apr", "May", "Jun", 
+              "Jul", "Aug", "Sep", 
+              "Oct", "Nov", "Dec"
+            ];
+            var day = comic.dateCreated.getDate();
+            var monthIndex = comic.dateCreated.getMonth();
+            var year = comic.dateCreated.getFullYear();
+            %>
+            <strong><span style="display:inline-block;width:60px">Author:</span> <a href="/profile/<%= comic.creatorID %>"><%= comic.creatorID %></a></strong> <br style="line-height: 200%;">
+            <strong><span style="display:inline-block;width:60px">Created:</span></strong> <%= monthNames[monthIndex] + ' ' + day + ', ' + year %> <br style="line-height: 200%;">
+            <strong><span style="display:inline-block;width:54px">Tags:</span></strong> &nbsp;
+            <%
+            var tagsArray = comic.tags.split(',');
+            for (i = 0; i < tagsArray.length; i++) {
+            %>
+              <a href="/search/?query=<%=tagsArray[i]%>" style="text-decoration:none;">
+                <span class="label label-primary">
+                  <%= tagsArray[i] %>
+                </span>
+              </a>
+              &nbsp;
+            <%
+            }
+            %>
+            <br>
+            <br>
+            
 
-        <% 
-        if (user) {
-          if (favourited == false) { 
-        %>
-            <form action="<%= '/addfavourite/' + comic._id %>" method="post" enctype="application/x-www-form-urlencoded" id="fav">
-              <button class="btn btn-default" type="submit"><span class="glyphicon glyphicon-heart-empty"></span></button>
-            </form>
-        <% 
-          } else { 
-        %>
-            <form action="<%= '/removefavourite/' + comic._id %>" method="post" enctype="application/x-www-form-urlencoded" id="fav">
-              <button class="btn btn-default" type="submit"><span class="glyphicon glyphicon-heart" style="color:red"></span></button>
-            </form>
-        <% 
-          } 
-        } 
-        %>
+            <%
+            if (user) {
+              var favourited = false; 
+              for (i = 0; i < user.local.favourites.length; i++) {
+                if (user.local.favourites[i] == comic._id){
+                  favourited = true;
+                }
+              } 
+            }
+            %>
 
+            <% 
+            if (user) {
+              if (favourited == false) { 
+            %>
+                <form action="<%= '/addfavourite/' + comic._id %>" method="post" enctype="application/x-www-form-urlencoded" id="fav" style="display:inline-block">
+                  <button class="btn btn-default btn-sm" type="submit"><span class="glyphicon glyphicon-heart-empty"></span></button>
+                </form>
+            <% 
+              } else { 
+            %>
+                <form action="<%= '/removefavourite/' + comic._id %>" method="post" enctype="application/x-www-form-urlencoded" id="fav" style="display:inline-block">
+                  <button class="btn btn-default btn-sm" type="submit"><span class="glyphicon glyphicon-heart" style="color:red"></span></button>
+                </form>
+            <% 
+              } 
+            } 
+            %>
+
+            <% if ((user) && (user.local.username == comic.creatorID)) { %>
+              <button class="btn btn-sm btn-default" data-toggle="modal" data-target="#editinfo">Edit</button> 
+              <button class="btn btn-sm btn-default" data-toggle="modal" data-target="#deletecomic">Delete Comic</button>
+            <% } %>
+
+            <br>
+            <br>
+
+            <small style="font-weight: bold"><span class="glyphicon glyphicon-heart"></span> <%= comic.favourites %> favourites</small>
+
+          </div>
+        </div>
         <br>
-
-        <small style="font-weight: bold"><span class="glyphicon glyphicon-heart"></span> <%= comic.favourites %> favourites</small>
+        <div class="row">
+          <div class="col-lg-4">
+            <%- comic.description.replace(/\r\n/g, '<br>') %> <br><br>
+          </div>
+        </div>
 
         <br>
         <br>
         
-
-        <!-- CANNOT CONTRIBUTE TO YOUR OWN COMIC ???? ask team-->
-
         <% 
         if ((user) && (user.local.contributor == true)) { 
         %>
@@ -443,7 +446,7 @@
               <br>
 
               <strong>Tags:</strong>
-              <input type="text" class="form-control" value="<%= comic.tags %>" name="tags" data-role="tagsinput" data->
+              <input type="text" class="form-control" value="<%= comic.tags %>" name="tags" data-role="tagsinput">
               <br><br>
 
               <input class="btn btn-primary" type="submit" value="Save Changes">
@@ -456,6 +459,32 @@
     </div>
   </div>
 </div>
+
+<!-- DELETE COMIC MODAL -->
+<div id="deletecomic" class="modal fade" role="dialog">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+
+      <!-- MODAL HEADER -->
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Delete Comic</h4>
+      </div>
+
+      <!-- MODAL BODY -->
+      <div class="modal-body" style="text-align:center">
+        Are you sure you want to delete this comic? <br><br>
+        <form method="post" action="<%= '/deletecomic/' + comic._id %>">
+          <button type="button" class="btn btn-default" data-dismiss="modal">No, take me back</button>
+          <button class="btn btn-danger" type="submit">Yes</button>
+        </form>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
 
 
 <script>

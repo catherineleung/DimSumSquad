@@ -509,15 +509,14 @@ var Router = (function () {
                     Comic.findByIdAndUpdate(req.params.id, { $set: { favourites: newFavourites } }, function (err) {
                         if (err)
                             console.log(err);
+
+                        User.findByIdAndUpdate(req.user._id, { $push: { 'local.favourites': req.params.id } }, { safe: true, upsert: true, new: true }, function (err, model) {
+                            if (err)
+                                console.log(err);
+                            res.redirect('/comics/' + req.params.id);
+                        });
                     });
                 });
-
-                User.findByIdAndUpdate(req.user._id, { $push: { 'local.favourites': req.params.id } }, { safe: true, upsert: true, new: true }, function (err, model) {
-                    if (err)
-                        console.log(err);
-                    res.redirect('/comics/' + req.params.id);
-                });
-                
             });
 
             app.post('/removefavourite/:id', function(req, res) {
@@ -530,13 +529,13 @@ var Router = (function () {
                     Comic.findByIdAndUpdate(req.params.id, { $set: { favourites: newFavourites } }, function (err) {
                         if (err)
                             console.log(err);
+                        
+                        User.findByIdAndUpdate(req.user._id, { $pull: { 'local.favourites': req.params.id } }, function (err, data) {
+                            if (err)
+                                console.log(err);
+                            res.redirect('/comics/' + req.params.id);
+                        });
                     });
-                });
-
-                User.findByIdAndUpdate(req.user._id, { $pull: { 'local.favourites': req.params.id } }, function (err, data) {
-                    if (err)
-                        console.log(err);
-                    res.redirect('/comics/' + req.params.id);
                 });
             });
 
