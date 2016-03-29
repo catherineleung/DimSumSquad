@@ -357,6 +357,10 @@
   </div>
 </div>
 
+
+<% 
+ if ((user) && (user.local.username == comic.creatorID)) { 
+ %>
 <div id="changecover" class="modal fade" role="dialog">
   <div class="modal-dialog modal-sm">
     <div class="modal-content">
@@ -389,6 +393,9 @@
     </div>
   </div>
 </div>
+<% 
+  }  
+ %>
 
 
 
