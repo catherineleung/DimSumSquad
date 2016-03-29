@@ -170,8 +170,22 @@
 
         <div>
           <strong>Title:</strong><br> <%= comic.title %><br><br>
-          <strong>Description:</strong> <br><%= comic.description %> <br><br>
-          <strong>Tags:</strong> <br> <%= comic.tags %> <br><br>
+          <strong>Description:</strong> <br><%- comic.description.replace(/\r\n/g, '<br>') %> <br><br>
+          <strong>Tags:</strong> <br>
+          <%
+          var tagsArray = comic.tags.split(',');
+          for (i = 0; i < tagsArray.length; i++) {
+          %>
+            <a href="/search/?query=<%=tagsArray[i]%>" style="text-decoration:none;">
+              <span class="label label-primary">
+                <%= tagsArray[i] %>
+              </span>
+            </a>
+            &nbsp;
+          <%
+          }
+          %> 
+          <br><br>
           <strong>Creator:</strong><br><a href="/profile/<%= comic.creatorID %>"><%= comic.creatorID %></a> <br><br>
           <strong>Date Created:</strong><br> <%= monthNames[monthIndex] + ' ' + day + ', ' + year %></a> <br><br>
 
@@ -406,7 +420,7 @@
 
 <!-- EDIT INFO MODAL -->
 <div id="editinfo" class="modal fade" role="dialog">
-  <div class="modal-dialog modal-sm">
+  <div class="modal-dialog modal-md">
     <div class="modal-content">
 
       <!-- MODAL HEADER -->
