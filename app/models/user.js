@@ -26,7 +26,10 @@ var bcrypt = require('bcrypt-nodejs');
 
                 //Other
                 following: Array,
-                follows: Number
+                follows: Number,
+
+                //Notifications
+                notifications: Array 
 
             },
             facebook: {
