@@ -166,13 +166,13 @@ var Router = (function () {
             });
 
             // ADD COMIC PANEL VIEW ==============================
-            app.get('/comics/:id/addpanel', isLoggedIn, function (req, res) {
+            app.get('/comics/:id/addchapter', isLoggedIn, function (req, res) {
                 // can only access page if user has contributor status
                 // the button is removed for non-contributors, but this is so that 
                 //     typing /upload in the browser will do nothing
                 if (req.user.local.contributor) {
                     Comic.find({}, function (err, docs) {
-                        res.render('addpanel.ejs', {
+                        res.render('addchapter.ejs', {
                          user: req.user,
                          comics: docs,
                          id: req.params.id
