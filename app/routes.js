@@ -374,7 +374,7 @@ var Router = (function () {
                         });
 
                         // decrements user's score by 5
-                        User.findByIdAndUpdate(user._id, { $dec: { 'local.score': 5}}, function (err, data) {
+                        User.findByIdAndUpdate(user._id, { $inc: { 'local.score': -5 }}, function (err, data) {
                             if (err)
                                 console.log(err);
                         });
