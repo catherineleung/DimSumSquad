@@ -782,7 +782,8 @@ var Router = (function () {
             // process the signup form
             app.post('/signup', passport.authenticate('local-signup', {
                 successRedirect: '/',
-                failureRedirect: '/signup',
+                // all errors get caught in the sign-up form anyways
+                failureRedirect: '/',
                 failureFlash: true // allow flash messages
             }));
             // facebook -------------------------------
