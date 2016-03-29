@@ -13,7 +13,9 @@
   <!-- Bootstrap core, IE10 viewport hack, and custom styles-->
   <link href="/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="/bootstrap/docs/assets/css/ie10-viewport-bug-workaround.css" rel="stylesheet">
+  <link href="/bootstrap-tagsinput/dist/bootstrap-tagsinput.css" rel="stylesheet">
   <script src="/bootstrap/docs/assets/js/ie-emulation-modes-warning.js"></script>
+
 
   <style>
 
@@ -166,7 +168,7 @@
         var year = comic.dateCreated.getFullYear();
         %>
 
-        <div ng-hide="editToggle">
+        <div>
           <strong>Title:</strong><br> <%= comic.title %><br><br>
           <strong>Description:</strong> <br><%= comic.description %> <br><br>
           <strong>Tags:</strong> <br> <%= comic.tags %> <br><br>
@@ -174,19 +176,9 @@
           <strong>Date Created:</strong><br> <%= monthNames[monthIndex] + ' ' + day + ', ' + year %></a> <br><br>
 
           <% if ((user) && (user.local.username == comic.creatorID)) { %>
-          <button class="btn btn-primary" ng-click="toggleEdit()">Edit Comic</button>
+          <button class="btn btn-primary" data-toggle="modal" data-target="#editinfo">Edit</button>
           <% } %>
         </div>
-        <form ng-show="editToggle" method="post" action="/comics/<%=comic._id%>">
-          <strong>Title:</strong>
-          <input type="text" class="form-control" id="editTitle" value="<%= comic.title %>" name="title">
-          <strong>Description:</strong>
-          <input type="text" class="form-control" id="editDescription" value="<%= comic.description %>" name="description">
-          <strong>Tags:</strong>
-          <input type="text" class="form-control" id="editTags" value="<%= comic.tags %>" name="tags"><br>
-          <input ng-show="editToggle" class="btn btn-primary" type="submit" ng-click="toggleEdit()" value="Save Changes">  
-          <!-- <button class="btn btn-primary" ng-show="editToggle" ng-click="toggleEdit()">Cancel</button>--> 
-        </form>
         <br> 
 
         <!-- DELETE COMIC BUTTON only shows up if you are creator of that comic -->
@@ -341,6 +333,7 @@
 </div>
 </div>
 
+<!-- IMAGE UPLOAD MODAL -->
 <div id="addchapter" class="modal fade" role="dialog">
   <div class="modal-dialog modal-med">
     <div class="modal-content">
@@ -377,7 +370,7 @@
   </div>
 </div>
 
-
+<!-- CHANGE COVER PHOTO MODAL -->
 <div id="changecover" class="modal fade" role="dialog">
   <div class="modal-dialog modal-sm">
     <div class="modal-content">
@@ -411,6 +404,44 @@
   </div>
 </div>
 
+<!-- EDIT INFO MODAL -->
+<div id="editinfo" class="modal fade" role="dialog">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+
+      <!-- MODAL HEADER -->
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Edit Comic Info</h4>
+      </div>
+
+      <!-- MODAL BODY -->
+      <div class="modal-body" style="text-align:left">
+        <fieldset>
+          <div class="form-group">
+            <form method="post" action="/comics/<%=comic._id%>">
+              <strong>Title:</strong>
+              <input type="text" class="form-control" value="<%= comic.title %>" name="title">
+              <br>
+
+              <strong>Description:</strong>
+              <textarea rows="3" class="form-control" name="description" style="resize: none"><%= comic.description %></textarea>
+              <br>
+
+              <strong>Tags:</strong>
+              <input type="text" class="form-control" value="<%= comic.tags %>" name="tags" data-role="tagsinput" data->
+              <br><br>
+
+              <input class="btn btn-primary" type="submit" value="Save Changes">
+            </form>
+          </div>
+
+        </fieldset>
+      </div>
+
+    </div>
+  </div>
+</div>
 
 
 <script>
@@ -445,6 +476,9 @@
     });
 
 </script>
+
+  <script src="../bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js"></script>
+  <script src="../bootstrap-tagsinput/dist/bootstrap-tagsinput.js"></script>
 
 </body>
 </html>
