@@ -5270,6 +5270,7 @@ select[multiple].input-group-sm>.input-group-btn>.btn {
 }
 
 .navbar-form {
+    width: 100%;
     margin-left: -15px;
     margin-right: -15px;
     padding: 10px 15px;
@@ -8378,6 +8379,7 @@ label {
 }
 
 .dropdown-menu {
+    width: 300px;
     margin-top: 0;
     border-width: 0 1px 4px 1px;
     border-top-width: 1px;
