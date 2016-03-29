@@ -262,8 +262,6 @@ var Router = (function () {
             app.get('/profile/:id', function (req, res) {
                 Comic.find({}, function (err, comics) {
                     User.findOne({'local.username' : req.params.id}, function (err, searchUser) {
-                        console.log(req.params.id);
-                        console.log(searchUser.local.username);
                         res.render('public-profile.ejs', {
                             user: req.user,
                             comics: comics,
@@ -475,35 +473,36 @@ var Router = (function () {
             });
 
             // FOLLOWING ====================
-            app.post('/follow', function(req, res){
-
-                // check first to see if you've liked the comic already
-                // NEED TO WORK ON THIS
-
-                var current_followers = req.body.followers;
-
-                // called parseFloat to work with integers
-                var new_followers = parseFloat(current_followers) + 1;
-
-                // increase the number of followers on displayUser
-                User.update({_id: req.body.follow_id}, {
-                    follows: new_followers
-                }, function (err, affected) {
-                    console.log(err);
+            //
+            app.post('/follow/:id', function(req, res){
+                User.findByIdAndUpdate(req.user._id, { $push: { 'local.following': req.params.id }}, { safe: true, upsert: true, new: true }, function(err) {
+                    if (err)
+                        console.log(err);
+                    User.findByIdAndUpdate(req.params.id, { $push: { 'local.followers': String(req.user._id) }}, { safe: true, upsert: true, new: true }, function(err) {
+                        if (err)
+                            console.log(err);
+                        User.findOne({_id: req.params.id}, function (err, user) {
+                            res.redirect('/profile/' + user.local.username);
+                        });
+                    });
                 });
+            });
 
-
-                console.log("check");
-                console.log(req.user._id);
-
-
-                User.findByIdAndUpdate(req.user._id, { $push: { 'local.following': req.body.follow_id } }, { safe: true, upsert: true, new: true }, function (err, model) {
-                    console.log(err);
+            // UNFOLLOWING ====================
+            //
+            app.post('/unfollow/:id', function(req, res) {
+                User.findByIdAndUpdate(req.user._id, { $pull: { 'local.following': req.params.id }}, function(err) {
+                    if (err)
+                        console.log(err);
+                    User.findByIdAndUpdate(req.params.id, { $pull: { 'local.followers': String(req.user._id) }}, function(err) {
+                        if (err)
+                            console.log(err);
+                        User.findOne({_id: req.params.id}, function (err, user) {
+                            res.redirect('/profile/' + user.local.username);
+                        });
+                    });
                 });
-
-                // NEED TO FIX THIS
-                res.redirect('/');
-            }); 
+            });
 
             // FAVOURITING =========================
             app.post('/addfavourite/:id', function(req, res) {

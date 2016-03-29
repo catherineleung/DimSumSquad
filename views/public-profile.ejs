@@ -92,12 +92,19 @@
         
         <% 
         if (user && (user.local.username != displayUser.local.username)) { 
+          if (user.local.following.indexOf(String(displayUser._id)) == -1) {
         %>
-          <form action="/follow" method="post" enctype="application/x-www-form-urlencoded">
-            <input type="hidden" name="follow_id" id="follow_id" value= <%= displayUser._id %> >
-            <button class="btn btn-primary btn-lg" style='background: midnightblue; border-color: midnightblue' type="submit">Follow <%= displayUser.local.username %> </button>
-          </form>
-        <% 
+            <form action="/follow/<%=displayUser._id%>" method="post">
+              <button class="btn btn-primary btn-lg" style='background: midnightblue; border-color: midnightblue' type="submit">Follow <%= displayUser.local.username %> </button>
+            </form>
+        <%
+          } else {
+        %>
+            <form action="/unfollow/<%=displayUser._id%>" method="post">
+              <button class="btn btn-primary btn-lg" style='background: midnightblue; border-color: midnightblue' type="submit">Unfollow <%= displayUser.local.username %> </button>
+            </form>
+        <%
+          }
         } 
         %>
 
