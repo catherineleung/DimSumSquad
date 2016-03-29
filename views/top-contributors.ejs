@@ -103,19 +103,40 @@
             <a href="/userlist" class="btn btn-warning"><span class="fa fa-user"></span> View Users</a>
             <a href="/top-contributors" class="btn btn-danger"><span class="fa fa-user"></span>Top Contributors</a>
         <% } %>
-    </div>
+ </div>
 
       <div class="well">
         <h2>Top Contributors</h2>
-        <% for (i = 0; i < users.length; i++) { 
-          console.log(users[i].local.username);
-        } %>
+        
+        <hr>
+        <% for (i = 0; i < 12; i += 6) { %> 
+          <div class="row">
+            <% for (k = i; k < i + 6; k++) { 
+
+                if(k < users.length) { %>
+                <% if (users[k].local.contributor) { %>
+                  <div class="col-md-2" align="center">
+                    
+                      <% if (users[k].local.picture) { %>
+                       <a href="/profile/<%= users[k].local.username %>" class="thumbnail">
+                         <img src="<%= '/gridfile/' + users[k].local.picture %>" alt="" style="width:150px;height:150px">
+                        </a>
+                       <% } else { %>
+                          <a href="/profile/<%= users[k].local.username %>" class="thumbnail">
+                          <img src="app_images/generic_picture.png" alt="" style="width:150px;height:150px">
+                           </a>
+                       <% } %>
+                        <a href="/profile/<%= users[k].local.username %>"><strong><%= users[k].local.username %></strong></a>
+                   </div>
+                   <% } %>
+              
+              <% } %>
+              <% } %>
+          </div>
+          <% } %>
+          <hr>
+
       </div>
-
-
-
-
-
 
     </div>
 

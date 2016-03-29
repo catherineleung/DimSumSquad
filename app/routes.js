@@ -120,11 +120,11 @@ var Router = (function () {
 
             // TOP CONTRIBUTORS =========================
             app.get('/top-contributors', function (req, res) {
-                User.find({}, function (err, users) {
-                        res.render('top-contributors.ejs', {
-                            user: req.user,
-                            users: users 
-                        });
+                User.find({}).sort({favourites: 'desc'}).exec(function(err, users) {
+                    res.render('top-contributors.ejs', {
+                        user: req.user,
+                        users: users
+                    });
                 });
             });
 
