@@ -8,7 +8,7 @@ var comicSchema = mongoose.Schema({
     tags: String,           // Tags ... list of Strings (e.g. "Funny,Sad,Happy")
     creatorID: String,	    // Sole creator ... this is the username
     contributors: {},
-    chapters: Array,       // Array of chapterRef objects (see /addchapter in routes)
+    chapters: Array,       // Array of chapter objects (see below)
     favourites: Number,
     comments: Array,        // list of comments
     dateCreated: Date,
@@ -22,3 +22,11 @@ var comicSchema = mongoose.Schema({
 // create the model
 module.exports = mongoose.model('Comic', comicSchema);
 
+// chapter object
+//
+// var Chapter = {
+//     chapter: Number,
+//     title: String,
+//     creatorID: String,
+//     dateCreated: Date
+// };

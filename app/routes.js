@@ -143,9 +143,6 @@ var Router = (function () {
 
             // COMIC VIEW =========================
             app.get('/comics/:id', function (req, res) {
-                // var hidden_value = req.getElementbyId("comic_get").innerHTML = req.getElementById("comic_get").value;
-                // console.log("This should be the title of the comic");
-                // console.log(hidden_value);
                 Comic.findOne({_id: req.params.id}, function (err, comic) {
                     if (err)
                         console.log(err);
@@ -158,6 +155,23 @@ var Router = (function () {
                                 comic: comic,
                                 users: users // list of all users - for commenting
                             });
+                        });
+                    });
+                });
+            });
+
+            // CHAPTER VIEW =========================
+            app.get('/comics/:id/chapters/:chapter', function (req, res) {
+                Comic.findOne({_id: req.params.id}, function (err, comic) {
+                    if (err)
+                        console.log(err);
+                    Comic.findByIdAndUpdate(comic._id, { $inc: { views: 1 }}, function (err) {
+                        if (err)
+                            console.log(err);
+                        res.render('chapter.ejs', {
+                            user: req.user,
+                            comic: comic,
+                            chapter: req.params.chapter
                         });
                     });
                 });
@@ -740,25 +754,18 @@ var Router = (function () {
 
             app.post('/comics/:id/addchapter', function (req, res) {
 
-                var newChapter = new Chapter({
-                    contributors: [],
-                    comicID: req.params.id,
-                    chapter: req.body.chapterNumber,
-                    title: req.body.chapterTitle,
-                    images: []
-                });
-
-                newChapter.save(function (err, chapter) {
+                Comic.findOne({_id: req.params.id}, function (err, comic) {
                     if (err)
                         console.log(err);
 
-                    var chapterRef = {
-                        chapterID: String(chapter._id),
-                        chapter: chapter.chapter,
-                        title: chapter.title
+                    var newChapter = {
+                        chapter: req.body.chapterNumber,
+                        title: req.body.chapterTitle,
+                        creatorID: String(req.user._id),
+                        dateCreated: new Date()
                     };
 
-                    Comic.findByIdAndUpdate(req.params.id, { $push: { chapters: chapterRef } }, { safe: true, upsert: true, new: true }, function (err) {
+                    Comic.findByIdAndUpdate(req.params.id, { $push: { chapters: newChapter } }, { safe: true, upsert: true, new: true }, function (err) {
                         if (err)
                             console.log(err)
 
