@@ -323,7 +323,22 @@
           <% } %>
         </div>
         <div class="col-lg-4">
-          <a href="/profile/<%= comic.comments[i].user %>"><strong> <%= comic.comments[i].user %></strong></a> <br><br>
+          <%
+            var monthNames = [
+              "Jan", "Feb", "Mar", 
+              "Apr", "May", "Jun", 
+              "Jul", "Aug", "Sep", 
+              "Oct", "Nov", "Dec"
+            ];
+            var day = comic.comments[i].date.getDate();
+            var monthIndex = comic.comments[i].date.getMonth();
+            var year = comic.comments[i].date.getFullYear();
+            var hour = comic.comments[i].date.getHours();
+            var mins = comic.comments[i].date.getMinutes();
+            %>
+          <a href="/profile/<%= comic.comments[i].user %>"><strong> <%= comic.comments[i].user %></strong></a><br>
+          <%= monthNames[monthIndex] + ' ' + day + ', ' + year %> at <%= hour %>:<%= mins %>
+           <br><br>
         </div>
       </div>
       <div class="row" style='padding: 20px; border:1px solid #bbb; background:white'>
