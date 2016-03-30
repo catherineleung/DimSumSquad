@@ -91,9 +91,31 @@
 
                     <!--  "You got followed!" EVENT -->
                     <% if (user.local.notifications[i].acting_event == "following"){ %>
-                    <li><a href="/profile/" +  <%= user.local.notifications[i].acting_username %> ><%= user.local.notifications[i].acting_username %></a></li>
+                    <li><a href="/profile/<%= user.local.notifications[i].acting_username %>" ><%= user.local.notifications[i].acting_username %></a></li>
                     <li>is now following you!</li>
+                    <!--  TEMPORARY -->
+                    <li>Status: </li>
+                    <% if (user.local.notifications[i].read == false){ %>
+                        <li>unread</li>
+                    <% } else { %>
+                        <li>read</li>
                     <% } %>
+                    <% } %>
+
+                    <!--  "Someone you follow created a new comic!" EVENT -->
+                    <% if (user.local.notifications[i].acting_event == "created"){ %>
+                    <li><a href="/profile/<%= user.local.notifications[i].acting_username %>" ><%= user.local.notifications[i].acting_username %></a></li>
+                    <li>created a new <a href="/comics/<%= user.local.notifications[i].acting_comic_id %>" >comic</a>!</li>
+                    <!--  TEMPORARY -->
+                    <li>Status: </li>
+                    <% if (user.local.notifications[i].read == false){ %>
+                        <li>unread</li>
+                    <% } else { %>
+                        <li>read</li>
+                    <% } %>
+                    <% } %>
+
+
 
                     
 
