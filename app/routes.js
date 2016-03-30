@@ -738,7 +738,13 @@ var Router = (function () {
                     if (err)
                         console.log(err);
 
-                    Comic.findByIdAndUpdate(req.params.id, { $push: { chapters: String(chapter._id) } }, { safe: true, upsert: true, new: true }, function (err) {
+                    var chapterRef = {
+                        chapterID: String(chapter._id),
+                        chapter: chapter.chapter,
+                        title: chapter.title
+                    };
+
+                    Comic.findByIdAndUpdate(req.params.id, { $push: { chapters: chapterRef } }, { safe: true, upsert: true, new: true }, function (err) {
                         if (err)
                             console.log(err)
 
@@ -778,7 +784,6 @@ var Router = (function () {
                     description: req.body.description,
                     tags: req.body.tags,
                     creatorID: req.user.local.username,
-                    chapters: 1,
                     favourites: 0,
                     dateCreated: Date.now(),
                     views: 0
