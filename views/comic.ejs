@@ -361,9 +361,9 @@
         } %>
         <div class="col-lg-1">
           <% if (currentuser.local.picture) { %>
-          <img src="/gridfile/<%=currentuser.local.picture%>" alt="Profile picture" style="width:55px;height:55px"> 
+          <img src="/gridfile/<%=currentuser.local.picture%>" alt="Profile picture" style="width:60px;height:60px"> 
           <% } else { %>
-          <img src="/app_images/generic_picture.png" alt="Generic" style="width:55px;height:55px"> 
+          <img src="/app_images/generic_picture.png" alt="Generic" style="width:60px;height:60px"> 
           <% } %>
         </div>
         <div class="col-lg-11">
@@ -382,8 +382,24 @@
             %>
           <a href="/profile/<%= comic.comments[i].user %>"><strong> <%= comic.comments[i].user %></strong></a><br>
           <small><em><%= monthNames[monthIndex] + ' ' + day + ', ' + year %> at <%= hour %>:<%= mins %></em></small>
+
+          <span style="display:inline-block;width:70px">
+            <form method="post" action="editcomment">
+          <button type="button" class="btn btn-link btn-xs"><span class="label label-info">Edit Comment</span></button>
+          </form>
+        </span>
+        <span style="display:inline-block;width:60px">
+          <form method="get" action="deletecomment">
+          <button type="button" class="btn btn-link btn-xs"><span class="label label-danger">Delete Comment</span></button>
+          </form>
+        </span>
+
+        <br>
           <%- comic.comments[i].comment.replace(/\r\n/g, '<br>') %>
         </div>
+
+        
+
       </div>
       </blockquote>
       <% } %>
