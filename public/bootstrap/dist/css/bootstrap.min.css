@@ -6027,7 +6027,7 @@ a.badge:focus {
 .thumbnail>img,
 .thumbnail a>img {
     margin-left: auto;
-    margin-right: auto
+    margin-right: auto;
 }
 
 a.thumbnail:hover,
@@ -8552,3 +8552,15 @@ a.list-group-item-danger.active:focus {
 .popover {
     color: #555555
 }
+
+.alignleft {
+  float: left;
+  width:50%;
+  text-align:left;
+}
+
+.alignright {
+ float: right;
+ width:50%;
+ text-align:right;
+}​
