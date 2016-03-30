@@ -786,7 +786,13 @@ var Router = (function () {
                 }), 
             function (req, res) { 
                 var url = req.header('Referer');
-                if (req.user) {res.redirect(url);}});
+                console.log(url.substring(url.length - 6));
+                if (url.substring(url.length - 6) == "/login") {
+                    res.redirect('/');
+                } else {
+                    if (req.user) {res.redirect(url);}
+                }
+            });
 
             // SIGNUP =================================
             // show the signup form
