@@ -132,7 +132,7 @@
               }
               %>
                   <img src="<%= '/gridfile/' + comic.coverphoto %>" alt="" style="width:250px;height:250px" 
-                    <% if ((user) && (user.local.username == comic.creatorID)) { %> data-toggle="tooltip" title="Change Cover Photo" data-placement="left" <% } %>
+                    <% if ((user) && (user.local.username == comic.creatorID)) { %> data-toggle="tooltip" title="Change Cover Photo" data-placement="bottom" <% } %>
                   >
               <% 
               if ((user) && (user.local.username == comic.creatorID)) { 
@@ -152,7 +152,7 @@
               }
               %>
                   <img src="/app_images/generic_comic.png" alt="" style="width:250px;height:250px"
-                    <% if ((user) && (user.local.username == comic.creatorID)) { %> data-toggle="tooltip" title="Add Cover Photo" data-placement="left" <% } %>
+                    <% if ((user) && (user.local.username == comic.creatorID)) { %> data-toggle="tooltip" title="Add Cover Photo" data-placement="bottom" <% } %>
                   >
               <% 
               if ((user) && (user.local.username == comic.creatorID)) { 
@@ -317,13 +317,28 @@
         } %>
         <div class="col-lg-1">
           <% if (currentuser.local.picture) { %>
-          <img src="/uploads/<%=currentuser.local.picture%>" alt="Profile picture" style="width:50px;height:50px"> 
+          <img src="/gridfile/<%=currentuser.local.picture%>" alt="Profile picture" style="width:50px;height:50px"> 
           <% } else { %>
           <img src="/app_images/generic_picture.png" alt="Generic" style="width:50px;height:50px"> 
           <% } %>
         </div>
         <div class="col-lg-4">
-          <strong> <%= comic.comments[i].user %></strong> <br><br>
+          <%
+            var monthNames = [
+              "Jan", "Feb", "Mar", 
+              "Apr", "May", "Jun", 
+              "Jul", "Aug", "Sep", 
+              "Oct", "Nov", "Dec"
+            ];
+            var day = comic.comments[i].date.getDate();
+            var monthIndex = comic.comments[i].date.getMonth();
+            var year = comic.comments[i].date.getFullYear();
+            var hour = comic.comments[i].date.getHours();
+            var mins = comic.comments[i].date.getMinutes();
+            %>
+          <a href="/profile/<%= comic.comments[i].user %>"><strong> <%= comic.comments[i].user %></strong></a><br>
+          <%= monthNames[monthIndex] + ' ' + day + ', ' + year %> at <%= hour %>:<%= mins %>
+           <br><br>
         </div>
       </div>
       <div class="row" style='padding: 20px; border:1px solid #bbb; background:white'>
@@ -401,21 +416,24 @@
 
       <!-- MODAL BODY -->
       <div class="modal-body" style="text-align:center">
-        <fieldset>
-          <div class="form-group">
-            <form id        =  "uploadForm"
-            enctype   =  "multipart/form-data"
-            action    =  "/comics/<%=comic._id%>/changecover"
-            method    =  "post"
-            >
-            <input type="file" name="userPhoto" id="changeCoverInput" class="inputfile"/>
-            <label id="changeCoverLabel" for="changeCoverInput" class="btn btn-lg btn-primary"><span class="glyphicon glyphicon-file"></span> Choose a file</label>
-            <br></br>
-            <input class="btn btn-default" type="submit" value="Upload" name="submit" onclick="changeCoverClicked(event)">
-            </form>
-          </div>
 
-        </fieldset>
+        <form id        =  "uploadForm"
+        enctype   =  "multipart/form-data"
+        action    =  "/comics/<%=comic._id%>/changecover"
+        method    =  "post"
+        >
+        <input type="file" name="userPhoto" id="changeCoverInput" class="inputfile"/>
+        <label id="changeCoverLabel" for="changeCoverInput" class="btn btn-lg btn-primary"><span class="glyphicon glyphicon-file"></span> Choose a file</label>
+        <br></br>
+        <input class="btn btn-default" type="submit" value="Upload" name="submit" onclick="changeCoverClicked(event)">
+        </form>
+
+        <br>
+
+        <form method="post" action="/comics/<%=comic._id%>/deletecover">
+          <button class="btn btn-danger btn-sm" type="submit">Delete Cover Photo</button>
+        </form>
+
       </div>
 
     </div>
@@ -450,6 +468,8 @@
               <input type="text" class="form-control" value="<%= comic.tags %>" name="tags" data-role="tagsinput">
               <br><br>
 
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+              &nbsp;
               <input class="btn btn-primary" type="submit" value="Save Changes">
             </form>
           </div>
@@ -477,6 +497,7 @@
         Are you sure you want to delete this comic? <br><br>
         <form method="post" action="<%= '/deletecomic/' + comic._id %>">
           <button type="button" class="btn btn-default" data-dismiss="modal">No, take me back</button>
+          &nbsp;
           <button class="btn btn-danger" type="submit">Yes</button>
         </form>
       </div>

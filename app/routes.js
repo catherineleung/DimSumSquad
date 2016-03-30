@@ -533,7 +533,6 @@ var Router = (function () {
                 Comic.findOne({_id: req.params.id}, function(err, comic) {
                     if (err)
                         console.log(err);
-                    var newFavourites = comic.favourites - 1;
 
                     Comic.findByIdAndUpdate(req.params.id, { $inc: { favourites: -1 } }, function (err) {
                         if (err)
@@ -557,7 +556,8 @@ var Router = (function () {
 
                     var newComment = new Comment({
                         user: req.user.local.username,
-                        comment: req.body.comment
+                        comment: req.body.comment,
+                        date: Date.now()
                     });
 
                     // console.log(newComment.user);
@@ -713,6 +713,30 @@ var Router = (function () {
                             res.redirect('/comics/' + req.params.id);
                         });
                     });
+                });
+            });
+
+            app.post('/comics/:id/deletecover', function (req, res) {
+
+                // remove cover photo from the filesystem
+                Comic.findOne({_id: req.params.id}, function (err, comic) {
+                    if (err)
+                        console.log(err);
+
+                    gfs.remove({
+                        filename: comic.coverphoto
+                    }, function(err) {
+                    if (err)
+                        console.error(err);
+                    });
+                });
+
+                // clear the coverphoto field
+                Comic.findByIdAndUpdate(req.params.id, { $unset: { coverphoto: "" } }, function (err) {
+                    if (err)
+                        console.log(err);
+
+                    res.redirect('/comics/' + req.params.id);
                 });
             });
 
