@@ -86,7 +86,8 @@
             <% while(i<comics.length && k<6) {
               var str = new String(comics[i].title);
               var tags = new String(comics[i].tags);
-              match = str.includes(query) || tags.includes(query);
+              var creator = new String(comics[i].creatorID);
+              match = str.includes(query) || tags.includes(query) || creator.includes(query);
               if(match) { 
                 k = k + 1; %>
                 <div class="col-md-2" align="center">
