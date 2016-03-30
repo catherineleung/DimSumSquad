@@ -15,7 +15,8 @@ var comicSchema = mongoose.Schema({
 
     // Mutable 
     images: Array,			// Array of images or chapters
-    coverphoto: String      // file path of cover photo
+    coverphoto: String,      // file path of cover photo
+    views: Number
 });
 
 // create the model

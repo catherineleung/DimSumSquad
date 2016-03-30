@@ -141,11 +141,17 @@ var Router = (function () {
                 // console.log("This should be the title of the comic");
                 // console.log(hidden_value);
                 Comic.findOne({_id: req.params.id}, function (err, comic) {
-                    User.find({}, function (err, users) {
-                        res.render('comic.ejs', {
-                            user: req.user,
-                            comic: comic,
-                            users: users // list of all users - for commenting
+                    if (err)
+                        console.log(err);
+                    Comic.findByIdAndUpdate(comic._id, { $inc: { views: 1 }}, function (err) {
+                        if (err)
+                            console.log(err);
+                        User.find({}, function (err, users) {
+                            res.render('comic.ejs', {
+                                user: req.user,
+                                comic: comic,
+                                users: users // list of all users - for commenting
+                            });
                         });
                     });
                 });
