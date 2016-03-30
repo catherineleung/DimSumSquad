@@ -474,7 +474,7 @@ var Router = (function () {
                 User.findByIdAndUpdate(req.user._id, { $push: { 'local.following': req.params.id }}, { safe: true, upsert: true, new: true }, function(err) {
                     if (err)
                         console.log(err);
-                    User.findByIdAndUpdate(req.params.id, { $push: { 'local.followers': String(req.user._id) }}, { safe: true, upsert: true, new: true }, function(err) {
+                    User.findByIdAndUpdate(req.params.id, { $push: { 'local.followers': String(req.user._id), 'local.notifications': String(req.user.local.username + " is now following you!") }}, { safe: true, upsert: true, new: true }, function(err) {
                         if (err)
                             console.log(err);
                         User.findOne({_id: req.params.id}, function (err, user) {

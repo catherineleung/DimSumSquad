@@ -65,6 +65,20 @@
         <% } else { %>
             <li><a href="/profile">Welcome, <%= user.local.username %>!</a></li>
             <li class="divider-vertical"></li>
+            <li>  
+            <div class="dropdown">
+              <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" style='padding-top:10px'>
+              <span class="glyphicon glyphicon-envelope"></span></button>
+              <ul class="dropdown-menu">
+                <li class="dropdown-header">Notifications</li>
+                <li class="divider"></li>
+                <% for (i = user.local.notifications.length; i >=0; i--){ %>
+                    <li><a href="#"><%= user.local.notifications[i] %></a></li>
+                 <% } %>
+              </ul>
+            </div>
+        </li>
+        <li class="divider-vertical"></li>
             <li><a href="/logout">Log Out</a></li>
         <% } %>
         </ul>
