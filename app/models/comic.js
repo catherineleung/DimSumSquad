@@ -8,7 +8,7 @@ var comicSchema = mongoose.Schema({
     tags: String,           // Tags ... list of Strings (e.g. "Funny,Sad,Happy")
     creatorID: String,	    // Sole creator ... this is the username
     contributors: {},
-    chapters: Number,       // Number of chapters the comic has
+    chapters: Array,       // Array of chapter ID's
     favourites: Number,
     comments: Array,        // list of comments
     dateCreated: Date,

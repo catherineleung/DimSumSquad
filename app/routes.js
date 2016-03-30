@@ -15,6 +15,7 @@ var Router = (function () {
         var Image = require('../app/models/image');
         var User = require('../app/models/user');
         var Comic = require('../app/models/comic.js');
+        var Chapter = require('../app/models/chapter.js');
         var Comment = require('../app/models/comment.js');
         
 
@@ -191,25 +192,6 @@ var Router = (function () {
                 });         
             });
 
-            // ADD COMIC PANEL VIEW ==============================
-            app.get('/comics/:id/addchapter', isLoggedIn, function (req, res) {
-                // can only access page if user has contributor status
-                // the button is removed for non-contributors, but this is so that 
-                //     typing /upload in the browser will do nothing
-                if (req.user.local.contributor) {
-                    Comic.find({}, function (err, docs) {
-                        res.render('addchapter.ejs', {
-                         user: req.user,
-                         comics: docs,
-                         id: req.params.id
-                     });    
-                    });
-
-                }
-                else {
-                    res.redirect('/');
-                }
-            });
 
 
 
@@ -737,6 +719,29 @@ var Router = (function () {
                         console.log(err);
 
                     res.redirect('/comics/' + req.params.id);
+                });
+            });
+
+            app.post('/comics/:id/addchapter', function (req, res) {
+
+                var newChapter = new Chapter({
+                    contributors: [],
+                    comicID: req.params.id,
+                    chapter: req.body.chapterNumber,
+                    title: req.body.chapterTitle,
+                    images: []
+                });
+
+                newChapter.save(function (err, chapter) {
+                    if (err)
+                        console.log(err);
+
+                    Comic.findByIdAndUpdate(req.params.id, { $push: { chapters: String(chapter._id) } }, { safe: true, upsert: true, new: true }, function (err) {
+                        if (err)
+                            console.log(err)
+
+                        res.redirect('/comics/' + req.params.id);
+                    });
                 });
             });
 
