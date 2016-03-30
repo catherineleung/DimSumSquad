@@ -776,7 +776,7 @@ var Router = (function () {
             // locally --------------------------------
             // LOGIN ===============================
             // show the login form
-            app.get('/login', function (req, res) {
+            app.get('/login', isLoggedOut, function (req, res) {
                 res.render('login.ejs', { message: req.flash('loginMessage'), user: req.user });
             });
             // process the login form
@@ -785,14 +785,9 @@ var Router = (function () {
                 failureFlash: true // allow flash messages
                 }), 
             function (req, res) { 
-                var url = req.header('Referer');
-                console.log(url.substring(url.length - 6));
-                if (url.substring(url.length - 6) == "/login") {
-                    res.redirect('/');
-                } else {
-                    if (req.user) {res.redirect(url);}
+                    if (req.user) {res.redirect('back');}
                 }
-            });
+            );
 
             // SIGNUP =================================
             // show the signup form
@@ -944,6 +939,14 @@ app.delete('/api/users/:user_id', function (req, res) {
                 return next();
             res.redirect('/');
         }
+
+        // route middleware to ensure user is logged out
+        function isLoggedOut(req, res, next) {
+            if (!req.isAuthenticated())
+                return next();
+            res.redirect('/');
+        }
+
     } // END CONSTRUCTOR
     return Router;
 }()); // END ROUTER CLASS
