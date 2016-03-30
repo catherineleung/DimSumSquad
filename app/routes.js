@@ -302,6 +302,7 @@ var Router = (function () {
                 });
             });
 
+
             // REMOVE PROFILE PICTURE  ===================
             app.get('/removeprofilepic', function (req, res) {
 
@@ -322,6 +323,19 @@ var Router = (function () {
                     });
                 });
             });
+
+            // DELETE OWN ACCOUNT ===========================
+            app.get('/deleteaccount', function (req, res) {
+               User.remove({
+                _id: req.user._id
+               }, function (err) {
+                    if (err)
+                        console.log(err);
+               });
+               res.redirect('/');
+            });
+
+       
 
 
 // COMIC CHANGES/REQUESTS ============================================================
