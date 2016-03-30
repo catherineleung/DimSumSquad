@@ -556,7 +556,8 @@ var Router = (function () {
 
                     var newComment = new Comment({
                         user: req.user.local.username,
-                        comment: req.body.comment
+                        comment: req.body.comment,
+                        date: Date.now()
                     });
 
                     // console.log(newComment.user);
