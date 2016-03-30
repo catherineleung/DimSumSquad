@@ -164,7 +164,7 @@
             %>
             <!-- END COVER PHOTO -->
           </div>
-          <div class="col-lg-4">
+          <div class="col-lg-9">
             <%
             var monthNames = [
               "Jan", "Feb", "Mar", 
@@ -238,23 +238,39 @@
 
           </div>
         </div>
+
         <br>
+
         <div class="row">
-          <div class="col-lg-4">
+          <div class="col-lg-12">
+            <strong>Summary:</strong><br>
             <%- comic.description.replace(/\r\n/g, '<br>') %> <br><br>
           </div>
         </div>
 
-        <br>
+        <div class="row">
+          <div class="col-lg-12">
+            <h4><%=comic.title%> Chapters</h4>
+            <%
+            for (i = 0; i < comic.chapters.length; i++) {
+            %>
+              <a href="/comics/<%=comic._id%>/<%=comic.chapter"
+            <%
+            }
+            %>
+            <br><br>
+            <% 
+            if ((user) && (user.local.contributor == true)) { 
+            %>
+              <a class="btn btn-primary btn-sm" data-toggle="modal" data-target="#addchapter">Add a chapter</a>
+            <%
+            }
+            %>
+          </div>
+        </div>
+
         <br>
         
-        <% 
-        if ((user) && (user.local.contributor == true)) { 
-        %>
-          <a class="btn btn-danger" data-toggle="modal" data-target="#addchapter">Add a chapter</a>
-        <% 
-        } 
-        %>
         <hr>
 
         <% 
@@ -367,8 +383,45 @@
 </div>
 </div>
 
-<!-- IMAGE UPLOAD MODAL -->
+<!-- ADD CHAPTER MODAL -->
 <div id="addchapter" class="modal fade" role="dialog">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+
+      <!-- MODAL HEADER -->
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Create New Chapter</h4>
+      </div>
+
+      <!-- MODAL BODY -->
+      <div class="modal-body" style="text-align:center">
+        <fieldset>
+          <div class="form-group">
+            <form method="post" action="/comics/<%=comic._id%>/addchapter">
+              <strong>Chapter #</strong>
+              <input type="text" class="form-control" value="" name="chapterNumber" style="width:100px; margin-left:auto; margin-right:auto;">
+              <br>
+
+              <strong>Chapter Title</strong>
+              <input type="text" class="form-control" value="" name="chapterTitle">
+              <br>
+
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+              &nbsp;
+              <input class="btn btn-primary" type="submit" value="Submit">
+            </form>
+          </div>
+
+        </fieldset>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- IMAGE UPLOAD MODAL -->
+<div id="uploadimage" class="modal fade" role="dialog">
   <div class="modal-dialog modal-med">
     <div class="modal-content">
 
