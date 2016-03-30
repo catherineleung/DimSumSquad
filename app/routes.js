@@ -746,7 +746,8 @@ var Router = (function () {
                     creatorID: req.user.local.username,
                     chapters: 1,
                     favourites: 0,
-                    dateCreated: Date.now()
+                    dateCreated: Date.now(),
+                    views: 0
                 });
 
                 newComic.save(function (err, comic) {
