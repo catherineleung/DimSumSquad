@@ -133,14 +133,14 @@
 
                   </div>
                   <div class="col-md-6">
-                    <div ng-hide="editToggle">
                       <strong>Username</strong>: <%= user.local.username %><br>
                       <strong>Email</strong>: <%= user.local.email %><br>
                       <strong>Birthday</strong>: <%= user.local.birthday %><br>
                       <strong>Description</strong>: <%= user.local.description %><br>
                       <button class="btn btn-sm btn-primary" data-toggle="modal" data-target="#editinfo">Edit Profile</button>
-                    </div>
-
+                      <form method="get" action="deleteaccount">
+                        <input class="btn btn-danger" type="submit" value="Delete Account">
+                      </form>
             
                       
                     <%  if (user.local.contributor) { %>
@@ -323,10 +323,7 @@
                <strong>Email</strong>:<input type="email" class="form-control" id="editEmail" placeholder="Email" name="email" value = <%= user.local.email %> ><br>
                <strong>Birthday</strong>:<input type="date" class="form-control" id="editBirthday" name="birthday" value= <%= user.local.birthday %> ><br>
                <strong>Description</strong>:<textarea rows="3" class="form-control" name="description" style="resize: none" id="editDescription" placeholder="Description"><%= user.local.description %></textarea><br>
-               <input class="btn btn-primary" type="submit" value="Save Changes">  
-              </form>
-              <form method="get" action="deleteaccount">
-                <input class="btn btn-danger" type="submit" value="Delete Account">
+              <input class="btn btn-primary" type="submit" value="Save Changes"> 
               </form>
           </div>
 
