@@ -213,7 +213,8 @@ var Router = (function () {
             // LOGOUT ==============================
             app.get('/logout', function (req, res) {
                 req.logout();
-                res.redirect('/');
+                var url = req.header('Referer');
+                res.redirect(url);
             });
 
 // PROFILE CHANGES  ============================================================
@@ -774,10 +775,13 @@ var Router = (function () {
             });
             // process the login form
             app.post('/login', passport.authenticate('local-login', {
-                successRedirect: '/',
                 failureRedirect: '/login',
                 failureFlash: true // allow flash messages
-            }));
+                }), 
+            function (req, res) { 
+                var url = req.header('Referer');
+                if (req.user) {res.redirect(url);}});
+
             // SIGNUP =================================
             // show the signup form
             app.get('/signup', function (req, res) {
