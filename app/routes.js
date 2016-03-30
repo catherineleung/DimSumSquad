@@ -141,11 +141,17 @@ var Router = (function () {
                 // console.log("This should be the title of the comic");
                 // console.log(hidden_value);
                 Comic.findOne({_id: req.params.id}, function (err, comic) {
-                    User.find({}, function (err, users) {
-                        res.render('comic.ejs', {
-                            user: req.user,
-                            comic: comic,
-                            users: users // list of all users - for commenting
+                    if (err)
+                        console.log(err);
+                    Comic.findByIdAndUpdate(comic._id, { $inc: { views: 1 }}, function (err) {
+                        if (err)
+                            console.log(err);
+                        User.find({}, function (err, users) {
+                            res.render('comic.ejs', {
+                                user: req.user,
+                                comic: comic,
+                                users: users // list of all users - for commenting
+                            });
                         });
                     });
                 });
@@ -505,9 +511,8 @@ var Router = (function () {
                 Comic.findOne({_id: req.params.id}, function(err, comic) {
                     if (err)
                         console.log(err);
-                    var newFavourites = comic.favourites + 1;
 
-                    Comic.findByIdAndUpdate(req.params.id, { $set: { favourites: newFavourites } }, function (err) {
+                    Comic.findByIdAndUpdate(req.params.id, { $inc: { favourites: 1 } }, function (err) {
                         if (err)
                             console.log(err);
 
@@ -527,7 +532,7 @@ var Router = (function () {
                         console.log(err);
                     var newFavourites = comic.favourites - 1;
 
-                    Comic.findByIdAndUpdate(req.params.id, { $set: { favourites: newFavourites } }, function (err) {
+                    Comic.findByIdAndUpdate(req.params.id, { $inc: { favourites: -1 } }, function (err) {
                         if (err)
                             console.log(err);
                         
@@ -741,7 +746,8 @@ var Router = (function () {
                     creatorID: req.user.local.username,
                     chapters: 1,
                     favourites: 0,
-                    dateCreated: Date.now()
+                    dateCreated: Date.now(),
+                    views: 0
                 });
 
                 newComic.save(function (err, comic) {

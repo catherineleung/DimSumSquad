@@ -178,6 +178,7 @@
             %>
             <strong><span style="display:inline-block;width:60px">Author:</span> <a href="/profile/<%= comic.creatorID %>"><%= comic.creatorID %></a></strong> <br style="line-height: 200%;">
             <strong><span style="display:inline-block;width:60px">Created:</span></strong> <%= monthNames[monthIndex] + ' ' + day + ', ' + year %> <br style="line-height: 200%;">
+            <strong><span style="display:inline-block;width:60px">Views:</span></strong> <%= comic.views %> <br style="line-height: 200%;">
             <strong><span style="display:inline-block;width:54px">Tags:</span></strong> &nbsp;
             <%
             var tagsArray = comic.tags.split(',');
