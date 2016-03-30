@@ -110,6 +110,8 @@ var Router = (function () {
                 });
             });
 
+            
+
             //UPLOAD VIEW ==============================
             app.get('/upload', isLoggedIn, function (req, res) {
                 // can only access page if user has contributor status
