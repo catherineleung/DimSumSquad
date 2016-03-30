@@ -7,7 +7,7 @@ var comicSchema = mongoose.Schema({
     description: String,	// Describes the comic theme or concept
     tags: String,           // Tags ... list of Strings (e.g. "Funny,Sad,Happy")
     creatorID: String,	    // Sole creator ... this is the username
-    contributors: {},
+    contributors: Array,
     chapters: Array,       // Array of chapter objects (see below)
     favourites: Number,
     comments: Array,        // list of comments

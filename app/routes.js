@@ -161,7 +161,7 @@ var Router = (function () {
             });
 
             // CHAPTER VIEW =========================
-            app.get('/comics/:id/chapters/:chapter', function (req, res) {
+            app.get('/comics/:id/chapters/:chapter/:page', function (req, res) {
                 Comic.findOne({_id: req.params.id}, function (err, comic) {
                     if (err)
                         console.log(err);
@@ -171,7 +171,8 @@ var Router = (function () {
                         res.render('chapter.ejs', {
                             user: req.user,
                             comic: comic,
-                            chapter: req.params.chapter
+                            chapter: req.params.chapter,
+                            page: req.params.page
                         });
                     });
                 });
@@ -646,7 +647,10 @@ var Router = (function () {
 
                         //add image name to the comic's list of images
                         Comic.findOne({ _id : req.params.id }, function(err, obj) {
-                            Comic.findByIdAndUpdate(obj._id, { $push: { 'images' : imageFileName } }, { safe: true, upsert: true, new: true }, function (err, model) {
+                            Comic.findByIdAndUpdate(obj._id, { 
+                                $push: { images : imageFileName },
+                                $addToSet: { contributors : String(req.user._id) } 
+                            }, { safe: true, upsert: true, new: true }, function (err, model) {
                                 console.log(err);
                             });
                         });
@@ -765,7 +769,10 @@ var Router = (function () {
                         dateCreated: new Date()
                     };
 
-                    Comic.findByIdAndUpdate(req.params.id, { $push: { chapters: newChapter } }, { safe: true, upsert: true, new: true }, function (err) {
+                    Comic.findByIdAndUpdate(req.params.id, { 
+                        $push: { chapters: newChapter },
+                        $addToSet: { contributors : String(req.user._id) }
+                    }, { safe: true, upsert: true, new: true }, function (err) {
                         if (err)
                             console.log(err)
 
@@ -807,7 +814,9 @@ var Router = (function () {
                     creatorID: req.user.local.username,
                     favourites: 0,
                     dateCreated: Date.now(),
-                    views: 0
+                    views: 0,
+                    chapters: [],
+                    contributors: [String(req.user._id)]
                 });
 
                 newComic.save(function (err, comic) {

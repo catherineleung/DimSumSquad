@@ -177,7 +177,6 @@
             %>
             <strong><span style="display:inline-block;width:60px">Author:</span> <a href="/profile/<%= comic.creatorID %>"><%= comic.creatorID %></a></strong> <br style="line-height: 200%;">
             <strong><span style="display:inline-block;width:60px">Created:</span></strong> <%= monthNames[monthIndex] + ' ' + day + ', ' + year %> <br style="line-height: 200%;">
-            <strong><span style="display:inline-block;width:60px">Views:</span></strong> <%= comic.views %> <br style="line-height: 200%;">
             <strong><span style="display:inline-block;width:54px">Tags:</span></strong> &nbsp;
             <%
             var tagsArray = comic.tags.split(',');
@@ -232,8 +231,10 @@
 
             <br>
             <br>
-
-            <small style="font-weight: bold"><span class="glyphicon glyphicon-heart"></span> <%= comic.favourites %> favourites</small>
+            <small style="font-weight: bold"><span class="glyphicon glyphicon-user"></span>&nbsp; <%= comic.contributors.length %> contributors</small><br>
+            <small style="font-weight: bold"><span class="glyphicon glyphicon-book"></span>&nbsp; <%= comic.chapters.length %> chapters</small><br>
+            <small style="font-weight: bold"><span class="glyphicon glyphicon-eye-open"></span>&nbsp; <%= comic.views %> views</small><br>
+            <small style="font-weight: bold"><span class="glyphicon glyphicon-heart"></span>&nbsp; <%= comic.favourites %> favourites</small>
 
           </div>
         </div>
@@ -389,7 +390,7 @@
           </form>
         </span>
         <span style="display:inline-block;width:60px">
-          <form method="get" action="deletecomment">
+          <form method="get" action="/deletecomment">
           <button type="button" class="btn btn-link btn-xs"><span class="label label-danger">Delete Comment</span></button>
           </form>
         </span>
