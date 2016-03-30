@@ -65,11 +65,14 @@ var Router = (function () {
 
             // HOME VIEW ==============================
             app.get('/', function (req, res) {
-                Comic.find({}, function(err, docs) {
+                User.find({}, function(err, docs2){
+                    Comic.find({}, function(err, docs) {
                     res.render('index.ejs', {
                         user: req.user,
-                        comics: docs
+                        comics: docs,
+                        users: docs2
                     });
+                });
                 });
             });
 
@@ -474,7 +477,7 @@ var Router = (function () {
                 User.findByIdAndUpdate(req.user._id, { $push: { 'local.following': req.params.id }}, { safe: true, upsert: true, new: true }, function(err) {
                     if (err)
                         console.log(err);
-                    User.findByIdAndUpdate(req.params.id, { $push: { 'local.followers': String(req.user._id) }}, { safe: true, upsert: true, new: true }, function(err) {
+                    User.findByIdAndUpdate(req.params.id, { $push: { 'local.followers': String(req.user._id), 'local.notifications': {acting_username: req.user.local.username, acting_id: req.params.id, acting_event: String("following") }}}, { safe: true, upsert: true, new: true }, function(err) {
                         if (err)
                             console.log(err);
                         User.findOne({_id: req.params.id}, function (err, user) {
@@ -799,7 +802,7 @@ var Router = (function () {
             // locally --------------------------------
             // LOGIN ===============================
             // show the login form
-            app.get('/login', function (req, res) {
+            app.get('/login', isLoggedOut, function (req, res) {
                 res.render('login.ejs', { message: req.flash('loginMessage'), user: req.user });
             });
             // process the login form
@@ -808,8 +811,9 @@ var Router = (function () {
                 failureFlash: true // allow flash messages
                 }), 
             function (req, res) { 
-                var url = req.header('Referer');
-                if (req.user) {res.redirect(url);}});
+                    if (req.user) {res.redirect('back');}
+                }
+            );
 
             // SIGNUP =================================
             // show the signup form
@@ -961,6 +965,14 @@ app.delete('/api/users/:user_id', function (req, res) {
                 return next();
             res.redirect('/');
         }
+
+        // route middleware to ensure user is logged out
+        function isLoggedOut(req, res, next) {
+            if (!req.isAuthenticated())
+                return next();
+            res.redirect('/');
+        }
+
     } // END CONSTRUCTOR
     return Router;
 }()); // END ROUTER CLASS

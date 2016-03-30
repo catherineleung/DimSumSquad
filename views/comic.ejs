@@ -92,7 +92,7 @@
             <div class="dropdown-menu" style="padding: 20px; padding-bottom: 15px;">
               <!-- Login form here-->
               <form action="/login" method="post" accept-charset="UTF-8">
-                <input class="form-control" id="username" style="margin-bottom: 15px;" type="text" name="email" size="30" placeholder="Username">
+                <input class="form-control" id="username" style="margin-bottom: 15px;" type="text" name="email" size="30" placeholder="Email">
                 <input class="form-control" id="password" style="margin-bottom: 15px;" type="password" name="password" size="30" placeholder="Password">
                 <input id="user_remember_me" style="float: left; margin-right: 10px;" type="checkbox" name="remember_me" value="1" />
                 <label class="string optional" for="user_remember_me"> Remember me</label>
@@ -323,7 +323,7 @@
           <% } %>
         </div>
         <div class="col-lg-4">
-          <strong> <%= comic.comments[i].user %></strong> <br><br>
+          <a href="/profile/<%= comic.comments[i].user %>"><strong> <%= comic.comments[i].user %></strong></a> <br><br>
         </div>
       </div>
       <div class="row" style='padding: 20px; border:1px solid #bbb; background:white'>

@@ -65,6 +65,43 @@
         <% } else { %>
             <li><a href="/profile">Welcome, <%= user.local.username %>!</a></li>
             <li class="divider-vertical"></li>
+            <li>  
+            <div class="dropdown">
+              <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" style='padding:10px'>
+              <span class="glyphicon glyphicon-envelope"></span></button>
+              <ul class="dropdown-menu">
+                <li class="dropdown-header">Notifications</li>
+                <li class="divider"></li>
+
+                <% for (i = user.local.notifications.length - 1; i >=0; i--){ %>
+                    <li class="divider"></li>
+
+                    <!--  GETS THE PROFILE PICTURE -->
+                    <% var currentuser;
+                      for (j = 0; j < users.length; j++) {
+                        if (users[j].local.username == user.local.notifications[i].acting_username) {
+                        currentuser = users[j];
+                        }
+                      } %>
+                      <% if (currentuser.local.picture) { %>
+                      <img src="/uploads/<%=currentuser.local.picture%>" alt="Profile picture" style="width:50px;height:50px"> 
+                      <% } else { %>
+                      <img src="/app_images/generic_picture.png" alt="Generic" style="width:50px;height:50px"> 
+                      <% } %>
+
+                    <!--  "You got followed!" EVENT -->
+                    <% if (user.local.notifications[i].acting_event == "following"){ %>
+                    <li><a href="/profile/" +  <%= user.local.notifications[i].acting_username %> ><%= user.local.notifications[i].acting_username %></a></li>
+                    <li>is now following you!</li>
+                    <% } %>
+
+                    
+
+                 <% } %>
+              </ul>
+            </div>
+        </li>
+        <li class="divider-vertical"></li>
             <li><a href="/logout">Log Out</a></li>
         <% } %>
         </ul>
