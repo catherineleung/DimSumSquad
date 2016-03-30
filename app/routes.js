@@ -65,11 +65,14 @@ var Router = (function () {
 
             // HOME VIEW ==============================
             app.get('/', function (req, res) {
-                Comic.find({}, function(err, docs) {
+                User.find({}, function(err, docs2){
+                    Comic.find({}, function(err, docs) {
                     res.render('index.ejs', {
                         user: req.user,
-                        comics: docs
+                        comics: docs,
+                        users: docs2
                     });
+                });
                 });
             });
 
