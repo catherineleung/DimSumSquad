@@ -128,6 +128,7 @@
                           <center>
                           <a href="/profile/<%= users[k].local.username %>"><font size="4"><b> <%= users[k].local.username %> </b></font></a>
                           <p><font size="2"><b> Rank #<%= k + 1 %> </b> <br>
+                            <%= users[k].local.score %> pts <br> 
                             Comics created: <%= users[k].local.comics.length %> <br>
                             Contributions made: <%= users[k].local.images.length %> </font></p>
                         </center>
