@@ -477,7 +477,7 @@ var Router = (function () {
                 User.findByIdAndUpdate(req.user._id, { $push: { 'local.following': req.params.id }}, { safe: true, upsert: true, new: true }, function(err) {
                     if (err)
                         console.log(err);
-                    User.findByIdAndUpdate(req.params.id, { $push: { 'local.followers': String(req.user._id), 'local.notifications': {acting_username: req.user.local.username, acting_id: req.params.id, acting_event: String("following") }}}, { safe: true, upsert: true, new: true }, function(err) {
+                    User.findByIdAndUpdate(req.params.id, { $push: { 'local.followers': String(req.user._id), 'local.notifications': {acting_username: req.user.local.username, read: false, acting_event: String("following") }}}, { safe: true, upsert: true, new: true }, function(err) {
                         if (err)
                             console.log(err);
                         User.findOne({_id: req.params.id}, function (err, user) {
@@ -789,6 +789,15 @@ var Router = (function () {
                     User.findByIdAndUpdate(req.user._id, { $push: { 'local.comics': String(comic._id) } }, { safe: true, upsert: true, new: true }, function (err, model) {
                         if (err)
                             console.log(err);
+
+                        if(req.user.local.followers.length != 0){
+                            for (i = 0; i < req.user.local.followers.length; i++){
+                                User.findByIdAndUpdate(req.user.local.followers[i], { $push: { 'local.notifications': {acting_username: req.user.local.username, acting_comic_id: comic._id, read: false, acting_event: String("created") }}}, { safe: true, upsert: true, new: true }, function(err) {
+                                if (err)
+                                    console.log(err);
+                            });
+                        }
+                    }
 
                         res.redirect('/comics/' + comic._id);
                     });
