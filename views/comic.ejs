@@ -351,7 +351,8 @@
       <br>
       <br>
       <% for (i = 0; i < comic.comments.length; i++) {  %> 
-      <div class="row" style='padding: 10px; border:1px solid #ededed; background:#ededed; vertical-align:middle '>
+      <blockquote style="font-size:100%">
+      <div class="row">
         <% var currentuser;
         for (j = 0; j < users.length; j++) {
           if (users[j].local.username == comic.comments[i].user) {
@@ -360,12 +361,12 @@
         } %>
         <div class="col-lg-1">
           <% if (currentuser.local.picture) { %>
-          <img src="/gridfile/<%=currentuser.local.picture%>" alt="Profile picture" style="width:60px;height:60px"> 
+          <img src="/gridfile/<%=currentuser.local.picture%>" alt="Profile picture" style="width:55px;height:55px"> 
           <% } else { %>
-          <img src="/app_images/generic_picture.png" alt="Generic" style="width:60px;height:60px"> 
+          <img src="/app_images/generic_picture.png" alt="Generic" style="width:55px;height:55px"> 
           <% } %>
         </div>
-        <div class="col-lg-4">
+        <div class="col-lg-11">
           <%
             var monthNames = [
               "Jan", "Feb", "Mar", 
@@ -380,15 +381,11 @@
             var mins = comic.comments[i].date.getMinutes();
             %>
           <a href="/profile/<%= comic.comments[i].user %>"><strong> <%= comic.comments[i].user %></strong></a><br>
-          <%= monthNames[monthIndex] + ' ' + day + ', ' + year %> at <%= hour %>:<%= mins %>
-           <br><br>
+          <small><em><%= monthNames[monthIndex] + ' ' + day + ', ' + year %> at <%= hour %>:<%= mins %></em></small>
+          <%- comic.comments[i].comment.replace(/\r\n/g, '<br>') %>
         </div>
       </div>
-      <div class="row" style='padding: 15px; border:1px solid #ededed; background:#ededed'>
-        <p><%= comic.comments[i].comment %></p>
-      </div>
-
-      <br>
+      </blockquote>
       <% } %>
 
       <% if (user) { %>
@@ -396,10 +393,10 @@
       enctype   =  "application/x-www-form-urlencoded"
       action    =  "/comment"
       method    =  "post">
-      <label for="comment">Comment:</label>
+      <label for="comment">Add a comment:</label>
       <textarea class="form-control" rows="3" id="comment" name="comment" style="resize: none"></textarea>
-      <input type="hidden" name="comic_id" id="comic_id" value= <%= comic._id %> >
-      <input class="btn btn-primary" style='background: indigo; border-color: indigo' type="submit" id="submit" value="Comment!" name="submit" ng-click="toggleComment()">
+      <input type="hidden" name="comic_id" id="comic_id" value= <%= comic._id %> > <br>
+      <input class="btn btn-primary btn-lg" style="width:100px" type="submit" id="submit" value="Post" name="submit" ng-click="toggleComment()">
     </div>
   </form>
     <% } %>
