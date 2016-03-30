@@ -511,9 +511,8 @@ var Router = (function () {
                 Comic.findOne({_id: req.params.id}, function(err, comic) {
                     if (err)
                         console.log(err);
-                    var newFavourites = comic.favourites + 1;
 
-                    Comic.findByIdAndUpdate(req.params.id, { $set: { favourites: newFavourites } }, function (err) {
+                    Comic.findByIdAndUpdate(req.params.id, { $inc: { favourites: 1 } }, function (err) {
                         if (err)
                             console.log(err);
 
@@ -533,7 +532,7 @@ var Router = (function () {
                         console.log(err);
                     var newFavourites = comic.favourites - 1;
 
-                    Comic.findByIdAndUpdate(req.params.id, { $set: { favourites: newFavourites } }, function (err) {
+                    Comic.findByIdAndUpdate(req.params.id, { $inc: { favourites: -1 } }, function (err) {
                         if (err)
                             console.log(err);
                         
