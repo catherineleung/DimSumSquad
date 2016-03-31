@@ -79,8 +79,11 @@ var Router = (function () {
 
             // ABOUT VIEW ==============================
             app.get('/about', function (req, res) {
-                res.render('about.ejs', {
-                    user: req.user,
+                User.find({}, function(err, docs){
+                    res.render('about.ejs', {
+                        user: req.user,
+                        users: docs
+                    });
                 });
             });
 
@@ -189,8 +192,8 @@ var Router = (function () {
                             if (err)
                                 console.log(err);
 
-                            if (chapter.images[req.params.panel]) {
-                                Image.findOne({_id: chapter.images[req.params.panel]}, function (err, image) {
+                            if (chapter.images[req.params.panel - 1]) {
+                                Image.findOne({_id: chapter.images[req.params.panel - 1]}, function (err, image) {
                                     if (err)
                                         console.log(err);
 
@@ -613,10 +616,19 @@ var Router = (function () {
 
 
             // COMMENT SECTION =======================
-            app.post('/comment', function (req, res) {
+            app.post('/comics/:id/comment', function (req, res) {
 
-                    // console.log("commenting!!");
+                var newComment = {
+                    user: req.user.local.username,
+                    comment: req.body.comment,
+                    date: new Date()
+                };
 
+<<<<<<< HEAD
+                Comic.findByIdAndUpdate(req.params.id, { $push: { 'comments': newComment } }, { safe: true, upsert: true, new: true }, function (err) {
+                    if (err)
+                        console.log(err);
+=======
                     var newComment = new Comment({
                         user: req.user.local.username,
                         comment: req.body.comment,
@@ -637,16 +649,18 @@ var Router = (function () {
                      var id = comicID;
 
                      User.findOneAndUpdate({'local.username' : req.body.creator_username}, 
-                                { $push: { 'local.notifications': { acting_username: req.user.local.username, read: false, acting_event: String("favourited"), acting_comic_id: req.params.id} }}, 
+                                { $push: { 'local.notifications': { acting_username: req.user.local.username, read: false, acting_event: String("commenting"), acting_comic_id: comicID} }}, 
                                 { safe: true, upsert: true, new: true }, 
                                 function (err, model) {
                                 if (err)
                                     console.log(err);
 
-                            res.redirect('/comics/' + req.body.comc_id);
+                            res.redirect('/comics/' + req.body.comic_id);
                         });
+>>>>>>> 953d21eae48147d58d681baa22e0315489148080
 
-                 });
+                    res.redirect('/comics/' + req.params.id);
+                });
             });
 
 
@@ -731,7 +745,7 @@ var Router = (function () {
                                     });
 
                                     // refresh page
-                                    res.redirect('/comics/' + req.params.id + '/chapters/' + req.params.chapter + '/' + (chapter.images.length - 1));
+                                    res.redirect('/comics/' + req.params.id + '/chapters/' + req.params.chapter + '/' + chapter.images.length);
                                 });
                             });
                         });
