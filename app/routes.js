@@ -472,6 +472,11 @@ var Router = (function () {
                                         });
                                     });
                                 }
+
+                                Chapter.remove({_id: chapter._id}, function (err) {
+                                    if (err)
+                                        console.log(err);
+                                });
                             });
                         }
                     });
