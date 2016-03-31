@@ -90,10 +90,15 @@
 
 
               </button>
-              <ul class="dropdown-menu" style='width: 360px'>
+              <ul class="dropdown-menu" style='width: 390px'>
                 <li class="dropdown-header">Notifications</li>
-        
-                <% for (i = user.local.notifications.length - 1; i > (user.local.notifications.length - 9); i--){ %>
+
+                <% 
+
+               
+
+                for (i = user.local.notifications.length - 1; (i >= 0 && i > user.local.notifications.length - 9) ; i--){ %>
+
                     <li class="divider"></li>
                     <!--  GETS THE PROFILE PICTURE -->
                     <div class="row">
@@ -141,6 +146,15 @@
                     </div>
                     <% } %>
 
+                    <!--  "Somebody commented on your comic!" EVENT -->
+                    <% if (user.local.notifications[i].acting_event == "commenting"){ %>
+                    <div class="col-sm-6">
+                    <div class="container" style='display: inline-block'>
+                    <li><a href="/profile/<%= user.local.notifications[i].acting_username %>" ><%= user.local.notifications[i].acting_username %></a> commented on your <a href="/comics/<%= user.local.notifications[i].acting_comic_id %>">comic</a></li>
+                    </div>
+                    </div>
+                    <% } %>
+
                     </div>
 
                  <% } %>
@@ -168,9 +182,10 @@
     <div class="jumbotron text-center">
         <h2>Welcome!</h2>
         <% if (!user) { %>
-            <a href="/login" class="btn btn-primary btn-lg">Log In</a>
-            <a href="/signup" class="btn btn-warning btn-lg"><span class="fa fa-user"></span> Sign Up</a>
-            <a href="/top-contributors" class="btn btn-success btn-lg"><span class="fa fa-user"></span>Top Contributors</a>
+            <a href="/login" class="btn btn-primary">Log In</a>
+            <a href="/signup" class="btn btn-success"><span class="fa fa-user"></span> Sign Up</a>
+            <a href="/userlist" class="btn btn-warning"><span class="fa fa-user"></span> View Users</a>
+            <a href="/top-contributors" class="btn btn-danger"><span class="fa fa-user"></span>Top Contributors</a>
             <!--
             <a href="/auth/facebook" class="btn btn-primary"><span class="fa fa-facebook"></span> Facebook</a>
             <a href="/auth/twitter" class="btn btn-info"><span class="fa fa-twitter"></span> Twitter</a>
@@ -179,96 +194,70 @@
         <% } else { %>
             <p>You are logged in as: <b><%= user.local.username %></b></p>
             <% if (user.local.contributor) { %>
-              <a href="/create-comic" class="btn btn-primary btn-lg"><span class="fa fa-user"></span> Create a Comic</a>
+              <a href="/create-comic" class="btn btn-danger"><span class="fa fa-user"></span> Create a Comic</a>
               <!-- <a href="/upload" class="btn btn-danger"><span class="fa fa-user"></span> Upload</a> -->
             <% } %>
-            <a href="/top-contributors" class="btn btn-success btn-lg"><span class="fa fa-user"></span>Top Contributors</a>
+            <a href="/userlist" class="btn btn-warning"><span class="fa fa-user"></span> View Users</a>
+            <a href="/top-contributors" class="btn btn-danger"><span class="fa fa-user"></span>Top Contributors</a>
         <% } %>
     </div>
 
-    <div class="panel panel-danger">
-      <div class="panel-heading">
-        <h3 class="panel-title" style="font-size:140%;"><span class="glyphicon glyphicon-fire"></span>&nbsp;Hot Comics</h3>
-      </div>
-      <% 
-      // 1 view gives 1 point
-      // 1 favourite gives 10 points
-      var rankedComics = comics.sort(function(a, b) {
-        return (b.views + (10 * b.favourites)) - (a.views + (10 * a.favourites));
-      });
-      %>
-      <div class="panel-body">
-        <br>
-        <%
-        for (i = 0; i < 6; i++) {
-          if (i < rankedComics.length) {
-            var comicScore = rankedComics[i].views + (2 * rankedComics[i].comments.length) + (10 * rankedComics[i].favourites);
-        %>
-            <div class="col-md-2" align="center">
-              <% if (rankedComics[i].coverphoto) { %>
-                <a href="/comics/<%= rankedComics[i]._id %>" class="thumbnail">
-                  <img src="<%= '/gridfile/' + rankedComics[i].coverphoto %>" alt="" style="width:150px;height:150px">
-                </a>
-              <% } else { %>
-                <a href="/comics/<%= rankedComics[i]._id %>" class="thumbnail">
-                  <img src="app_images/generic_comic.png" alt="" style="width:150px;height:150px">
-                </a>
+      <div class="well">
+        <h2>Top Comics</h2>
+        <hr>
+        <% for (i = 0; i < 12; i += 6) { %> 
+          <div class="row">
+            <% for (k = i; k < i + 6; k++) { 
+                if(k < comics.length) { %>
+                  <div class="col-md-2" align="center">
+                    <% if (comics[k].coverphoto) { %>
+                      <a href="/comics/<%= comics[k]._id %>" class="thumbnail">
+                        <img src="<%= '/gridfile/' + comics[k].coverphoto %>" alt="" style="width:150px;height:150px">
+                      </a>
+                    <% } else { %>
+                      <a href="/comics/<%= comics[k]._id %>" class="thumbnail">
+                        <img src="app_images/generic_comic.png" alt="" style="width:150px;height:150px">
+                      </a>
+                    <% } %>
+                    <strong><%= comics[k].title %></strong> <br>
+                    By <a href="/profile/<%= comics[k].creatorID %>"><strong><%= comics[k].creatorID %></strong></a>
+                  </div>
+                <% } %>
               <% } %>
-              <strong><%= rankedComics[i].title %></strong> <br>
-              <small>By <a href="/profile/<%= rankedComics[i].creatorID %>"><%= rankedComics[i].creatorID %></a></small><br>
-              <small style="font-weight: bold"><span class="glyphicon glyphicon-fire"></span>&nbsp; <%= comicScore %></small>
-            </div>
-        <%
-          }
-        }
-        %>
+          </div>
+          <hr>
+        <% } %>
       </div>
-    </div>
 
 
-    <div class="panel panel-success">
-      <div class="panel-heading">
-        <h3 class="panel-title" style="font-size:140%;"><span class="glyphicon glyphicon-time"></span>&nbsp;Most Recent Comics</h3>
-      </div>
-      <% 
-      var timedComics = comics.sort(function(a, b) {
-        return b.dateCreated - a.dateCreated;
-      });
-      var monthNames = [
-        "Jan", "Feb", "Mar", 
-        "Apr", "May", "Jun", 
-        "Jul", "Aug", "Sep", 
-        "Oct", "Nov", "Dec"
-      ];
-      %>
-      <div class="panel-body">
-        <br>
-        <%
-        for (i = 0; i < 6; i++) {
-          if (i < timedComics.length) {
-            var day = timedComics[i].dateCreated.getDate();
-            var monthIndex = timedComics[i].dateCreated.getMonth();
-            var year = timedComics[i].dateCreated.getFullYear();
-        %>
-            <div class="col-md-2" align="center">
-              <% if (timedComics[i].coverphoto) { %>
-                <a href="/comics/<%= timedComics[i]._id %>" class="thumbnail">
-                  <img src="<%= '/gridfile/' + timedComics[i].coverphoto %>" alt="" style="width:150px;height:150px">
-                </a>
-              <% } else { %>
-                <a href="/comics/<%= timedComics[i]._id %>" class="thumbnail">
-                  <img src="app_images/generic_comic.png" alt="" style="width:150px;height:150px">
-                </a>
+      <div class="well">
+        <h2>Most Recent Comics</h2>
+        <hr>
+          <div class="row">
+            <% for (k = 0; k < i + 6; k++) { 
+                if((k > comics.length - 7) && k < comics.length) { %>
+                  <div class="col-md-2" align="center">
+                    <% if (comics[k].coverphoto) { %>
+                      <a href="/comics/<%= comics[k]._id %>" class="thumbnail">
+                        <img src="<%= '/gridfile/' + comics[k].coverphoto %>" alt="" style="width:150px;height:150px">
+                      </a>
+                    <% } else { %>
+                      <a href="/comics/<%= comics[k]._id %>" class="thumbnail">
+                        <img src="app_images/generic_comic.png" alt="Generic" style="width:150px;height:150px">
+                      </a>
+                    <% } %>
+                    <strong><%= comics[k].title %></strong> <br>
+                    By <a href="/profile/<%= comics[k].creatorID %>"><strong><%= comics[k].creatorID %></strong></a>
+                  </div>
+                <% } %>
               <% } %>
-              <strong><%= timedComics[i].title %></strong> <br>
-              <small>By <a href="/profile/<%= timedComics[i].creatorID %>"><%= timedComics[i].creatorID %></a></small><br>
-              <small style="font-weight: bold"><span class="glyphicon glyphicon-time"></span>&nbsp; <%= monthNames[monthIndex] + ' ' + day + ', ' + year %></small>
-            </div>
-        <%
-          }
-        }
-        %>
+          </div>
+          <hr>
       </div>
+
+
+
+
     </div>
 
     <!-- Bootstrap core JavaScript and IE10 viewport hack-->
