@@ -79,8 +79,11 @@ var Router = (function () {
 
             // ABOUT VIEW ==============================
             app.get('/about', function (req, res) {
-                res.render('about.ejs', {
-                    user: req.user,
+                User.find({}, function(err, docs){
+                    res.render('about.ejs', {
+                        user: req.user,
+                        users: docs
+                    });
                 });
             });
 
