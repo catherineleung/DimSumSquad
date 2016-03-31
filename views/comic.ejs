@@ -499,22 +499,22 @@
       <div class="modal-body" style="text-align:left">
         <fieldset>
           <div class="form-group">
-            <form method="post" action="/comics/<%=comic._id%>">
+            <form id="editInfoForm" method="post" action="/comics/<%=comic._id%>">
               <strong>Title:</strong>
-              <input type="text" class="form-control" value="<%= comic.title %>" name="title">
+              <input type="text" class="form-control" value="<%= comic.title %>" name="title" id="editInfoTitle">
               <br>
 
               <strong>Description:</strong>
-              <textarea rows="3" class="form-control" name="description" style="resize: none"><%= comic.description %></textarea>
+              <textarea rows="3" class="form-control" name="description" style="resize: none" id="editInfoDescription"><%= comic.description %></textarea>
               <br>
 
               <strong>Tags:</strong>
-              <input type="text" class="form-control" value="<%= comic.tags %>" name="tags" data-role="tagsinput">
+              <input type="text" class="form-control" value="<%= comic.tags %>" name="tags" data-role="tagsinput" id="editInfoTags">
               <br><br>
 
               <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
               &nbsp;
-              <input class="btn btn-primary" type="submit" value="Save Changes">
+              <button id="editInfoSubmitButton" class="btn btn-primary" onclick="editInfoButtonClicked(event)">Save Changes</button>
             </form>
           </div>
 
@@ -554,6 +554,19 @@
 
 
 <script>
+    function editInfoButtonClicked(event) {
+      var title = document.getElementById("editInfoTitle").value;
+      var description = document.getElementById("editInfoDescription").value;
+      var tags = document.getElementById("editInfoTags").value;
+
+      if (title.length == 0 || description.length == 0 || tags.length == 0) {
+        event.preventDefault();
+        alert("All fields are required.");
+      } else {
+        document.getElementById("editInfoSubmitButton").disabled = true;
+        document.getElementById("editInfoForm").submit();
+      }
+    }
 
     function buttonSubmitClicked(event) {
       var uploadForm = document.getElementById("userPhoto").value;
