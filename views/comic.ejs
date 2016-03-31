@@ -372,7 +372,7 @@
         </div>
         <div class="col-lg-2">
           <div class="row" style="float:right; padding-right:5px">
-            <% if (user && user.local.username == comic.creatorID) { %>
+            <% if (user && user.local.username == sortedComments[i].user) { %>
               <a href data-toggle="modal" data-target="#editComment" style="text-decoration:none" onclick="editCommentButtonClicked('<%=displayComment%>', '<%=String(sortedComments[i]._id)%>');"><span class="label label-info">Edit</span></a>
               &nbsp;
               <a href data-toggle="modal" data-target="#deleteComment" style="text-decoration:none" onclick="deleteCommentButtonClicked('<%=String(sortedComments[i]._id)%>');"><span class="label label-danger">Delete</span></a>

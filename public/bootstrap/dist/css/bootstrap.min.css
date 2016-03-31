@@ -7797,8 +7797,8 @@ button.close {
     margin-right: auto
 }
 
-.pull-right {
-    float: right !important
+ .pull-right {
+   float: right !important
 }
 
 .pull-left {
