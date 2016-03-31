@@ -75,6 +75,14 @@ abbr[title] {
     border-bottom: 1px dotted
 }
 
+#footer {
+  height: 85px;
+  background-color: #f5f5f5;
+  margin-top:50px;
+  padding-top:20px;
+  padding-bottom:20px;
+}
+
 b,
 strong {
     font-weight: bold
@@ -1996,6 +2004,14 @@ pre code {
     margin-left: auto;
     padding-left: 15px;
     padding-right: 15px
+}
+
+#footer {
+  background-color:#ededed;
+}
+
+#footer a {
+  color:#efefef;
 }
 
 @media (min-width:768px) {
