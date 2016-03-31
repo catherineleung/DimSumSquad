@@ -112,7 +112,7 @@
         <ul class="nav nav-tabs">
           <li class="active"><a href="#account" data-toggle="tab" aria-expanded="true">Account</a></li>
           <li class=""><a href="#favourites" data-toggle="tab" aria-expanded="false">Favourites</a></li>
-          <li class=""><a href="#contributions" data-toggle="tab" aria-expanded="false">Contributions</a></li>
+          <li class=""><a href="#comics" data-toggle="tab" aria-expanded="false">Comics</a></li>
         </ul>
         <br>
 
@@ -211,13 +211,13 @@
             </div>
           </div>
 
-          <!-- CONTRIBUTIONS TAB -->
-          <div class="tab-pane fade" id="contributions">
+          <!-- COMICS TAB -->
+          <div class="tab-pane fade" id="comics">
             <div class="panel panel-success">
               <div class="panel-heading">
-                <h1 class="panel-title"><span class="glyphicon glyphicon-cloud-upload"></span> <%= displayUser.local.username %>'s Contributions</h1>
+                <h1 class="panel-title"><span class="glyphicon glyphicon-cloud-upload"></span> <%= displayUser.local.username %>'s Comics</h1>
               </div>
-              <!-- Displays contributions -->
+              <!-- Displays comics -->
               <!-- MODIFY: change hyperlink depending on the comic book which the images belongs to-->
               <div class="panel-body">
                 <%  for (i = 0; i < displayUser.local.comics.length; i += 6) { %>
