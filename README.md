@@ -32,3 +32,8 @@ Files
 * **/server.js**: handles setting up global variables and establishes the database connection
 * **/package.json**: lists the application dependencies
 * **/integration-test.coffee**: automated selenium black-box tests
+
+##Citations/References
+* **Tag objects**: <a href="https://github.com/bootstrap-tagsinput/bootstrap-tagsinput">https://github.com/bootstrap-tagsinput/bootstrap-tagsinput</a>
+* **Website theme**: <a href="https://bootswatch.com/lumen/">https://bootswatch.com/lumen/</a>
+* **File Uploading Tutorial**: <a href="https://codeforgeek.com/2014/11/file-uploads-using-node-js/">https://codeforgeek.com/2014/11/file-uploads-using-node-js/</a>
