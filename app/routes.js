@@ -735,6 +735,28 @@ var Router = (function () {
             // EDIT COMMENT ============
             app.post('/comics/:id/editcomment', function (req, res) {
 
+                Comment.findByIdAndUpdate(req.body.commentID, { $set: { comment: req.body.editCommentText } }, function (err) {
+                    if (err)
+                        console.log(err);
+
+                    res.redirect('/comics/' + req.params.id);
+                });
+            });
+
+            // DELETE COMMENT ============
+            app.post('/comics/:id/deletecomment', function (req, res) {
+
+                Comic.findByIdAndUpdate(req.params.id, { $pull: { comment: req.body.deleteCommentID } }, function (err) {
+                    if (err)
+                        console.log(err);
+
+                    Comment.remove({_id: req.body.deleteCommentID}, function (err) {
+                        if (err)
+                            console.log(err);
+
+                        res.redirect('/comics/' + req.params.id);
+                    });  
+                });
             });
 
 
