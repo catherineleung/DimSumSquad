@@ -194,8 +194,8 @@ var Router = (function () {
                             if (err)
                                 console.log(err);
 
-                            if (chapter.images[req.params.panel]) {
-                                Image.findOne({_id: chapter.images[req.params.panel]}, function (err, image) {
+                            if (chapter.images[req.params.panel - 1]) {
+                                Image.findOne({_id: chapter.images[req.params.panel - 1]}, function (err, image) {
                                     if (err)
                                         console.log(err);
 
