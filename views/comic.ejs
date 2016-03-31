@@ -211,14 +211,13 @@
               if (favourited == false) { 
             %>
                 <form action="<%= '/addfavourite/' + comic._id %>" method="post" enctype="application/x-www-form-urlencoded" id="fav" style="display:inline-block">
-                  <input type="hidden" name="creator_username" value=<%= comic.creatorID %>>
-                  <button class="btn btn-default btn-sm" type="submit"><span class="glyphicon glyphicon-heart-empty"></span></button>
+                  <button id="favSubmitButton" class="btn btn-default btn-sm" onclick="favSubmitClicked(event);"><span class="glyphicon glyphicon-heart-empty"></span></button>
                 </form>
             <% 
               } else { 
             %>
                 <form action="<%= '/removefavourite/' + comic._id %>" method="post" enctype="application/x-www-form-urlencoded" id="fav" style="display:inline-block">
-                  <button class="btn btn-default btn-sm" type="submit"><span class="glyphicon glyphicon-heart" style="color:red"></span></button>
+                  <button id="favSubmitButton" class="btn btn-default btn-sm" onclick="favSubmitClicked(event);"><span class="glyphicon glyphicon-heart" style="color:red"></span></button>
                 </form>
             <% 
               } 
@@ -235,7 +234,8 @@
             <small style="font-weight: bold"><span class="glyphicon glyphicon-user"></span>&nbsp; <%= comic.contributors.length %> contributors</small><br>
             <small style="font-weight: bold"><span class="glyphicon glyphicon-book"></span>&nbsp; <%= comic.chapters.length %> chapters</small><br>
             <small style="font-weight: bold"><span class="glyphicon glyphicon-eye-open"></span>&nbsp; <%= comic.views %> views</small><br>
-            <small style="font-weight: bold"><span class="glyphicon glyphicon-heart"></span>&nbsp; <%= comic.favourites %> favourites</small>
+            <small style="font-weight: bold"><span class="glyphicon glyphicon-heart"></span>&nbsp; <%= comic.favourites %> favourites</small><br>
+            <small style="font-weight: bold"><span class="glyphicon glyphicon-fire"></span>&nbsp; <%= comic.views + (2 * comic.comments.length) + (10 * comic.favourites) %> hotness</small>
 
           </div>
         </div>
@@ -266,7 +266,7 @@
             <%
             for (i = 0; i < sortedChapters.length; i++) {
             %>
-              <a href="/comics/<%=comic._id%>/chapters/<%=sortedChapters[i]._id%>/0"><strong><%=comic.title + ' ' + sortedChapters[i].chapter + ' '%></strong></a> - <small><%=sortedChapters[i].title%></small><br>
+              <a href="/comics/<%=comic._id%>/chapters/<%=sortedChapters[i]._id%>/1"><strong><%=comic.title + ' ' + sortedChapters[i].chapter + ' '%></strong></a> - <small><%=sortedChapters[i].title%></small><br>
             <%
             }
             %>
@@ -388,13 +388,11 @@
       %>
         <form id  =  "commentForm"
         enctype   =  "application/x-www-form-urlencoded"
-        action    =  "/comment"
+        action    =  "/comics/<%=comic._id%>/comment"
         method    =  "post">
           <label for="comment">Add a comment:</label>
-          <textarea class="form-control" rows="3" id="comment" name="comment" style="resize: none"></textarea>
-          <input type="hidden" name="comic_id" id="comic_id" value= <%= comic._id %> > <br>
-          <input type="hidden" name="creator_username" value=<%= comic.creatorID %>>
-          <input class="btn btn-primary btn-lg" style="width:100px" type="submit" id="submit" value="Post" name="submit" ng-click="toggleComment()">
+          <textarea class="form-control" rows="3" id="commentText" name="comment" style="resize: none"></textarea><br>
+          <button class="btn btn-success btn-lg" id="commentButton" style="width:100px" onclick="commentButtonClicked(event);">Post</button>
           </div>
         </form>
       <% 
@@ -429,7 +427,7 @@
           <div class="form-group">
             <form id="addChapterForm" method="post" action="/comics/<%=comic._id%>/addchapter">
               <strong>Chapter #</strong>
-              <input type="number" class="form-control" value="" name="chapterNumber" id="chapterNumber" style="width:100px; margin-left:auto; margin-right:auto;" required>
+              <input type="number" class="form-control" value="" min="0" name="chapterNumber" id="chapterNumber" style="width:100px; margin-left:auto; margin-right:auto;" required>
               <br>
 
               <strong>Chapter Title</strong><br>
@@ -588,6 +586,23 @@
         event.preventDefault();
         alert("Please choose a file!");
       }
+    }
+
+    function commentButtonClicked(event) {
+      var commentText = document.getElementById("commentText").value;
+
+      if (commentText.trim().length == 0) {
+        event.preventDefault();
+        alert("You can't post an empty comment!");
+      } else {
+        document.getElementById("commentButton").setAttribute("class", "btn btn-default btn-sm disabled");
+        document.getElementById("commentForm").submit();
+      }
+    }
+
+    function favSubmitClicked(event) {
+      document.getElementById("favSubmitButton").disabled = true;
+      document.getElementById("fav").submit();
     }
 
     function addChapterClicked(event) {
