@@ -107,52 +107,53 @@
         <br>
 
         <div class="row">
-          <div class="col-lg-2">
-            <a href="/comics/<%=comic._id%>/chapters/<%=chapter._id%>/<%= parseInt(panel) - 1 %>">PREV</a>
-            &nbsp;|&nbsp;
-            <a href="/comics/<%=comic._id%>/chapters/<%=chapter._id%>/<%= parseInt(panel) + 1 %>">NEXT</a>
-          </div>
-        </div>
-
-        <br>
-
-        <div class="row" align="center">
-          <div class="col-lg-12">
-            <%
-            if (valid) {
-            %>
-              <img src="/gridfile/<%=imagePath%>" alt="" style="width:100%;max-width:700px">
-              <br>
+          <div class="col-lg-8 col-lg-offset-2" style="padding-left:0px">
+            <div class="row">
+              <div class="col-lg-6" style="padding-left:0px">
+                <div class="row" style="float:left">
+                  <%
+                  if (valid && user && user.local.contributor == true) {
+                  %>
+                    <a class="btn btn-danger" data-toggle="modal" data-target="#uploadImage">Add a panel</a>
+                  <%
+                  } else {
+                  %>
+                    <a class="btn btn-danger disabled" data-toggle="modal" data-target="#uploadImage">Add a panel</a>
+                  <%
+                  }
+                  %>
+                </div>
+              </div>
+              <div class="col-lg-6" style="float:right;padding-left:0px">
+                <div class="row" style="float:right">
+                  <a class="btn btn-success 
+                    <% if (panel == 0 || !valid) { %> disabled <% } %>
+                    " href="/comics/<%=comic._id%>/chapters/<%=chapter._id%>/<%= parseInt(panel) - 1 %>">PREV</a>
+                  &nbsp;|&nbsp;
+                  <a class="btn btn-success
+                    <% if (panel == chapter.images.length - 1 || !valid) { %> disabled <% } %>
+                    " href="/comics/<%=comic._id%>/chapters/<%=chapter._id%>/<%= parseInt(panel) + 1 %>">NEXT</a>
+                </div>
+              </div>
+            </div>
+            <br>
+            <div class="row" align="center">
               <%
-              if (user && user.local.contributor == true) {
+                if (valid && chapter.images.length > 0) { 
               %>
-                <a href data-toggle="modal" data-target="#uploadImage">Add a panel</a>
+                <img src="/gridfile/<%=imagePath%>" alt="">
+              <%
+              } else if (chapter.images.length == 0) {
+              %>
+                <img src="/app_images/generic_panel.png" alt="">
               <%
               } else {
               %>
-                <a href="/login">Log in</a> to add a panel.
+                <img src="/app_images/generic_panel_error.png" alt="">
               <%
               }
               %>
-            <%
-            } else {
-            %>
-              No panels
-              <br>
-              <%
-              if (user && user.local.contributor == true) {
-              %>
-                <a href data-toggle="modal" data-target="#uploadImage">Add a panel</a>
-              <%
-              } else {
-              %>
-                <a href="/login">Log in</a> to add a panel.
-              <%
-              }
-              %>
-            <%
-            }
-            %>
+            </div>
           </div>
         </div>
 
