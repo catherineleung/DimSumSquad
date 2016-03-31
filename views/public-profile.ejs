@@ -112,7 +112,9 @@
         <ul class="nav nav-tabs">
           <li class="active"><a href="#account" data-toggle="tab" aria-expanded="true">Account</a></li>
           <li class=""><a href="#favourites" data-toggle="tab" aria-expanded="false">Favourites</a></li>
+          <% if (displayUser.local.contributor) { %>
           <li class=""><a href="#comics" data-toggle="tab" aria-expanded="false">Comics</a></li>
+          <% } %>
         </ul>
         <br>
 
