@@ -417,54 +417,61 @@ var Router = (function () {
                         if (err)
                             console.log(err);
 
-                        // removes comic from user's comic list
-                        User.findByIdAndUpdate(user._id, { $pull: { 'local.comics': String(comic._id)}}, function (err, data) {
+                        // removes comic from user's comic list, decrements user's score by 5
+                        User.findByIdAndUpdate(user._id, { 
+                            $pull: { 'local.comics': String(comic._id) },
+                            $inc: { 'local.score': -5 }
+                        }, function (err) {
                             if (err)
                                 console.log(err);
                         });
 
-                        // decrements user's score by 5
-                        User.findByIdAndUpdate(user._id, { $inc: { 'local.score': -5 }}, function (err, data) {
-                            if (err)
-                                console.log(err);
-                        });
+                        // iterate through the comic's chapters
+                        for (i = 0; i < comic.chapters.length; i++) {
 
-                        // iterate through the comic's images
-                        for (i = 0; i < comic.images.length; i++) {
-
-                            // find the image
-                            Image.findOne({path: comic.images[i]}, function(err, image) {
+                            // find the chapter
+                            Chapter.findOne({_id: comic.chapters[i]}, function (err, chapter) {
                                 if (err)
                                     console.log(err);
-                                // go through user list and look for uploaderID's userID
-                                User.findOne({'local.username': image.uploaderID}, function(err, user) {
-                                    if (err)
-                                        console.log(err);
-                                    // decrement user's score by 2
-                                    User.findByIdAndUpdate(user._id, { $inc: { 'local.score': -2 }}, function(err) {
+
+                                // iterate through the chapter's images
+                                for (j = 0; j < chapter.images.length; j++) {
+
+                                    // find the image
+                                    Image.findOne({_id: chapter.images[j]}, function (err, image) {
                                         if (err)
                                             console.log(err);
+
+                                        // update the user who uploaded the image:
+                                        // - decrement user's score by 2
+                                        // - remove image from user's image list
+                                        //
+                                        User.findOne({'local.username': image.uploaderID}, function (err, imageUser) {
+                                            if (err)
+                                                console.log(err);
+
+                                            User.findByIdAndUpdate(imageUser._id, { 
+                                                $inc: { 'local.score': -2 },
+                                                $pull: { 'local.images': String(image._id) }
+                                            }, function (err) {
+                                                if (err)
+                                                    console.log(err);
+                                            });
+                                        });
+                                        
+                                        // removes image from the file system
+                                        gfs.remove({filename: image.path}, function (err) {
+                                            if (err)
+                                                console.error(err);
+                                        });
+
+                                        // removes image from the database
+                                        Image.remove({_id: image._id}, function (err) {
+                                            if (err) 
+                                                console.log(err);
+                                        });
                                     });
-                                });
-                            });
-                            
-
-                            // removes image from user's image list
-                            User.findByIdAndUpdate(user._id, { $pull: { 'local.images': comic.images[i]}}, function (err, data) {
-                                if (err)
-                                    console.log(err);
-                            });
-
-                            // removes image from the database
-                            Image.remove({path: comic.images[i]}, function (err, user) {
-                                if (err) 
-                                    console.log(err);
-                            });
-
-                            // removes image from the file system
-                            gfs.remove({filename: comic.images[i]}, function(err) {
-                                if (err)
-                                    console.error(err);
+                                }
                             });
                         }
                     });
