@@ -172,14 +172,12 @@
                   <%  for (j = i; j < i + 6; j++) {
                     if (j < displayUser.local.favourites.length) {
                       var comic_id;
-                      var comic_path;
                       var comic_title;
                       var comic_coverphoto;
                       title = displayUser.local.comics[j];
                       for (k = 0; k < comics.length; k++) {
                         if (displayUser.local.favourites[j] == comics[k]._id) {
                           comic_id = comics[k]._id;
-                          comic_path = comics[k].images[0];
                           comic_title = comics[k].title;
                           comic_coverphoto = comics[k].coverphoto;
                         }
@@ -227,14 +225,12 @@
                   <%  for (j = i; j < i + 6; j++) {
                     if (j < displayUser.local.comics.length) {
                       var comic_id;
-                      var comic_path;
                       var comic_title;
                       var comic_coverphoto;
                       title = displayUser.local.comics[j];
                       for (k = 0; k < comics.length; k++) {
                         if (String(displayUser.local.comics[j]) == comics[k]._id) {
                           comic_id = comics[k]._id;
-                          comic_path = comics[k].images[0];
                           comic_title = comics[k].title;
                           comic_coverphoto = comics[k].coverphoto;
                         }
