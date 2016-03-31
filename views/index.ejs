@@ -48,8 +48,6 @@
           <button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-search"></span></button>
         </form>
 
-
-        
         <ul class="nav navbar-nav navbar-right">
         <% if (!user) { %>
             <li><a href="/signup">Sign Up</a></li>
@@ -73,28 +71,15 @@
           
           <!--  NOTIFICATIONS -->
             <li>  
-            <div class="dropdown" ng-app="notificationsController" ng-contoller="toggleNotifications" ng-init="checkUnread()">
+            <div class="dropdown">
               <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" style='padding:10px'>
-
-              <!--  CHANGES ICON -->
-
-              <!-- <div ng-show="exists_unread">
-              <span class="glyphicon glyphicon-envelope" style="color:red"></span>
-              </div>
-              <div ng-show="!exists_unread">
               <span class="glyphicon glyphicon-envelope" style="color:purple"></span>
-              </div> -->
-
-              <span class="glyphicon glyphicon-envelope" style="color:purple"></span>
-
-
-
               </button>
-              <ul class="dropdown-menu" style='width: 360px'>
+              <ul class="dropdown-menu" style='width: 390px'>
                 <li class="dropdown-header">Notifications</li>
-        
-                <% for (i = user.local.notifications.length - 1; i > (user.local.notifications.length - 9); i--){ %>
+                <% for (i = user.local.notifications.length - 1; (i >= 0 && i > user.local.notifications.length - 9) ; i--){ %>
                     <li class="divider"></li>
+                    
                     <!--  GETS THE PROFILE PICTURE -->
                     <div class="row">
                     <% var currentuser;
@@ -141,6 +126,15 @@
                     </div>
                     <% } %>
 
+                    <!--  "Somebody commented on your comic!" EVENT -->
+                    <% if (user.local.notifications[i].acting_event == "commenting"){ %>
+                    <div class="col-sm-6">
+                    <div class="container" style='display: inline-block'>
+                    <li><a href="/profile/<%= user.local.notifications[i].acting_username %>" ><%= user.local.notifications[i].acting_username %></a> commented on your <a href="/comics/<%= user.local.notifications[i].acting_comic_id %>">comic</a></li>
+                    </div>
+                    </div>
+                    <% } %>
+
                     </div>
 
                  <% } %>
@@ -151,6 +145,10 @@
             <li><a href="/logout">Log Out</a></li>
         <% } %>
         </ul>
+        
+        
+            </div>
+        
         
 
 
