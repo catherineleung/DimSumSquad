@@ -37,3 +37,4 @@ Files
 * **Tag objects**: <a href="https://github.com/bootstrap-tagsinput/bootstrap-tagsinput">https://github.com/bootstrap-tagsinput/bootstrap-tagsinput</a>
 * **Website theme**: <a href="https://bootswatch.com/lumen/">https://bootswatch.com/lumen/</a>
 * **File Uploading Tutorial**: <a href="https://codeforgeek.com/2014/11/file-uploads-using-node-js/">https://codeforgeek.com/2014/11/file-uploads-using-node-js/</a>
+* **Passport Tutorial**: <a href="https://scotch.io/tutorials/easy-node-authentication-setup-and-local">https://scotch.io/tutorials/easy-node-authentication-setup-and-local</a>
