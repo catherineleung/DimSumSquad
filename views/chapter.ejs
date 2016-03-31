@@ -177,14 +177,14 @@
       <div class="modal-body" style="text-align:center">
         <fieldset>
           <div class="form-group">
-            <form id        =  "contribute"
+            <form id="addPanelForm"
             enctype   =  "multipart/form-data"
             action    =  "/comics/<%=comic._id%>/chapters/<%=chapter._id%>/addpanel"
             method    =  "post">
               <input type="file" name="userPhoto" id="userPhoto" class="inputfile"/>
               <label id="uploadlabel" for="userPhoto" class="btn btn-lg btn-primary"><span class="glyphicon glyphicon-file"></span>Choose a file</label>
               <br></br>
-              <input class="btn btn-default" type="submit" id="submit" value="Upload" name="submit" onclick="buttonSubmitClicked(event)">
+              <button class="btn btn-default" id="addPanelSubmitButton" onclick="buttonSubmitClicked(event)">Upload</button>
             </form>
           </div>
 
@@ -202,6 +202,9 @@
       if (!uploadForm) {
         event.preventDefault();
         alert("Please choose a file!");
+      } else {
+        document.getElementById("addPanelSubmitButton").disabled = true;
+        document.getElementById("addPanelForm").submit();
       }
     }
 
