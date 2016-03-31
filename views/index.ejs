@@ -90,7 +90,7 @@
 
 
               </button>
-              <ul class="dropdown-menu">
+              <ul class="dropdown-menu" style='width: 360px'>
                 <li class="dropdown-header">Notifications</li>
         
                 <% for (i = user.local.notifications.length - 1; i >=0; i--){ %>
@@ -128,6 +128,15 @@
                     <div class="col-sm-6">
                     <div class="container" style='display: inline-block'>
                     <li><a href="/profile/<%= user.local.notifications[i].acting_username %>"><%= user.local.notifications[i].acting_username %></a> created a new <a href="/comics/<%= user.local.notifications[i].acting_comic_id %>" >comic</a>!</li>
+                    </div>
+                    </div>
+                    <% } %>
+
+                     <!--  "Somebody liked your comic!" EVENT -->
+                    <% if (user.local.notifications[i].acting_event == "favourited"){ %>
+                    <div class="col-sm-6">
+                    <div class="container" style='display: inline-block'>
+                    <li><a href="/profile/<%= user.local.notifications[i].acting_username %>" ><%= user.local.notifications[i].acting_username %></a> favourited your <a href="/comics/<%= user.local.notifications[i].acting_comic_id %>">comic</a></li>
                     </div>
                     </div>
                     <% } %>

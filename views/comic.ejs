@@ -211,6 +211,7 @@
               if (favourited == false) { 
             %>
                 <form action="<%= '/addfavourite/' + comic._id %>" method="post" enctype="application/x-www-form-urlencoded" id="fav" style="display:inline-block">
+                  <input type="hidden" name="creator_username" value=<%= comic.creatorID %>>
                   <button class="btn btn-default btn-sm" type="submit"><span class="glyphicon glyphicon-heart-empty"></span></button>
                 </form>
             <% 
