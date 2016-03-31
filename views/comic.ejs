@@ -554,6 +554,11 @@
 
 
 <script>
+
+    $(document).ready(function(){
+      $('[data-toggle="tooltip"]').tooltip(); 
+    });
+
     function editInfoButtonClicked(event) {
       var title = document.getElementById("editInfoTitle").value;
       var description = document.getElementById("editInfoDescription").value;
@@ -619,14 +624,11 @@
       document.getElementById("changeCoverLabel").innerHTML = '<span class="glyphicon glyphicon-ok"></span> ' + this.value.split( '\\' ).pop();
     }
 
-    $(document).ready(function(){
-      $('[data-toggle="tooltip"]').tooltip(); 
-    });
 
 </script>
 
-  <script src="../bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js"></script>
-  <script src="../bootstrap-tagsinput/dist/bootstrap-tagsinput.js"></script>
+  <script src="/bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js"></script>
+  <script src="/bootstrap-tagsinput/dist/bootstrap-tagsinput.js"></script>
 
 </body>
 </html>
