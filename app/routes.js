@@ -143,17 +143,32 @@ var Router = (function () {
 
             // COMIC VIEW =========================
             app.get('/comics/:id', function (req, res) {
-                Comic.findOne({_id: req.params.id}, function (err, comic) {
+                Comic.findByIdAndUpdate(req.params.id, { $inc: { views: 1 }}, function (err) {
                     if (err)
                         console.log(err);
-                    Comic.findByIdAndUpdate(comic._id, { $inc: { views: 1 }}, function (err) {
+
+                    Comic.findOne({_id: req.params.id}, function (err, comic) {
                         if (err)
                             console.log(err);
+
                         User.find({}, function (err, users) {
-                            res.render('comic.ejs', {
-                                user: req.user,
-                                comic: comic,
-                                users: users // list of all users - for commenting
+                            if (err)
+                                console.log(err);
+
+                            Chapter.find({}, function (err, chapters) {
+                                if (err)
+                                    console.log(err);
+
+                                var filteredChapters = chapters.filter(function (chapter) {
+                                    return chapter.comicID == req.params.id;
+                                });
+
+                                res.render('comic.ejs', {
+                                    user: req.user,
+                                    comic: comic,
+                                    users: users,
+                                    chapters: filteredChapters
+                                });
                             });
                         });
                     });
@@ -161,18 +176,42 @@ var Router = (function () {
             });
 
             // CHAPTER VIEW =========================
-            app.get('/comics/:id/chapters/:chapter/:page', function (req, res) {
-                Comic.findOne({_id: req.params.id}, function (err, comic) {
+            app.get('/comics/:id/chapters/:chapter/:panel', function (req, res) {
+                Comic.findByIdAndUpdate(req.params.id, { $inc: { views: 1 }}, function (err) {
                     if (err)
                         console.log(err);
-                    Comic.findByIdAndUpdate(comic._id, { $inc: { views: 1 }}, function (err) {
+
+                    Comic.findOne({_id: req.params.id}, function (err, comic) {
                         if (err)
                             console.log(err);
-                        res.render('chapter.ejs', {
-                            user: req.user,
-                            comic: comic,
-                            chapter: req.params.chapter,
-                            page: req.params.page
+
+                        Chapter.findOne({_id: req.params.chapter}, function (err, chapter) {
+                            if (err)
+                                console.log(err);
+
+                            if (chapter.images[req.params.panel]) {
+                                Image.findOne({_id: chapter.images[req.params.panel]}, function (err, image) {
+                                    if (err)
+                                        console.log(err);
+
+                                    res.render('chapter.ejs', {
+                                        user: req.user,
+                                        comic: comic,
+                                        chapter: chapter,
+                                        panel: req.params.panel,
+                                        valid: true,
+                                        imagePath: image.path
+                                    });
+                                });
+                            } else {
+                                res.render('chapter.ejs', {
+                                    user: req.user,
+                                    comic: comic,
+                                    chapter: chapter,
+                                    panel: req.params.panel,
+                                    valid: false
+                                });
+                            }
                         });
                     });
                 });
@@ -198,18 +237,6 @@ var Router = (function () {
                     });
                 });
             });
-
-            // PANEL VIEW ==============================
-            app.get('/comic/panel/:id', function(req, res){
-                Comic.find({}, function (err, docs) {
-                    res.render('panel.ejs', {
-                        user: req.user,
-                        comics: docs,
-                    });
-                });         
-            });
-
-
 
 
 // =============================================================================
@@ -614,7 +641,7 @@ var Router = (function () {
             // ADD PANEL
             // uploads a new image to MongoDB using GridFS and adds required associations
             //
-            app.post('/comics/:id/addpanel', function (req, res) {
+            app.post('/comics/:id/chapters/:chapter/addpanel', function (req, res) {
 
                 process.nextTick(function () {
                     upload(req, res, function (err) {
@@ -630,49 +657,52 @@ var Router = (function () {
                         fs.createReadStream(path).pipe(writestream);
 
                         // creates a new image
-                        // TODO: UPDATE IT SO THAT IT CHECKS WHAT CHAPTER THE COMIC IS CURRENTLY ON
-                        var imageFilePath = new Image({ path: imageFileName, uploaderID: req.user.local.username, imageBelongsTo: req.params.id});
-
-
-                        // get image name and add it to user's image array    GOOD2GO
-                        User.findByIdAndUpdate(req.user._id, { $push: { 'local.images': imageFileName } }, { safe: true, upsert: true, new: true }, function (err, model) {
-                            console.log(err);
-                        });
-
-                        // increment user's score by 2
-                        User.findByIdAndUpdate(req.user._id, { $inc: { 'local.score': 2 }}, function(err) {
-                            if (err)
-                                console.log(err);
-                        });
-
-                        //add image name to the comic's list of images
-                        Comic.findOne({ _id : req.params.id }, function(err, obj) {
-                            Comic.findByIdAndUpdate(obj._id, { 
-                                $push: { images : imageFileName },
-                                $addToSet: { contributors : String(req.user._id) } 
-                            }, { safe: true, upsert: true, new: true }, function (err, model) {
-                                console.log(err);
-                            });
+                        var imageFilePath = new Image({ 
+                            path: imageFileName, 
+                            uploaderID: req.user.local.username, 
+                            chapter: req.params.chapter
                         });
 
                         // save image path data to db
                         imageFilePath.save(function (err, imageFilePath) {
                             if (err)
                                 return console.error(err);
-                            console.log('photo upload successful!');
-                        });
 
-                        // waits for stream to complete
-                        writestream.on('finish', function() {
+                            // add user to comic contributors
+                            Comic.findByIdAndUpdate(req.params.id, { $addToSet: { contributors: String(req.user._id) }}, function (err) {
+                                if (err)
+                                    console.log(err);
+                            })
 
-                            // delete file from local storage
-                            fs.unlink(path, function(err) {
+                            // add image id to user's list of images, increment score by 2
+                            User.findByIdAndUpdate(req.user._id, { 
+                                $push: { 'local.images': String(imageFilePath._id) },
+                                $inc: { 'local.score': 2 } 
+                            }, { safe: true, upsert: true, new: true }, function (err, model) {
                                 if (err)
                                     console.log(err);
                             });
 
-                            // refresh page
-                            res.redirect('/comics/' + req.params.id);
+                            // add image id to chapter
+                            Chapter.findByIdAndUpdate(req.params.chapter, { 
+                                $push: { images: String(imageFilePath._id) }
+                            }, { safe: true, upsert: true, new: true }, function (err, chapter) {
+                                if (err)
+                                    console.log(err);
+
+                                // waits for stream to complete
+                                writestream.on('finish', function() {
+
+                                    // delete file from local storage
+                                    fs.unlink(path, function(err) {
+                                        if (err)
+                                            console.log(err);
+                                    });
+
+                                    // refresh page
+                                    res.redirect('/comics/' + req.params.id + '/chapters/' + req.params.chapter + '/' + (chapter.images.length - 1));
+                                });
+                            });
                         });
                     });
                 });
@@ -758,19 +788,20 @@ var Router = (function () {
 
             app.post('/comics/:id/addchapter', function (req, res) {
 
-                Comic.findOne({_id: req.params.id}, function (err, comic) {
+                var newChapter = new Chapter({
+                    chapter: req.body.chapterNumber,
+                    title: req.body.chapterTitle,
+                    comicID: req.params.id,
+                    dateCreated: new Date(),
+                    images: []
+                });
+
+                newChapter.save(function (err, chapter) {
                     if (err)
                         console.log(err);
 
-                    var newChapter = {
-                        chapter: req.body.chapterNumber,
-                        title: req.body.chapterTitle,
-                        creatorID: String(req.user._id),
-                        dateCreated: new Date()
-                    };
-
                     Comic.findByIdAndUpdate(req.params.id, { 
-                        $push: { chapters: newChapter },
+                        $push: { chapters: String(chapter._id) },
                         $addToSet: { contributors : String(req.user._id) }
                     }, { safe: true, upsert: true, new: true }, function (err) {
                         if (err)

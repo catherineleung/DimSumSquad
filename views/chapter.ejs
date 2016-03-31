@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" ng-app="comicController">
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -35,26 +35,10 @@
 <!-- Bootstrap core JavaScript and IE10 viewport hack-->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
-<script src="../bootstrap/dist/js/bootstrap.min.js"></script>
-<script src="../bootstrap/docs/assets/js/ie10-viewport-bug-workaround.js"></script>
+<script src="/bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="/bootstrap/docs/assets/js/ie10-viewport-bug-workaround.js"></script>
 
-<!-- AngularJS -->
-<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular.min.js"></script>
-<script src="/js/controllers/comic.js"></script> <!-- load up our controller -->
-
-<body ng-controller = "toggleController">
-
-<!-- Facebook script-->
-<div id="fb-root"></div>
-<script>(function(d, s, id) {
-  var js, fjs = d.getElementsByTagName(s)[0];
-  if (d.getElementById(id)) return;
-  js = d.createElement(s); js.id = id;
-  js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.5";
-  fjs.parentNode.insertBefore(js, fjs);
-}(document, 'script', 'facebook-jssdk'));</script>
-
-
+<body>
 
   <!-- Static navbar -->
   <nav class="navbar navbar-default navbar-static-top">
@@ -116,7 +100,17 @@
 
         <div class="row">
           <div class="col-lg-12">
-            <h3><small><a href="/comics/<%=comic._id%>"><%= comic.title %></a> &raquo; <a href="/comics/<%=comic._id%>/chapters/<%=chapter%>">Chapter <%= chapter %></a></small></h3>
+            <h3><small><a href="/comics/<%=comic._id%>"><%= comic.title %></a> &raquo; Chapter <%= chapter.chapter %></small></h3>
+          </div>
+        </div>
+
+        <br>
+
+        <div class="row">
+          <div class="col-lg-2">
+            <a href="/comics/<%=comic._id%>/chapters/<%=chapter._id%>/<%= parseInt(panel) - 1 %>">PREV</a>
+            &nbsp;|&nbsp;
+            <a href="/comics/<%=comic._id%>/chapters/<%=chapter._id%>/<%= parseInt(panel) + 1 %>">NEXT</a>
           </div>
         </div>
 
@@ -124,20 +118,96 @@
 
         <div class="row" align="center">
           <div class="col-lg-12">
-            Test
+            <%
+            if (valid) {
+            %>
+              <img src="/gridfile/<%=imagePath%>" alt="" style="width:100%;max-width:700px">
+              <br>
+              <%
+              if (user && user.local.contributor == true) {
+              %>
+                <a href data-toggle="modal" data-target="#uploadImage">Add a panel</a>
+              <%
+              } else {
+              %>
+                <a href="/login">Log in</a> to add a panel.
+              <%
+              }
+              %>
+            <%
+            } else {
+            %>
+              No panels
+              <br>
+              <%
+              if (user && user.local.contributor == true) {
+              %>
+                <a href data-toggle="modal" data-target="#uploadImage">Add a panel</a>
+              <%
+              } else {
+              %>
+                <a href="/login">Log in</a> to add a panel.
+              <%
+              }
+              %>
+            <%
+            }
+            %>
           </div>
         </div>
 
         <br>
 
-        <div class="row">
-          <div class="col-lg-12">
-            Test
-          </div>
-        </div>
-
       </div>
     </div>
+
+<!-- IMAGE UPLOAD MODAL -->
+<div id="uploadImage" class="modal fade" role="dialog">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+
+      <!-- MODAL HEADER -->
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Create Panel</h4>
+      </div>
+
+      <!-- MODAL BODY -->
+      <div class="modal-body" style="text-align:center">
+        <fieldset>
+          <div class="form-group">
+            <form id        =  "contribute"
+            enctype   =  "multipart/form-data"
+            action    =  "/comics/<%=comic._id%>/chapters/<%=chapter._id%>/addpanel"
+            method    =  "post">
+              <input type="file" name="userPhoto" id="userPhoto" class="inputfile"/>
+              <label id="uploadlabel" for="userPhoto" class="btn btn-lg btn-primary"><span class="glyphicon glyphicon-file"></span>Choose a file</label>
+              <br></br>
+              <input class="btn btn-default" type="submit" id="submit" value="Upload" name="submit" onclick="buttonSubmitClicked(event)">
+            </form>
+          </div>
+
+        </fieldset>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+    function buttonSubmitClicked(event) {
+      var uploadForm = document.getElementById("userPhoto").value;
+
+      if (!uploadForm) {
+        event.preventDefault();
+        alert("Please choose a file!");
+      }
+    }
+
+    document.getElementById("userPhoto").onchange = function () {
+      document.getElementById("uploadlabel").innerHTML = '<span class="glyphicon glyphicon-ok"></span> ' + this.value.split( '\\' ).pop();
+    }
+</script>
 
 </body>
 </html>

@@ -5,8 +5,7 @@ var mongoose = require('mongoose');
 var imageSchema = mongoose.Schema({
 	//Intial + immutable information
 	uploaderID: String,
-	imageBelongsTo: String,    // id of comic that the image belongs to
-	chapter: Number,
+	chapter: String, // chapter id
     path: String,
 
     //Mutable

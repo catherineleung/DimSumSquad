@@ -8,25 +8,15 @@ var comicSchema = mongoose.Schema({
     tags: String,           // Tags ... list of Strings (e.g. "Funny,Sad,Happy")
     creatorID: String,	    // Sole creator ... this is the username
     contributors: Array,
-    chapters: Array,       // Array of chapter objects (see below)
+    chapters: Array,       // Array of chapter ids (see below)
     favourites: Number,
     comments: Array,        // list of comments
     dateCreated: Date,
 
     // Mutable 
-    images: Array,			// Array of images or chapters
     coverphoto: String,      // file path of cover photo
     views: Number
 });
 
 // create the model
 module.exports = mongoose.model('Comic', comicSchema);
-
-// chapter object
-//
-// var Chapter = {
-//     chapter: Number,
-//     title: String,
-//     creatorID: String,
-//     dateCreated: Date
-// };
