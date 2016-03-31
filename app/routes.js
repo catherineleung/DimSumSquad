@@ -636,7 +636,15 @@ var Router = (function () {
 
                      var id = comicID;
 
-                     res.redirect('/comics/' + req.body.comic_id);
+                     User.findOneAndUpdate({'local.username' : req.body.creator_username}, 
+                                { $push: { 'local.notifications': { acting_username: req.user.local.username, read: false, acting_event: String("favourited"), acting_comic_id: req.params.id} }}, 
+                                { safe: true, upsert: true, new: true }, 
+                                function (err, model) {
+                                if (err)
+                                    console.log(err);
+
+                            res.redirect('/comics/' + req.body.comc_id);
+                        });
 
                  });
             });
