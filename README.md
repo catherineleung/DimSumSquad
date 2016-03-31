@@ -12,7 +12,7 @@ Visit <a href="https://sumcomics.herokuapp.com/">https://sumcomics.herokuapp.com
 * Navigate back to the main directory: / <br>
 * Start the application: `npm start` <br>
 
-##Class associations
+##Class Associations
 * Refer to the UML.pdf
 
 ##Important Files/Folders
