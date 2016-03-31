@@ -228,7 +228,9 @@ var Router = (function () {
                 Comic.find({}, function (err, docs) {
                     res.render('comics.ejs', {
                         user: req.user,
-                        comics: docs
+                        comics: docs,
+                        direction: req.query.sort,
+                        criteria: req.query.by
                     });
                 });
             });

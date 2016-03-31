@@ -75,31 +75,82 @@
 
     <div class="container">
       <div class="well">
+        <%
+        var sortDirection;
+        var sortCriteria;
+        if (!direction) {
+          sortDirection = 'down';
+        } else {
+          sortDirection = direction;
+        }
+        if (!criteria) {
+          sortCriteria = 'time';
+        } else {
+          sortCriteria = criteria;
+        }
+        %>
         <h2>Browse Comics</h2>
         <hr>
-<!--         <ul class="pagination" style="margin-top:0px">
-          <li class="active"><a href="#">1</a></li>
-          <li><a href="#">2</a></li>
-          <li><a href="#">3</a></li>
-          <li><a href="#">4</a></li>
-          <li><a href="#">5</a></li>
-        </ul> -->
-        <% for (i = 0; i < comics.length; i += 6) { %> 
+        <ul class="pagination" style="margin-top:0px">
+          <li <% if (sortDirection == 'down') { %>class="active"<% } %>><a href="/comics?sort=down&by=<%=sortCriteria%>"><span class="glyphicon glyphicon-triangle-bottom"></span></a></li>
+          <li <% if (sortDirection == 'up') { %>class="active"<% } %>><a href="/comics?sort=up&by=<%=sortCriteria%>"><span class="glyphicon glyphicon-triangle-top"></span></a></li>
+        </ul>
+        &nbsp;
+        <ul class="pagination" style="margin-top:0px">
+          <li <% if (sortCriteria == 'time') { %>class="active"<% } %>><a href="/comics?sort=<%=sortDirection%>&by=time"><span class="glyphicon glyphicon-time"></span></a></li>
+          <li <% if (sortCriteria == 'views') { %>class="active"<% } %>><a href="/comics?sort=<%=sortDirection%>&by=views"><span class="glyphicon glyphicon-eye-open"></span></a></li>
+          <li <% if (sortCriteria == 'favs') { %>class="active"<% } %>><a href="/comics?sort=<%=sortDirection%>&by=favs"><span class="glyphicon glyphicon-heart"></span></a></li>
+        </ul>
+        <%
+        var sortedComics = comics.sort(function(a, b) {
+          if (sortDirection == 'up') {
+            if (sortCriteria == 'time') {
+              return a.dateCreated - b.dateCreated;
+            } else if (sortCriteria == 'views') {
+              return a.views - b.views;
+            } else {
+              return a.favourites - b.favourites;
+            }
+          } else {
+            if (sortCriteria == 'time') {
+              return b.dateCreated - a.dateCreated;
+            } else if (sortCriteria == 'views') {
+              return b.views - a.views;
+            } else {
+              return b.favourites - a.favourites;
+            }
+          }
+        });
+
+        var monthNames = [
+          "Jan", "Feb", "Mar", 
+          "Apr", "May", "Jun", 
+          "Jul", "Aug", "Sep", 
+          "Oct", "Nov", "Dec"
+        ];
+        for (i = 0; i < sortedComics.length; i += 6) { %> 
           <div class="row">
             <% for (k = i; k < i + 6; k++) { 
-                if(k < comics.length) { %>
+                if(k < sortedComics.length) { 
+                  var day = sortedComics[k].dateCreated.getDate();
+                  var monthIndex = sortedComics[k].dateCreated.getMonth();
+                  var year = sortedComics[k].dateCreated.getFullYear();
+                  %>
                   <div class="col-md-2" align="center">
-                    <% if (comics[k].coverphoto) { %>
-                      <a href="/comics/<%= comics[k]._id %>" class="thumbnail">
-                        <img src="<%= '/gridfile/' + comics[k].coverphoto %>" alt="" style="width:150px;height:150px">
+                    <% if (sortedComics[k].coverphoto) { %>
+                      <a href="/comics/<%= sortedComics[k]._id %>" class="thumbnail">
+                        <img src="<%= '/gridfile/' + sortedComics[k].coverphoto %>" alt="" style="width:150px;height:150px">
                       </a>
                     <% } else { %>
-                      <a href="/comics/<%= comics[k]._id %>" class="thumbnail">
+                      <a href="/comics/<%= sortedComics[k]._id %>" class="thumbnail">
                         <img src="app_images/generic_comic.png" alt="Generic" style="width:150px;height:150px">
                       </a>
                     <% } %>
-                    <strong><%= comics[k].title %></strong> <br>
-                    By <a href="/profile/<%= comics[k].creatorID %>"><strong><%= comics[k].creatorID %></strong></a>
+                    <strong><%= sortedComics[k].title %></strong> <br>
+                    <small>By <a href="/profile/<%= sortedComics[k].creatorID %>"><%= sortedComics[k].creatorID %></a></small><br>
+                    <small style="font-weight: bold"><span class="glyphicon glyphicon-eye-open"></span>&nbsp; <%= sortedComics[k].views %></small>
+                    <small style="font-weight: bold"><span class="glyphicon glyphicon-heart"></span>&nbsp; <%= sortedComics[k].favourites %></small><br>
+                    <em><small></span>&nbsp; <%= monthNames[monthIndex] + ' ' + day + ', ' + year %></small></em>
                   </div>
                 <% } %>
               <% } %>
