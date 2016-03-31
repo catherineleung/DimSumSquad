@@ -192,8 +192,8 @@ var Router = (function () {
                             if (err)
                                 console.log(err);
 
-                            if (chapter.images[req.params.panel - 1]) {
-                                Image.findOne({_id: chapter.images[req.params.panel - 1]}, function (err, image) {
+                            if (chapter.images[req.params.panel]) {
+                                Image.findOne({_id: chapter.images[req.params.panel]}, function (err, image) {
                                     if (err)
                                         console.log(err);
 
@@ -678,20 +678,40 @@ var Router = (function () {
 
 
             // COMMENT SECTION =======================
-            app.post('/comics/:id/comment', function (req, res) {
+            app.post('/comment', function (req, res) {
 
-                var newComment = {
-                    user: req.user.local.username,
-                    comment: req.body.comment,
-                    date: new Date()
-                };
+                    // console.log("commenting!!");
 
-                Comic.findByIdAndUpdate(req.params.id, { $push: { 'comments': newComment } }, { safe: true, upsert: true, new: true }, function (err) {
-                    if (err)
-                        console.log(err);
+                    var newComment = new Comment({
+                        user: req.user.local.username,
+                        comment: req.body.comment,
+                        date: Date.now()
+                    });
 
-                    res.redirect('/comics/' + req.params.id);
-                });
+                    // console.log(newComment.user);
+                    // console.log(newComment.comment);
+
+                    // query using id of current comic
+                    var comicID = req.body.comic_id;
+
+                    // console.log(comicID);
+
+                    Comic.findByIdAndUpdate(comicID, { $push: { 'comments': newComment } }, { safe: true, upsert: true, new: true }, function (err, model) {
+                     console.log(err);
+
+                     var id = comicID;
+
+                     User.findOneAndUpdate({'local.username' : req.body.creator_username}, 
+                                { $push: { 'local.notifications': { acting_username: req.user.local.username, read: false, acting_event: String("commenting"), acting_comic_id: comicID} }}, 
+                                { safe: true, upsert: true, new: true }, 
+                                function (err, model) {
+                                if (err)
+                                    console.log(err);
+
+                            res.redirect('/comics/' + req.body.comic_id);
+                        });
+
+                 });
             });
 
 
@@ -776,7 +796,7 @@ var Router = (function () {
                                     });
 
                                     // refresh page
-                                    res.redirect('/comics/' + req.params.id + '/chapters/' + req.params.chapter + '/' + chapter.images.length);
+                                    res.redirect('/comics/' + req.params.id + '/chapters/' + req.params.chapter + '/' + (chapter.images.length - 1));
                                 });
                             });
                         });

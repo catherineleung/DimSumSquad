@@ -65,9 +65,84 @@
         <% } else { %>
             <li><a href="/profile">Welcome, <%= user.local.username %>!</a></li>
             <li class="divider-vertical"></li>
+          
+          <!--  NOTIFICATIONS -->
+            <li>  
+            <div class="dropdown">
+              <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" style='padding:10px'>
+              <span class="glyphicon glyphicon-envelope" style="color:purple"></span>
+              </button>
+              <ul class="dropdown-menu" style='width: 390px'>
+                <li class="dropdown-header">Notifications</li>
+                <% for (i = user.local.notifications.length - 1; (i >= 0 && i > user.local.notifications.length - 9) ; i--){ %>
+                    <li class="divider"></li>
+                    
+                    <!--  GETS THE PROFILE PICTURE -->
+                    <div class="row">
+                    <% var currentuser;
+                      for (j = 0; j < users.length; j++) {
+                        if (users[j].local.username == user.local.notifications[i].acting_username) {
+                        currentuser = users[j];
+                        }
+                      } %>
+
+                      <% if (currentuser.local.picture) { %>
+                      <div class="col-sm-3">
+                      <img src="/gridfile/<%=currentuser.local.picture%>" alt="Profile picture" style="width:50px;height:50px"> 
+                      </div>
+                      <% } else { %>
+                      <div class="col-sm-3">
+                      <img src="/app_images/generic_picture.png" alt="Generic" style="width:50px;height:50px"> 
+                      </div>
+                      <% } %>
+
+                    <!--  "You got followed!" EVENT -->
+                    <% if (user.local.notifications[i].acting_event == "following"){ %>
+                    <div class="col-sm-6">
+                    <div class="container" style='display: inline-block'>
+                    <li><a href="/profile/<%= user.local.notifications[i].acting_username %>" ><%= user.local.notifications[i].acting_username %></a> followed you!</li>
+                    </div>
+                    </div>
+                    <% } %>
+
+                    <!--  "Someone you follow created a new comic!" EVENT -->
+                    <% if (user.local.notifications[i].acting_event == "created"){ %>
+                    <div class="col-sm-6">
+                    <div class="container" style='display: inline-block'>
+                    <li><a href="/profile/<%= user.local.notifications[i].acting_username %>"><%= user.local.notifications[i].acting_username %></a> created a new <a href="/comics/<%= user.local.notifications[i].acting_comic_id %>" >comic</a>!</li>
+                    </div>
+                    </div>
+                    <% } %>
+
+                     <!--  "Somebody liked your comic!" EVENT -->
+                    <% if (user.local.notifications[i].acting_event == "favourited"){ %>
+                    <div class="col-sm-6">
+                    <div class="container" style='display: inline-block'>
+                    <li><a href="/profile/<%= user.local.notifications[i].acting_username %>" ><%= user.local.notifications[i].acting_username %></a> favourited your <a href="/comics/<%= user.local.notifications[i].acting_comic_id %>">comic</a></li>
+                    </div>
+                    </div>
+                    <% } %>
+
+                    <!--  "Somebody commented on your comic!" EVENT -->
+                    <% if (user.local.notifications[i].acting_event == "commenting"){ %>
+                    <div class="col-sm-6">
+                    <div class="container" style='display: inline-block'>
+                    <li><a href="/profile/<%= user.local.notifications[i].acting_username %>" ><%= user.local.notifications[i].acting_username %></a> commented on your <a href="/comics/<%= user.local.notifications[i].acting_comic_id %>">comic</a></li>
+                    </div>
+                    </div>
+                    <% } %>
+
+                    </div>
+
+                 <% } %>
+              </ul>
+            </div>
+        </li>
+        <li class="divider-vertical"></li>
             <li><a href="/logout">Log Out</a></li>
         <% } %>
         </ul>
+        
         
 
 
