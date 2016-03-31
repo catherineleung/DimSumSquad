@@ -111,7 +111,11 @@
             <div class="row">
               <a class="btn btn-success btn-sm
                 <% if (!user || !user.local.contributor) { %> disabled <% } %>
-                " data-toggle="modal" data-target="#uploadImage">Add a panel</a>
+                " data-toggle="modal" data-target="#uploadImage">Add panel</a>
+              &nbsp;
+              <a class="btn btn-warning btn-sm
+                <% if (!user || user.local.username != comic.creatorID || !valid) { %> disabled <% } %>
+                " data-toggle="modal" data-target="#movePanel">Move panel</a>
               &nbsp;
               <a class="btn btn-danger btn-sm
                 <% if (!user || user.local.username != comic.creatorID) { %> disabled <% } %>
@@ -159,7 +163,7 @@
             <% if (panel == chapter.images.length) { %>
               <img src="/gridfile/<%=imagePath%>" alt="">
             <% } else { %>
-              <a href="/comics/<%=comic._id%>/chapters/<%=chapter._id%>/<%= parseInt(panel) + 1 %>"><img src="/gridfile/<%=imagePath%>" alt=""></a>
+              <a href="/comics/<%=comic._id%>/chapters/<%=chapter._id%>/<%= parseInt(panel) + 1 %>"><img src="/gridfile/<%=imagePath%>" alt="" style="max-width: 800px"></a>
             <% } %>
           <%
           } else if (chapter.images.length == 0) {
@@ -229,6 +233,39 @@
           <button type="button" class="btn btn-default" data-dismiss="modal">No, take me back</button>
           &nbsp;
           <button class="btn btn-danger" type="submit">Yes</button>
+        </form>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- MOVE PANEL MODAL -->
+<div id="movePanel" class="modal fade" role="dialog">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+
+      <!-- MODAL HEADER -->
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Move Panel</h4>
+      </div>
+
+      <!-- MODAL BODY -->
+      <div class="modal-body" align="center">
+        Where do you want to move this panel? <br><br>
+        <form method="post" action="/comics/<%=comic._id%>/chapters/<%=chapter._id%>/<%=panel%>/movepanel">
+          <select class="form-control" id="moveTo" name="moveTo" style="width: 100px">
+            <%
+            for (i = 0; i < chapter.images.length; i++) {
+            %>
+              <option><%= i + 1 %></option>
+            <%
+            }
+            %>
+          </select>
+          <br>
+          <button class="btn btn-primary" type="submit">Move</button>
         </form>
       </div>
 

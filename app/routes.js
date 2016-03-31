@@ -848,6 +848,33 @@ var Router = (function () {
                     });
                 });
             });
+            
+            // MOVE PANEL
+            //
+            app.post('/comics/:id/chapters/:chapter/:panel/movepanel', function (req, res) {
+
+                Chapter.findOne({_id: req.params.chapter}, function (err, chapter) {
+                    if (err)
+                        console.log(err);
+
+                    var images = chapter.images;
+                    var old_index = parseInt(req.params.panel) - 1;
+                    var new_index = parseInt(req.body.moveTo) - 1;
+
+                    var element = images[old_index];
+                    images.splice(old_index, 1);
+                    images.splice(new_index, 0, element);
+
+                    Chapter.findByIdAndUpdate(req.params.chapter, { $set: { images: images } }, function (err) {
+                        if (err)
+                            console.log(err);
+
+                        res.redirect('/comics/' + req.params.id + '/chapters/' + req.params.chapter + '/' + req.body.moveTo); 
+                    });
+                });
+            });
+
+
 
             // CHANGE COVER PHOTO
             // uploads a new cover photo for a comic using GridFS

@@ -82,31 +82,9 @@
 
 <div class="container">
 
-    <div class="jumbotron text-center">
-        <h2>Welcome!</h2>
-        <% if (!user) { %>
-            <a href="/login" class="btn btn-primary">Log In</a>
-            <a href="/signup" class="btn btn-success"><span class="fa fa-user"></span> Sign Up</a>
-            <a href="/userlist" class="btn btn-warning"><span class="fa fa-user"></span> View Users</a>
-            <a href="/top-contributors" class="btn btn-danger"><span class="fa fa-user"></span>Top Contributors</a>
-            <!--
-            <a href="/auth/facebook" class="btn btn-primary"><span class="fa fa-facebook"></span> Facebook</a>
-            <a href="/auth/twitter" class="btn btn-info"><span class="fa fa-twitter"></span> Twitter</a>
-            <a href="/auth/google" class="btn btn-danger"><span class="fa fa-google-plus"></span> Google+</a>
-            -->
-        <% } else { %>
-            <p>You are logged in as: <b><%= user.local.username %></b></p>
-            <% if (user.local.contributor) { %>
-              <a href="/create-comic" class="btn btn-danger"><span class="fa fa-user"></span> Create a Comic</a>
-              <!-- <a href="/upload" class="btn btn-danger"><span class="fa fa-user"></span> Upload</a> -->
-            <% } %>
-            <a href="/userlist" class="btn btn-warning"><span class="fa fa-user"></span> View Users</a>
-            <a href="/top-contributors" class="btn btn-danger"><span class="fa fa-user"></span>Top Contributors</a>
-        <% } %>
- </div>
-
       <div class="well">
         <h2>Top Contributors</h2>
+        <hr>
 
         <div class="row">
           <% for (k = 0; k < users.length + 6; k++) { 
