@@ -235,7 +235,7 @@
             <small style="font-weight: bold"><span class="glyphicon glyphicon-book"></span>&nbsp; <%= comic.chapters.length %> chapters</small><br>
             <small style="font-weight: bold"><span class="glyphicon glyphicon-eye-open"></span>&nbsp; <%= comic.views %> views</small><br>
             <small style="font-weight: bold"><span class="glyphicon glyphicon-heart"></span>&nbsp; <%= comic.favourites %> favourites</small><br>
-            <small style="font-weight: bold"><span class="glyphicon glyphicon-fire"></span>&nbsp; <%= comic.views + (2 * comic.comments.length) + (10 * comic.favourites) %> hotness</small>
+            <small style="font-weight: bold"><span class="glyphicon glyphicon-fire"></span>&nbsp; <%= comic.views + (2 * comments.length) + (10 * comic.favourites) %> hotness</small>
 
           </div>
         </div>
@@ -329,12 +329,16 @@
       <strong>Comments: </strong>
       <br>
       <br>
-      <% for (i = 0; i < comic.comments.length; i++) {  %> 
+      <% 
+      var sortedComments = comments.sort(function(a, b) {
+        return b.date - a.date;
+      });
+      for (i = 0; i < sortedComments.length; i++) {  %> 
       <blockquote style="font-size:100%; background-color:white">
       <div class="row">
         <% var currentuser;
         for (j = 0; j < users.length; j++) {
-          if (users[j].local.username == comic.comments[i].user) {
+          if (users[j].local.username == sortedComments[i].user) {
             currentuser = users[j];
           }
         } %>
@@ -353,22 +357,22 @@
               "Jul", "Aug", "Sep", 
               "Oct", "Nov", "Dec"
             ];
-            var day = comic.comments[i].date.getDate();
-            var monthIndex = comic.comments[i].date.getMonth();
-            var year = comic.comments[i].date.getFullYear();
-            var hour = comic.comments[i].date.getHours();
-            var mins = comic.comments[i].date.getMinutes();
+            var day = sortedComments[i].date.getDate();
+            var monthIndex = comments[i].date.getMonth();
+            var year = sortedComments[i].date.getFullYear();
+            var hour = sortedComments[i].date.getHours();
+            var mins = sortedComments[i].date.getMinutes();
             %>
-          <a href="/profile/<%= comic.comments[i].user %>"><strong> <%= comic.comments[i].user %></strong></a><br>
+          <a href="/profile/<%= comments[i].user %>"><strong> <%= sortedComments[i].user %></strong></a><br>
           <small><em><%= monthNames[monthIndex] + ' ' + day + ', ' + year %> at <%= hour %>:<%= mins %></em></small>
 
           <br>
-          <% var displayComment = comic.comments[i].comment.replace(/\r\n/g, '<br>'); %>
+          <% var displayComment = sortedComments[i].comment.replace(/\r\n/g, '<br>'); %>
           <%- displayComment %>
         </div>
         <div class="col-lg-2">
           <div class="row" style="float:right; padding-right:5px">
-            <a href data-toggle="modal" data-target="#editComment" style="text-decoration:none" onclick="editCommentButtonClicked('<%=displayComment%>');"><span class="label label-info">Edit</span></a>
+            <a href data-toggle="modal" data-target="#editComment" style="text-decoration:none" onclick="editCommentButtonClicked('<%=displayComment%>', '<%=String(sortedComments[i]._id)%>');"><span class="label label-info">Edit</span></a>
             &nbsp;
             <span class="label label-danger">Delete</span>
           </div>
@@ -536,9 +540,10 @@
       <div class="modal-body" style="text-align:left">
         <fieldset>
           <div class="form-group">
-            <form id="editCommentForm" method="post" action="/comics/<%=comic._id%>">
+            <form id="editCommentForm" method="post" action="/comics/<%=comic._id%>/editcomment">
               <strong>Comment:</strong>
               <textarea rows="3" class="form-control" name="description" style="resize: none" id="editCommentText"></textarea>
+              <input type="hidden" id="commentID" name="commentID" value="">
               <br><br>
 
               <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -593,8 +598,9 @@
       document.getElementById("changeCoverLabel").innerHTML = '<span class="glyphicon glyphicon-ok"></span> ' + this.value.split( '\\' ).pop();
     }
 
-    function editCommentButtonClicked(comment) {
+    function editCommentButtonClicked(comment, id) {
       document.getElementById("editCommentText").innerHTML = comment;
+      document.getElementById("commentID").value = id;
     }
     
     function editInfoButtonClicked(event) {

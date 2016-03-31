@@ -158,19 +158,21 @@ var Router = (function () {
                             if (err)
                                 console.log(err);
 
-                            Chapter.find({}, function (err, chapters) {
+                            Chapter.find({comicID: req.params.id}, function (err, chapters) {
                                 if (err)
                                     console.log(err);
 
-                                var filteredChapters = chapters.filter(function (chapter) {
-                                    return chapter.comicID == req.params.id;
-                                });
+                                Comment.find({comicID: req.params.id}, function (err, comments) {
+                                    if (err)
+                                        console.log(err);
 
-                                res.render('comic.ejs', {
-                                    user: req.user,
-                                    comic: comic,
-                                    users: users,
-                                    chapters: filteredChapters
+                                    res.render('comic.ejs', {
+                                        user: req.user,
+                                        comic: comic,
+                                        users: users,
+                                        chapters: chapters,
+                                        comments: comments
+                                    });
                                 });
                             });
                         });
@@ -684,29 +686,40 @@ var Router = (function () {
                 var newComment = new Comment({
                     user: req.user.local.username,
                     comment: req.body.comment,
-                    date: Date.now()
+                    date: Date.now(),
+                    comicID: req.params.id
                 });
 
-                Comic.findByIdAndUpdate(req.params.id, { 
-                    $push: { 'comments': newComment } 
-                    }, { safe: true, upsert: true, new: true }, function (err, comic) {
+                newComment.save(function (err, comment) {
                     if (err)
-                        console.log(err);
+                        console.log(err)
 
-                    User.findOne({'local.username': comic.creatorID}, function (err, user) {
+                    Comic.findByIdAndUpdate(req.params.id, { 
+                        $push: { 'comments': String(comment._id) } 
+                        }, { safe: true, upsert: true, new: true }, function (err, comic) {
                         if (err)
                             console.log(err);
 
-                        User.findByIdAndUpdate(user._id, {
-                            $push: { 'local.notifications': { acting_username: req.user.local.username, read: false, acting_event: String("commenting"), acting_comic_id: req.params.id} } }, 
-                            { safe: true, upsert: true, new: true }, function (err) {
-                                if (err)
-                                    console.log(err);
+                        User.findOne({'local.username': comic.creatorID}, function (err, user) {
+                            if (err)
+                                console.log(err);
 
-                            res.redirect('/comics/' + req.params.id);
+                            User.findByIdAndUpdate(user._id, {
+                                $push: { 'local.notifications': { acting_username: req.user.local.username, read: false, acting_event: String("commenting"), acting_comic_id: req.params.id} } }, 
+                                { safe: true, upsert: true, new: true }, function (err) {
+                                    if (err)
+                                        console.log(err);
+
+                                res.redirect('/comics/' + req.params.id);
+                            });
                         });
                     });
                 });
+            });
+
+            // EDIT COMMENT ============
+            app.post('/comics/:id/editcomment', function (req, res) {
+
             });
 
 
