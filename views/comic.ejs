@@ -472,11 +472,12 @@
         <input class="btn btn-default" type="submit" value="Upload" name="submit" onclick="changeCoverClicked(event)">
         </form>
 
+        <% if (comic.coverphoto) { %>
         <br>
-
         <form method="post" action="/comics/<%=comic._id%>/deletecover">
           <button class="btn btn-danger btn-sm" type="submit">Delete Cover Photo</button>
         </form>
+        <% } %>
 
       </div>
 
@@ -550,15 +551,20 @@
   </div>
 </div>
 
+<script>
 
+  $(document).ready(function(){
+    $('[data-toggle="tooltip"]').tooltip(); 
+  });
 
+</script>
 
 <script>
 
-    $(document).ready(function(){
-      $('[data-toggle="tooltip"]').tooltip(); 
-    });
-
+    document.getElementById("changeCoverInput").onchange = function () {
+      document.getElementById("changeCoverLabel").innerHTML = '<span class="glyphicon glyphicon-ok"></span> ' + this.value.split( '\\' ).pop();
+    }
+    
     function editInfoButtonClicked(event) {
       var title = document.getElementById("editInfoTitle").value;
       var description = document.getElementById("editInfoDescription").value;
@@ -570,15 +576,6 @@
       } else {
         document.getElementById("editInfoSubmitButton").disabled = true;
         document.getElementById("editInfoForm").submit();
-      }
-    }
-
-    function buttonSubmitClicked(event) {
-      var uploadForm = document.getElementById("userPhoto").value;
-
-      if (!uploadForm) {
-        event.preventDefault();
-        alert("Please choose a file!");
       }
     }
 
@@ -615,15 +612,6 @@
         document.getElementById("addChapterForm").submit();
       }
     }
-
-    document.getElementById("userPhoto").onchange = function () {
-      document.getElementById("uploadlabel").innerHTML = '<span class="glyphicon glyphicon-ok"></span> ' + this.value.split( '\\' ).pop();
-    }
-
-    document.getElementById("changeCoverInput").onchange = function () {
-      document.getElementById("changeCoverLabel").innerHTML = '<span class="glyphicon glyphicon-ok"></span> ' + this.value.split( '\\' ).pop();
-    }
-
 
 </script>
 
