@@ -408,6 +408,7 @@ var Router = (function () {
 
 
             // DELETE A COMIC ====================
+            //
             app.post('/deletecomic/:id', function (req, res) {
 
                 // find the comic to delete
@@ -512,6 +513,67 @@ var Router = (function () {
                     });
                 });
             });
+
+
+
+            // DELETE CHAPTER =======
+            //
+            app.post('/deletechapter/:id', function (req, res) {
+
+                // find the chapter to delete
+                Chapter.findOne({_id: req.params.id}, function (err, chapter) {
+                    if (err)
+                        console.log(err);
+
+                    // iterate through the chapter's images
+                    for (j = 0; j < chapter.images.length; j++) {
+
+                        // find the image
+                        Image.findOne({_id: chapter.images[j]}, function (err, image) {
+                            if (err)
+                                console.log(err);
+
+                            // update the user who uploaded the image:
+                            // - decrement user's score by 2
+                            // - remove image from user's image list
+                            //
+                            User.findOne({'local.username': image.uploaderID}, function (err, imageUser) {
+                                if (err)
+                                    console.log(err);
+
+                                User.findByIdAndUpdate(imageUser._id, { 
+                                    $inc: { 'local.score': -2 },
+                                    $pull: { 'local.images': String(image._id) }
+                                }, function (err) {
+                                    if (err)
+                                        console.log(err);
+                                });
+                            });
+                            
+                            // removes image from the file system
+                            gfs.remove({filename: image.path}, function (err) {
+                                if (err)
+                                    console.error(err);
+                            });
+
+                            // removes image from the database
+                            Image.remove({_id: image._id}, function (err) {
+                                if (err) 
+                                    console.log(err);
+                            });
+                        });
+                    }
+
+                    Chapter.remove({_id: chapter._id}, function (err) {
+                        if (err)
+                            console.log(err);
+
+                        res.redirect('/comics/' + chapter.comicID);
+                    });
+                });
+            });
+
+
 
             // COMIC COVER PAGE EDITTING ==============
             app.post('/comics/:id', function (req, res) {
