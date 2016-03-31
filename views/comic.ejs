@@ -382,24 +382,33 @@
       </blockquote>
       <% } %>
 
-      <% if (user) { %>
-      <form id  =  "commentForm"
-      enctype   =  "application/x-www-form-urlencoded"
-      action    =  "/comment"
-      method    =  "post">
-      <label for="comment">Add a comment:</label>
-      <textarea class="form-control" rows="3" id="comment" name="comment" style="resize: none"></textarea>
-      <input type="hidden" name="comic_id" id="comic_id" value= <%= comic._id %> > <br>
-      <input class="btn btn-primary btn-lg" style="width:100px" type="submit" id="submit" value="Post" name="submit" ng-click="toggleComment()">
-    </div>
-  </form>
-    <% } %>
+      <% 
+      if (user) { 
+      %>
+        <form id  =  "commentForm"
+        enctype   =  "application/x-www-form-urlencoded"
+        action    =  "/comment"
+        method    =  "post">
+          <label for="comment">Add a comment:</label>
+          <textarea class="form-control" rows="3" id="comment" name="comment" style="resize: none"></textarea>
+          <input type="hidden" name="comic_id" id="comic_id" value= <%= comic._id %> > <br>
+          <input class="btn btn-primary btn-lg" style="width:100px" type="submit" id="submit" value="Post" name="submit" ng-click="toggleComment()">
+          </div>
+        </form>
+      <% 
+      } else {
+      %>
+        <em>Please <a href="/login">log in</a> to comment.</em>
+      <% 
+      }
+      %>
 
 </div>
 </div>
 
 </div>
 </div>
+<br><br>
 
 <!-- ADD CHAPTER MODAL -->
 <div id="addchapter" class="modal fade" role="dialog">
