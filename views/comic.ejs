@@ -425,7 +425,7 @@
       <div class="modal-body" style="text-align:center">
         <fieldset>
           <div class="form-group">
-            <form method="post" action="/comics/<%=comic._id%>/addchapter">
+            <form id="addChapterForm" method="post" action="/comics/<%=comic._id%>/addchapter">
               <strong>Chapter #</strong>
               <input type="number" class="form-control" value="" name="chapterNumber" id="chapterNumber" style="width:100px; margin-left:auto; margin-right:auto;" required>
               <br>
@@ -436,7 +436,7 @@
 
               <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
               &nbsp;
-              <input class="btn btn-primary" type="submit" value="Submit" onclick="addChapterClicked(event)">
+              <input id="addChapterSubmitButton" type="submit" class="btn btn-primary" onclick="addChapterClicked(event)" value="Submit">
             </form>
           </div>
 
@@ -576,15 +576,12 @@
     function addChapterClicked(event) {
       var chapterNumber = document.getElementById("chapterNumber").value;
       var chapterExists = false;
-      var chapters = <%- JSON.stringify(comic.chapters) %>;
+      var chapters = <%- JSON.stringify(chapters) %>;
       for (i = 0; i < chapters.length; i++) {
         if (chapters[i].chapter == chapterNumber) {
           chapterExists = true;
         }
-        console.log(chapters[i].chapter);
       }
-      console.log('Chapter number submitted: ' + chapterNumber);
-
 
       if (chapterNumber < 0) {
         event.preventDefault();
@@ -592,6 +589,12 @@
       } else if (chapterExists) {
         event.preventDefault();
         alert("That chapter number already exists.");
+      } else if (!document.getElementById("chapterNumber").value || !document.getElementById("chapterTitle").value) {
+        event.preventDefault();
+        alert("Both fields are required.");
+      } else {
+        document.getElementById("addChapterSubmitButton").disabled = true;
+        document.getElementById("addChapterForm").submit();
       }
     }
 
