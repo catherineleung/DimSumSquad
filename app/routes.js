@@ -841,7 +841,7 @@ var Router = (function () {
                                     });
 
                                     // refresh page
-                                    res.redirect('/comics/' + req.params.id + '/chapters/' + req.params.chapter + '/' + (chapter.images.length - 1));
+                                    res.redirect('/comics/' + req.params.id + '/chapters/' + req.params.chapter + '/' + chapter.images.length);
                                 });
                             });
                         });
