@@ -93,7 +93,7 @@
               <ul class="dropdown-menu" style='width: 360px'>
                 <li class="dropdown-header">Notifications</li>
         
-                <% for (i = user.local.notifications.length - 1; i >=0; i--){ %>
+                <% for (i = user.local.notifications.length - 1; i > (user.local.notifications.length - 9); i--){ %>
                     <li class="divider"></li>
                     <!--  GETS THE PROFILE PICTURE -->
                     <div class="row">
