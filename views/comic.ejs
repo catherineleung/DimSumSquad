@@ -391,15 +391,8 @@
         action    =  "/comics/<%=comic._id%>/comment"
         method    =  "post">
           <label for="comment">Add a comment:</label>
-<<<<<<< HEAD
           <textarea class="form-control" rows="3" id="commentText" name="comment" style="resize: none"></textarea><br>
           <button class="btn btn-success btn-lg" id="commentButton" style="width:100px" onclick="commentButtonClicked(event);">Post</button>
-=======
-          <textarea class="form-control" rows="3" id="comment" name="comment" style="resize: none"></textarea>
-          <input type="hidden" name="comic_id" id="comic_id" value= <%= comic._id %> > <br>
-          <input type="hidden" name="creator_username" value=<%= comic.creatorID %>>
-          <input class="btn btn-primary btn-lg" style="width:100px" type="submit" id="submit" value="Post" name="submit" ng-click="toggleComment()">
->>>>>>> 953d21eae48147d58d681baa22e0315489148080
           </div>
         </form>
       <% 

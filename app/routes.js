@@ -624,40 +624,9 @@ var Router = (function () {
                     date: new Date()
                 };
 
-<<<<<<< HEAD
                 Comic.findByIdAndUpdate(req.params.id, { $push: { 'comments': newComment } }, { safe: true, upsert: true, new: true }, function (err) {
                     if (err)
                         console.log(err);
-=======
-                    var newComment = new Comment({
-                        user: req.user.local.username,
-                        comment: req.body.comment,
-                        date: Date.now()
-                    });
-
-                    // console.log(newComment.user);
-                    // console.log(newComment.comment);
-
-                    // query using id of current comic
-                    var comicID = req.body.comic_id;
-
-                    // console.log(comicID);
-
-                    Comic.findByIdAndUpdate(comicID, { $push: { 'comments': newComment } }, { safe: true, upsert: true, new: true }, function (err, model) {
-                     console.log(err);
-
-                     var id = comicID;
-
-                     User.findOneAndUpdate({'local.username' : req.body.creator_username}, 
-                                { $push: { 'local.notifications': { acting_username: req.user.local.username, read: false, acting_event: String("commenting"), acting_comic_id: comicID} }}, 
-                                { safe: true, upsert: true, new: true }, 
-                                function (err, model) {
-                                if (err)
-                                    console.log(err);
-
-                            res.redirect('/comics/' + req.body.comic_id);
-                        });
->>>>>>> 953d21eae48147d58d681baa22e0315489148080
 
                     res.redirect('/comics/' + req.params.id);
                 });
