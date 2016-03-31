@@ -485,6 +485,21 @@ var Router = (function () {
                                 });
                             });
                         }
+
+                        // iterate through the comic's comments
+                        for (i = 0; i < comic.comments.length; i++) {
+
+                            // find the Comment
+                            Comment.findOne({_id: comic.comments[i]}, function (err, comment) {
+                                if (err)
+                                    console.log(err);
+
+                                Comment.remove({_id: comment._id}, function (err) {
+                                    if (err)
+                                        console.log(err);
+                                });
+                            });
+                        }
                     });
 
                     // removes comic from the favourites list of any user who favourited it
