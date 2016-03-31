@@ -102,7 +102,7 @@
                     <% } %>
                   </a>
                   <strong><%= comics[i].title %></strong> <br>
-                  By <strong><%= comics[i].creatorID %></strong>
+                  By <a href="/profile/<%= comics[i].creatorID %>"><strong><%= comics[i].creatorID %></strong></a>
                 </div>
                 <% } %>
                 <% i = i + 1; } %>

@@ -562,6 +562,8 @@ var Router = (function () {
 
             // FAVOURITING =========================
             app.post('/addfavourite/:id', function(req, res) {
+                console.log("checking creator_username");
+                console.log(req.body.creator_username);
 
                 Comic.findOne({_id: req.params.id}, function(err, comic) {
                     if (err)
@@ -574,11 +576,20 @@ var Router = (function () {
                         User.findByIdAndUpdate(req.user._id, { $push: { 'local.favourites': req.params.id } }, { safe: true, upsert: true, new: true }, function (err, model) {
                             if (err)
                                 console.log(err);
+
+                            User.findOneAndUpdate({'local.username' : req.body.creator_username}, 
+                                { $push: { 'local.notifications': { acting_username: req.user.local.username, read: false, acting_event: String("favourited"), acting_comic_id: req.params.id} }}, 
+                                { safe: true, upsert: true, new: true }, 
+                                function (err, model) {
+                                if (err)
+                                    console.log(err);
+
                             res.redirect('/comics/' + req.params.id);
                         });
                     });
                 });
             });
+        });
 
             app.post('/removefavourite/:id', function(req, res) {
 
