@@ -2,6 +2,8 @@
 
 Visit <a href="https://sumcomics.herokuapp.com/">https://sumcomics.herokuapp.com/</a> for the most recently deployed web build!
 
+Note: Not maintained so may be outdated / broken
+
 ## Getting Started
 
 * Install application dependencies: `npm install` <br>
